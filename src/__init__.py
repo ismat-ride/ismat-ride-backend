@@ -7,7 +7,7 @@ def create_app():
     app = Flask(__name__)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
-    app.config["FLASK_DEBUG"] = "Development"
+    FLASK_DEBUG="Development"
 
     #register blueprints
     from src.users import users_bp

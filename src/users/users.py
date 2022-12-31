@@ -1,6 +1,8 @@
+import datetime
 from src.extensions import db
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	email = db.Column(db.String(255), unique=True)
 	password = db.Column(db.Unicode(80))
@@ -34,5 +36,5 @@ class Vehicle(db.Model):
 	color = db.Column(db.String(20))
 	seats = db.Column(db.Integer, default=0)
 	is_deleted = db.Column(db.Boolean, default=False)
-	createdAt = db.Column(db.DateTime, default=datetime.now)
-	updatedAt = db.Column(db.DateTime, default=datetime.now)
+	createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
+	updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
