@@ -1,5 +1,5 @@
 import datetime
-from src.extensions import db
+from src.extensions import db, marshmallow
 from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
@@ -14,6 +14,10 @@ class User(db.Model, UserMixin):
 	
 	def __str__(self):
 		return self.email
+
+class UserJsonSchema(marshmallow.Schema):
+	class Meta:
+		model = User
 
 class Brand(db.Model):
 	__tablename__ = 'brand'
