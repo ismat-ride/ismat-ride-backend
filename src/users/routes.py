@@ -1,6 +1,5 @@
 from src.users import users_bp
 from flask import render_template, request, redirect, url_for, jsonify, flash
-from .users import User, UserJsonSchema
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.extensions import db
 
