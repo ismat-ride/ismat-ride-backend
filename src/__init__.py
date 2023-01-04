@@ -11,7 +11,9 @@ def create_app():
 
     #register blueprints
     from src.users import users_bp
-    app.register_blueprint(users_bp, url_prefix='/users')
+    from src.auth import auth_bp
+    app.register_blueprint(users_bp, url_prefix = '/users')
+    app.register_blueprint(auth_bp, url_prefix = '/auth')
 
     db.init_app(app)
     with app.app_context():

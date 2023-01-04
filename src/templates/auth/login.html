@@ -1,0 +1,60 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/global.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/adminkit.css') }}">
+    <script
+      src="https://kit.fontawesome.com/86102a7658.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Login Page</title>
+  </head>
+  <body>
+    <div
+      class="d-flex align-items-center justify-content-center container-sm vh-100"
+    >
+      <div class="w-auto">
+        <h1 class="logo-font text-center mb-5 primary-color">
+          ISMAT<span class="secondary-color">RIDE</span>
+        </h1>
+        <form action="/auth/login" method="POST">
+            <div class="input-group mb-4 p-0">
+                <span class="input-group-text"
+                  ><i class="fa-solid fa-at icon-color"></i
+                ></span>
+                <input type="text" class="form-control" name="email" placeholder="Email" />
+              </div>
+              <div class="input-group mb-4 p-0">
+                <span class="input-group-text"
+                  ><i class="fa-solid fa-lock icon-color"></i
+                ></span>
+                <input type="text" class="form-control" name="password" placeholder="Password" />
+              </div>
+              <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" />
+                <label class="form-check-label fw-bold" for="flexCheckChecked">
+                  Lembrar-me
+                </label>
+              </div>
+              <button type="submit" class="btn btn-primary mb-3 w-100 fw-bold">
+                LOGIN
+              </button>
+              <div class="d-flex justify-content-end input-group fw-bold">
+                <span>Esqueci-me da <span class="text-primary">Password</span>?</span>
+              </div>
+        </form>
+        {% with messages = get_flashed_messages(category_filter=["invalid_credentials"]) %}
+        {% if messages %} 
+        <div class="alert alert-danger d-flex justify-content-center align-items-center text-center" role="alert">
+            {% for message in messages %}
+              <span class="p-2">{{ message }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+    </div>
+  </body>
+</html>

@@ -7,7 +7,7 @@ from src.extensions import db
 def register():
     return render_template("users/register.html")
 
-@users_bp.route("/register", methods= ['POST'])
+@users_bp.route("/register", methods = ['POST'])
 def register_post():
     is_valid = True
     email = request.form.get("email")
