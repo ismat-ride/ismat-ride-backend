@@ -24,16 +24,16 @@
                 <span class="input-group-text"
                   ><i class="fa-solid fa-at icon-color"></i
                 ></span>
-                <input type="text" class="form-control" name="email" placeholder="Email" />
+                <input type="text" value="{% if 'email' in request.cookies %}{{ request.cookies.get('email') }}{% endif %}" class="form-control" name="email" placeholder="Email" />
               </div>
               <div class="input-group mb-4 p-0">
                 <span class="input-group-text"
                   ><i class="fa-solid fa-lock icon-color"></i
                 ></span>
-                <input type="text" class="form-control" name="password" placeholder="Password" />
+                <input class="form-control" value="{% if 'password' in request.cookies %}{{ request.cookies.get('password') }}{% endif %}" type="password" name="password" placeholder="Password" />
               </div>
               <div class="form-check mb-4">
-                <input class="form-check-input" type="checkbox" />
+                <input class="form-check-input" checked="{% if 'remember_me' in request.cookies %}{{ request.cookies.get('remember_me') }}{% endif %}" name="remember_me" type="checkbox" />
                 <label class="form-check-label fw-bold" for="flexCheckChecked">
                   Lembrar-me
                 </label>
