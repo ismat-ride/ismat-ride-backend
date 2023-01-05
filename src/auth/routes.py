@@ -17,10 +17,6 @@ def login_post():
 
     user = User.query.filter_by(email=email).first()
 
-    print(user)
-    print(check_password_hash(user.password, password))
-    print(password)
-
     if not user or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
         return render_template('auth/login.html')  
