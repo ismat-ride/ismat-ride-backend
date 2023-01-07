@@ -1,4 +1,5 @@
-from extensions import db
+from src.extensions import db
+import datetime
 
 class RideRequest(db.Model):
 	__tablename__ = 'ride_request'
@@ -12,8 +13,8 @@ class RideRequest(db.Model):
 	local = db.relationship('Local', backref='ride_request')
 	ride_request_state_id = db.Column('ride_request_state_id', db.ForeignKey('ride_request_state.id'), default=1)
 	ride_request_state = db.relationship('RideRequestState', backref='ride_request')
-	createdAt = db.Column(db.DateTime, default=datetime.now)
-	updatedAt = db.Column(db.DateTime, default=datetime.now)
+	createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
+	updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
 
 class RideRequestState(db.Model):
    __tablename__ = 'ride_request_state'
