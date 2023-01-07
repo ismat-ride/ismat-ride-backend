@@ -24,8 +24,8 @@ class Ride(db.Model):
     createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
     updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
     status_id = db.Column('status_id', db.ForeignKey('ride_status.id'))
-    status = db.relationship('RideStatus', backref='ride_status')
-
+    status = db.relationship('RideStatus', backref='ride')
+    
 class RideStatus(db.Model):
     __tablename__ = 'ride_status'
     id = db.Column(db.Integer, primary_key=True)
