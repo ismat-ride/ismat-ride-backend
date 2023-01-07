@@ -13,7 +13,7 @@ class Ride(db.Model):
     end_time = db.Column(db.DateTime)
     driver_id = db.Column('driver_id', db.ForeignKey('user.id')) 
     driver = db.relationship('User', backref='ride')
-    passengers = db.relationship('User', secondary=ride_passengers, backref='ride')
+    passengers = db.relationship('User', secondary=ride_passengers, backref='rides')
     vehicle_id = db.Column('vehicle_id', db.ForeignKey('vehicle.id'))
     vehicle = db.relationship('Vehicle', backref='ride')
     local_id = db.Column('local_id', db.ForeignKey('local.id'))
