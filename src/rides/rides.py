@@ -5,8 +5,6 @@ class RideStatus(db.Model):
     __tablename__ = 'ride_status'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
-    def __str__(self):
-        return self.name
 
 class Local(db.Model):
     __tablename__ = 'local'

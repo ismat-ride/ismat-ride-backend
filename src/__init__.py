@@ -39,9 +39,3 @@ def create_app():
         return User.query.get(int(user_id))
 
     return app
-
-""" def custom_filters(app):
-    @app.template_filter('format_date')
-    def format_date(value):
-        print(value)
-        return value.strftime('%Y-%m-%d') """
