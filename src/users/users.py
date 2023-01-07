@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
 	last_name = db.Column(db.String(100))
 	student_number = db.Column(db.String(50))
 	phone_number = db.Column(db.String(100))
-	type = db.Column(db.String(20))
+	""" type = db.Column(db.String(20)) """
 	
 	def __str__(self):
 		return self.email
