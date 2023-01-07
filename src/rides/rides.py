@@ -1,11 +1,12 @@
 from src.extensions import db
+import datetime
 
 class Ride(db.Model):
     __tablename__ = 'ride' 
-    __table_args__ = (db.UniqueConstraint('user_id', 'vehicle_id', 'ride_date'),)
-    id = db.Column(db.integer, primary_key=True)
-    start_time = db.Column(db.Datetime)
-    end_time = db.Column(db.Datetime)
+    __table_args__ = (db.UniqueConstraint('user_id', 'vehicle_id'),)
+    id = db.Column(db.Integer, primary_key=True)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
     user_id = db.Column('user_id', db.ForeignKey('user.id')) 
     user = db.relationship('User', backref='ride')
     vehicle_id = db.Column('vehicle_id', db.ForeignKey('vehicle.id'))
@@ -15,15 +16,15 @@ class Ride(db.Model):
     seats = db.Column(db.Integer())
     cost = db.Column(db.Float, default=0.0)
     is_return_trip = db.Column(db.Boolean, default=False)
-    createdAt = db.Column(db.DateTime, default=datetime.now)
-    updatedAt = db.Column(db.DateTime, default=datetime.now)
+    createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
+    updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
     status_id = db.Column('status_id', db.ForeignKey('ride_status.id'))
     status = db.relationship('status_id', backref='ride_status')
     
 
 class RideStatus(db.Model):
     __tablename__ = 'ride_status'
-    id = db.Column(db.integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20))
 
 
@@ -37,5 +38,5 @@ class Local(db.Model):
 	postal_code = db.Column(db.String(20))
 	latitude = db.Column(db.Float)
 	longitude = db.Column(db.Float)
-	createdAt = db.Column(db.DateTime, default=datetime.now)
-	updatedAt = db.Column(db.DateTime, default=datetime.now)
+	createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
+	updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
