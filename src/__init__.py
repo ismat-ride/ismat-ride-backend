@@ -1,9 +1,9 @@
 from flask import Flask
 from .extensions import db
-from flask_login import LoginManager
 from .users.users import *
 from .rides.rides import *
 from .ride_requests import *
+from flask_login import LoginManager
 
 DB_NAME = "rides.db"
 
@@ -20,6 +20,9 @@ def create_app():
     app.register_blueprint(users_bp, url_prefix = '/users')
     app.register_blueprint(auth_bp, url_prefix = '/auth')
     app.register_blueprint(admin_bp, url_prefix = '/admin')
+
+    from src.rides import rides_bp
+    app.register_blueprint(rides_bp, url_prefix = '/rides')
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
