@@ -1,6 +1,8 @@
+import datetime
 from src.extensions import db
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
 	id = db.Column(db.Integer, primary_key=True)
 	email = db.Column(db.String(255), unique=True)
 	password = db.Column(db.Unicode(80))
@@ -9,9 +11,19 @@ class User(db.Model):
 	last_name = db.Column(db.String(100))
 	student_number = db.Column(db.String(50))
 	phone_number = db.Column(db.String(100))
+	type = db.Column(db.String(20))
 	
 	def __str__(self):
 		return self.email
+
+	def get_full_name(self):
+		return self.first_name + " " + self.last_name	
+
+	def get_initials(self):
+		first_name_initial = str.upper(self.first_name[0])
+		last_name_initial = str.upper(self.last_name[0])
+		return f'{first_name_initial}{last_name_initial}'	
+
 
 class Brand(db.Model):
 	__tablename__ = 'brand'
@@ -34,5 +46,5 @@ class Vehicle(db.Model):
 	color = db.Column(db.String(20))
 	seats = db.Column(db.Integer, default=0)
 	is_deleted = db.Column(db.Boolean, default=False)
-	createdAt = db.Column(db.DateTime, default=datetime.now)
-	updatedAt = db.Column(db.DateTime, default=datetime.now)
+	createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
+	updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
