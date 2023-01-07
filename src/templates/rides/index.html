@@ -1,0 +1,11 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+Rides 
+{% endblock title %}
+ 
+{%block content %} 
+    {% for item in rides %}
+        <li><a>{{ item }}</a></li>
+    {% endfor %} 
+{% endblock content %}
