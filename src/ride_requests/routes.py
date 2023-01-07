@@ -1,9 +1,11 @@
 from flask import render_template
+from flask_login import login_required
 from src.ride_requests import ride_requests_bp
 from src.ride_requests.dto.ride_requests_dto import RideRequestDto
 from .ride_requests import RideRequest
 
 @ride_requests_bp.route("get")
+@login_required
 def get():
        db_ride_requests = RideRequest.query.all()
 
