@@ -22,15 +22,20 @@ class Local(db.Model):
     updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
     def __str__(self):
         return self.name
+        
+ride_passengers = db.Table('ride_passengers',
+                    db.Column('passenger_id', db.Integer, db.ForeignKey('user.id')),
+                    db.Column('ride_id', db.Integer, db.ForeignKey('ride.id'))
+                    )
 
 class Ride(db.Model):
     __tablename__ = 'ride' 
-    __table_args__ = (db.UniqueConstraint('user_id', 'vehicle_id'),)
     id = db.Column(db.Integer, primary_key=True)
     start_time = db.Column(db.DateTime)
     end_time = db.Column(db.DateTime)
-    user_id = db.Column('user_id', db.ForeignKey('user.id')) 
-    user = db.relationship('User', backref='ride')
+    driver_id = db.Column('driver_id', db.ForeignKey('user.id')) 
+    driver = db.relationship('User', backref='ride')
+    passengers = db.relationship('User', secondary=ride_passengers, backref='rides')
     vehicle_id = db.Column('vehicle_id', db.ForeignKey('vehicle.id'))
     vehicle = db.relationship('Vehicle', backref='ride')
     local_id = db.Column('local_id', db.ForeignKey('local.id'))
@@ -42,4 +47,3 @@ class Ride(db.Model):
     updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
     status_id = db.Column('status_id', db.ForeignKey('ride_status.id'))
     status = db.relationship('RideStatus', backref='ride_status')
-    
