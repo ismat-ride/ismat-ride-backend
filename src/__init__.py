@@ -1,5 +1,5 @@
 from flask import Flask
-from .extensions import db
+from .extensions import db, migrate
 from .users.users import *
 from .rides.rides import *
 from flask_login import LoginManager
@@ -35,6 +35,7 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         db.create_all()
+        migrate.init_app(app, db, render_as_batch=True)
 
     @login_manager.user_loader
     def load_user(user_id):

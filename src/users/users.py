@@ -48,3 +48,5 @@ class Vehicle(db.Model):
 	is_deleted = db.Column(db.Boolean, default=False)
 	createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
 	updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
+	model_id = db.Column('model_id', db.ForeignKey('model.id')) 
+	model = db.relationship('Model', backref='vehicle')
