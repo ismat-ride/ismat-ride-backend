@@ -2,10 +2,8 @@ from flask import Flask
 from .extensions import db
 from .users.users import *
 from .rides.rides import *
-from flask_login import LoginManager
-from .users.users import *
-from .rides.rides import *
 from .ride_requests import *
+from flask_login import LoginManager
 
 DB_NAME = "rides.db"
 
