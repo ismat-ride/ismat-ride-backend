@@ -3,6 +3,8 @@ from .extensions import db
 from .users.users import *
 from .rides.rides import *
 from flask_login import LoginManager
+from .users.users import *
+from .rides.rides import *
 
 DB_NAME = "rides.db"
 
@@ -22,15 +24,11 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    #rides blueprints
-    from src.rides import rides_bp
-    app.register_blueprint(rides_bp, url_prefix='/rides')
+    from src.users.users import User
 
     db.init_app(app)
     with app.app_context():
         db.create_all()
-
-    from src.users.users import User
 
     @login_manager.user_loader
     def load_user(user_id):
