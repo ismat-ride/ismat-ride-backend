@@ -1,5 +1,7 @@
 from flask import Flask
 from .extensions import db
+from .users.users import *
+from .rides.rides import *
 from flask_login import LoginManager
 from .users.users import *
 from .rides.rides import *
@@ -21,6 +23,9 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix = '/auth')
     app.register_blueprint(admin_bp, url_prefix = '/admin')
 
+    from src.rides import rides_bp
+    app.register_blueprint(rides_bp, url_prefix = '/rides')
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -36,3 +41,9 @@ def create_app():
         return User.query.get(int(user_id))
 
     return app
+
+""" def custom_filters(app):
+    @app.template_filter('format_date')
+    def format_date(value):
+        print(value)
+        return value.strftime('%Y-%m-%d') """

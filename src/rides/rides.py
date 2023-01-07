@@ -1,6 +1,28 @@
 from src.extensions import db
 import datetime
 
+class RideStatus(db.Model):
+    __tablename__ = 'ride_status'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20))
+    def __str__(self):
+        return self.name
+
+class Local(db.Model):
+    __tablename__ = 'local'
+    id =  db.Column(db.Integer, primary_key=True)
+    user_id = db.Column('user_id', db.ForeignKey('user.id')) 
+    user = db.relationship('User', backref='local')
+    name = db.Column(db.String(100))
+    description = db.Column(db.String(150))
+    postal_code = db.Column(db.String(20))
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    createdAt = db.Column(db.DateTime, default=datetime.datetime.now)
+    updatedAt = db.Column(db.DateTime, default=datetime.datetime.now)
+    def __str__(self):
+        return self.name
+        
 ride_passengers = db.Table('ride_passengers',
                     db.Column('passenger_id', db.Integer, db.ForeignKey('user.id')),
                     db.Column('ride_id', db.Integer, db.ForeignKey('ride.id'))
