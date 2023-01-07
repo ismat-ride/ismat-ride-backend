@@ -18,8 +18,10 @@ def create_app():
     #register blueprints
     from src.users import users_bp
     from src.auth import auth_bp
+    from src.admin import admin_bp
     app.register_blueprint(users_bp, url_prefix = '/users')
     app.register_blueprint(auth_bp, url_prefix = '/auth')
+    app.register_blueprint(admin_bp, url_prefix = '/admin')
 
     from src.rides import rides_bp
     app.register_blueprint(rides_bp, url_prefix = '/rides')
