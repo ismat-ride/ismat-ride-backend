@@ -16,17 +16,17 @@ def update(id):
        brand = Brand.query.get(id)
 
        if(brand is None):
-              flash('MARCA INVALIDA TENTE OUTRA VEZ!', 'error')
+              flash('Esta marca nao existe', 'error')
               return redirect(url_for('brand.get'))
 
        request_data = request.form.get("name")
 
        if(request_data is None):
-              flash('ATRIBUTO INVALIDO, TEM QUE SER: ${name}', 'error')
+              flash('Nome da marca nao pode vir vazio: ${name}', 'error')
               return redirect(url_for('brand.get'))
 
        if(request_data == brand.name):
-              flash('NOME DA MARCA TEEM QUE SER DIFERENTE', 'error')
+              flash('Esta marca já existe', 'error')
               return redirect(url_for('brand.get'))
 
        brand.name = request_data
@@ -36,4 +36,5 @@ def update(id):
               flash("MARCA ATUALIZADA COM SUCESSO!", 'info')
               return redirect(url_for('brand.get'))
        except Exception as e:
-               flash(f'{e}', 'error')
+              print(e)
+              flash(f'Ocorreu um erro inesperado', 'error')

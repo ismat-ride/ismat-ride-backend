@@ -21,8 +21,6 @@ def register_post():
     if not email.endswith("@mso365.ismat.pt") or email is None:
         flash('Email de aluno nao pertence ao ISMAT', 'validation_error')
         is_valid = False
-    
-    print(password)
 
     if password is "" or None:
         flash('Por favor introduza uma password', 'validation_error')
@@ -45,7 +43,7 @@ def register_post():
         flash('Já existe um utilizador com este email', 'already_exists_error')
         return redirect(url_for('users.register'))
 
-    new_user = User(email=email, password=generate_password_hash(password), status="Pending", first_name=first_name, last_name="dummy", student_number="dummy", phone_number=phone_number)
+    new_user = User(email=email, password=generate_password_hash(password), status="Pending", first_name=first_name, last_name="dummy", student_number="dummy", phone_number=phone_number, type="Student")
 
     db.session.add(new_user)
     db.session.commit()
@@ -56,19 +54,3 @@ def register_post():
 @login_required
 def profile():
     return f'<h1> Hello {current_user.email}<h1>'
-
-@users_bp.route('send/recovery')
-@login_required
-def send_recovery():
-    encrypted_token = generate_password_hash(current_user.email)
-
-    uri = f'{request.host_url}reset/password/{encrypted_token}'
-
-    msg = Message('Reset de pasword', sender = 'noreply@ismatride.com', recipients = [current_user.email])
-    msg.html = render_template('email/reset_password.html', reset = uri)
-    msg.body = render_template('email/reset_password.html', reset = uri)
-    mail.send(msg)
-
-    flash('Email de recuperação enviado', category='success')
-
-    return redirect(request.url)
