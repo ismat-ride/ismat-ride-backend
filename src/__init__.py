@@ -1,5 +1,6 @@
 from flask import Flask
-from .extensions import db, migrate
+from .extensions import db, migrate, mail, SECRET_KEY
+from flask_mail import Mail
 from .users.users import *
 from .rides.rides import *
 from flask_login import LoginManager
@@ -9,11 +10,22 @@ from .ride_requests import *
 
 DB_NAME = "rides.db"
 
+mail = Mail()
+
 def create_app():
     app = Flask(__name__)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
-    app.secret_key="supersecretkey"
+    app.secret_key=SECRET_KEY
+
+    ##Email configs
+    app.config['MAIL_SERVER']='smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = 'ismatridenoreply@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'jrescxyosdilmhbh'
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    mail.init_app(app)
 
     #register blueprints
     from src.users import users_bp
@@ -42,9 +54,3 @@ def create_app():
         return User.query.get(int(user_id))
 
     return app
-
-""" def custom_filters(app):
-    @app.template_filter('format_date')
-    def format_date(value):
-        print(value)
-        return value.strftime('%Y-%m-%d') """
