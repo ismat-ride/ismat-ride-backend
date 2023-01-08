@@ -31,6 +31,9 @@ def create_app():
     from src.brands import brand_bp
     app.register_blueprint(brand_bp, url_prefix = '/brands')
 
+    from src.models import models_bp
+    app.register_blueprint(models_bp, url_prefix = '/models')
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
