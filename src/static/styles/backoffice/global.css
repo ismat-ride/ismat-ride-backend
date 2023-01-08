@@ -44,10 +44,6 @@
   background-color: #fafbfe;
 }
 
-.sidebar-link {
-  background-color: #fafbfe !important;
-}
-
 .sidebar-content {
   background-color: #313a46 !important;
 }
@@ -83,31 +79,17 @@
   font-size: 14px;
 }
 
-.sidebar-link {
-  color: #fafbfe !important;
-  background-color: transparent !important;
-}
-
-.sidebar-link:hover,
-.sidebar-link > i:hover {
-  color: white !important;
-  border-width: 1px, 1px, 0px, 5px !important;
-  border-right: 0px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.13);
-  border-left-color: white;
-}
-
-i {
-  color: #6c757d;
-}
-
 a {
   text-decoration: none !important;
 }
 
-.logout {
-  color: #fafbfe;
+.logout-wrapper:hover {
+  cursor: pointer;
+  background-color: white;
+}
+
+.logout-wrapper:hover > div > div > span > * {
+  color: black;
 }
 
 .pagination {
@@ -394,7 +376,7 @@ button.form-control {
 }
 @media (min-width: 992px) {
   .modal-lg,
-.modal-xl {
+  .modal-xl {
     max-width: 800px;
   }
 }
@@ -537,4 +519,4 @@ button.form-control {
   .modal-fullscreen-xxl-down .modal-footer {
     border-radius: 0;
   }
-}/*# sourceMappingURL=global.css.map */
+} /*# sourceMappingURL=global.css.map */
