@@ -1,9 +1,10 @@
 from src.users import users_bp
 from src.users.users import User
-from flask import render_template, request, redirect, url_for, jsonify, flash
-from werkzeug.security import generate_password_hash, check_password_hash
-from src.extensions import db
+from flask import render_template, request, redirect, url_for, flash
+from werkzeug.security import generate_password_hash
+from src.extensions import db, mail
 from flask_login import login_required, current_user
+from flask_mail import Message
 
 @users_bp.route("/register")
 def register():
@@ -49,9 +50,25 @@ def register_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return f"<h1>Welcome {new_user.email} to ISMATRIDE"
+    return f"<h1>Welcome {new_user.email} to ISMATRIDE<h1>"
 
 @users_bp.route('profile')
 @login_required
 def profile():
     return f'<h1> Hello {current_user.email}<h1>'
+
+@users_bp.route('send/recovery')
+@login_required
+def send_recovery():
+    encrypted_token = generate_password_hash(current_user.email)
+
+    uri = f'{request.host_url}reset/password/{encrypted_token}'
+
+    msg = Message('Reset de pasword', sender = 'noreply@ismatride.com', recipients = [current_user.email])
+    msg.html = render_template('email/reset_password.html', reset = uri)
+    msg.body = render_template('email/reset_password.html', reset = uri)
+    mail.send(msg)
+
+    flash('Email de recuperação enviado', category='success')
+
+    return redirect(request.url)

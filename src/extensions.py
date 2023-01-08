@@ -1,7 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+from sqlalchemy import MetaData
+from flask_migrate import Migrate
+from flask_mail import Mail
 
-db = SQLAlchemy()
+convention = {
+    "ix": 'ix_%(column_0_label)s',
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s"
+}
 
-SECRET_KEY = "SuperSecretKey" 
+db = SQLAlchemy(metadata=MetaData(naming_convention=convention))
+migrate = Migrate()
+
+mail = Mail()
+
+SECRET_KEY = "Zr4u7x!A%D*G-KaPdSgVkYp2s5v8y/B?" 
 SQLALCHEMY_TRACK_MODIFICATIONS=False
