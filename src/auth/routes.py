@@ -1,8 +1,12 @@
+import secrets
+import string
 from src.auth import auth_bp
-from flask import render_template, redirect, request, flash, make_response
+from flask import render_template, redirect, request, flash, make_response, url_for
 from flask_login import login_required, login_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.users.users import User
+from src.extensions import mail, db
+from flask_mail import Message
 
 
 @auth_bp.route('/login')
@@ -38,3 +42,31 @@ def login_post():
     response.delete_cookie('remember_me')
 
     return response
+
+@auth_bp.route('recover', methods = ['GET'])
+def recover_get():
+    return render_template('auth/recover.html')
+
+@auth_bp.route('recover', methods = ['POST'])
+def recover_post():
+    user = User.query.filter_by(email=request.form.get('email')).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('auth.recover_get'))
+    
+    new_password = ''.join((secrets.choice(string.ascii_letters) for i in range(8)))
+
+    user.password = generate_password_hash(new_password)
+
+    db.session.commit()
+
+    msg = Message('Reset de pasword', sender = 'noreply@ismatride.com', recipients = [user.email])
+    msg.html = render_template('email/recover_account.html', password = new_password)
+    msg.body = render_template('email/recover_account.html', password = new_password)
+    mail.send(msg)
+
+    flash('Email enviado com nova password', category='info')
+
+    return render_template('auth/login.html')

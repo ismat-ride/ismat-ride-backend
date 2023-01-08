@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/global.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/adminkit.css') }}">
+    <script
+      src="https://kit.fontawesome.com/86102a7658.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Register Page</title>
+  </head>
+  <body>
+    <div
+      class="d-flex align-items-center justify-content-center container-sm vh-100"
+    >
+      <div>
+        <h1 class="logo-font text-center mb-2 primary-color">
+          ISMAT<span class="secondary-color">RIDE</span>
+        </h1>
+        <h2 class="text-center mb-4">
+          <b><span class="primary-color">RECUPERAR</span> CONTA</b>
+        </h2>
+        <form action="/auth/recover" method="POST">
+            <div class="row w-100 justify-content-center align-items-center m-0">
+              <div class="col-12 col-md-6 col-lg-6 mb-3 text-center">
+                <span class="fw-bold"
+                  ><span class="secondary-color">Esqueceu</span> a sua password?
+                  <span class="secondary-color">Sem problema</span>! apenas insira o
+                  seu <span class="secondary-color">email</span> abaixo e
+                  <span class="secondary-color">clique</span> no botão de
+                  <span class="secondary-color">recuperar password</span>.
+                </span>
+              </div>
+            </div>
+            <div class="row justify-content-center align-items-center">
+              <div class="col-10 col-sm-8 col-md-6 col-lg-6">
+                <div class="input-group mb-3 p-0">
+                  <span class="input-group-text"
+                    ><i class="fa-solid fa-at icon-color"></i
+                  ></span>
+                  <input type="email" name="email" class="form-control" placeholder="Email" />
+                </div>
+                <button type="submit" class="btn btn-primary mb-3 w-100 fw-bold">
+                  RECUPERAR PASSWORD
+                </button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+  </body>
+</html>
