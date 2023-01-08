@@ -42,65 +42,75 @@
             <li class="sidebar-item">
               <a class="sidebar-link" href="">
                 <i class="align-middle"></i>
-                <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
+                <i class="fa-solid fa-registered fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold"> BOLEIAS</span>
               </a>
             </li>
             <li class="sidebar-item">
               <a class="sidebar-link" href="#">
                 <i class="align-middle"></i>
-                <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
+                <i class="fa-solid fa-paper-plane fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold"> PEDIDOS DE BOLEIA</span>
               </a>
             </li>
             <li class="sidebar-item">
               <a
                 class="sidebar-link collapsed"
-                data-bs-target="#vehicles"
+                data-bs-target="#marcas"
                 data-bs-toggle="collapse"
               >
                 <i class="align-middle"></i>
-                <i class="fa-solid fa-car fa-lg me-2 text-color"></i>
-                <span class="align-middle fw-bold">Marcas e Modelos</span>
+                <i class="fa-solid fa-b fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">MARCAS</span>
               </a>
               <ul
-                id="vehicles"
+                id="marcas"
                 class="sidebar-dropdown list-unstyled collapse show"
                 data-bs-parent="#sidebar"
               >
                 <li class="sidebar-item">
-                  <a
-                    class="sidebar-link fw-bold"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#createVehicleModal"
-                    >CRIAR</a
-                  >
+                  <a class="sidebar-link fw-bold">CRIAR</a>
                 </li>
                 <li class="sidebar-item">
-                  <a href="../vehicles-page/" class="sidebar-link fw-bold"
-                    >MARCAS</a
-                  >
+                  <a class="sidebar-link fw-bold">VISUALIZAR</a>
+                </li>
+              </ul>
+            </li>
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link collapsed"
+                data-bs-target="#modelos"
+                data-bs-toggle="collapse"
+              >
+                <i class="align-middle"></i>
+                <i class="fa-solid fa-m fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">MODELOS</span>
+              </a>
+              <ul
+                id="modelos"
+                class="sidebar-dropdown list-unstyled collapse show"
+                data-bs-parent="#sidebar"
+              >
+                <li class="sidebar-item">
+                  <a class="sidebar-link fw-bold">CRIAR</a>
                 </li>
                 <li class="sidebar-item">
-                  <a href="../vehicles-page/" class="sidebar-link fw-bold"
-                    >OS MEUS VEÍCULOS</a
-                  >
+                  <a class="sidebar-link fw-bold">VISUALIZAR</a>
                 </li>
               </ul>
             </li>
           </ul>
-          <div class="row w-100 m-0 mb-3">
-            <button class="btn rounded-0 button-wrapper">
-              <i class="fa-solid fa-user fa-lg me-2 secondary-color"></i>
-              <span class="secondary-color">Dummy User</span>
-            </button>
-          </div>
-          <div class="row w-100 m-0 button-wrapper">
-            <button class="btn rounded-0 decoration-none p-2">
-              <i class="fa-solid fa-right-from-bracket fa-lg me-2 logout"></i>
-              <span class="fw-bold secondary-color">SAIR</span>
-            </button>
+          <div class="row w-100 m-0 logout-wrapper">
+            <div class="col-12">
+              <div class="decoration-none row justify-items-center p-2">
+                <span class="fw-bold secondary-color text-center">
+                  <i
+                    class="fa-solid fa-right-from-bracket fa-lg me-2 logout"
+                  ></i
+                  ><span>SAIR</span></span
+                >
+              </div>
+            </div>
           </div>
         </div>
       </nav>
@@ -180,192 +190,6 @@
           </div>
         </main>
       </div>
-    </div>
-    <div
-    class="modal fade"
-    id="createVehicleModal"
-    tabindex="-1"
-    aria-labelledby="createVehicleModal"
-    aria-hidden="true"
-    >
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header m-2">
-        <h5 class="modal-title text-color" id="createVehicleModal">
-          CRIAR NOVO VEÍCULO
-        </h5>
-      </div>
-      <div class="modal-body">
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-12 col-lg-10">
-            <div class="card shadow">
-              <div class="card-body">
-                <div
-                  class="d-flex flex-column justify-content-center align-items-center"
-                >
-                  <div
-                    class="row align-items-center justify-content-center"
-                  >
-                    <div class="col-12"></div>
-                  </div>
-                  <div
-                    class="row align-items-center justify-content-center mt-2"
-                  >
-                    <div class="container">
-                      <div class="col-12 position-relative">
-                        <img
-                          src="https://cdn1.iconfinder.com/data/icons/ios-11-glyphs/30/car-512.png"
-                          class="img-thumbnail rounded"
-                          width="240"
-                          height="200"
-                          style="cursor: pointer; opacity: 15%"
-                        />
-                        <div class="overlay">
-                          <div
-                            class="d-flex justify-content-center align-items-center w-75"
-                          >
-                            <div class="row">
-                              <div class="col-12">
-                                <span
-                                  style="cursor: pointer"
-                                  class="text-center"
-                                  >ADICIONAR IMAGEM</span
-                                >
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row justify-content-lg-around w-100 mt-2">
-                    <div class="col-12 col-sm-6 col-lg-6 mt-2">
-                      <label class="form-label text-color">Marca</label>
-                      <div class="input-group">
-                        <button
-                          class="btn btn-primary dropdown-toggle"
-                          type="button"
-                          id="dropdownMenuButton1"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          SELECIONE
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li>
-                            <a class="dropdown-item" href="#">Action</a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="#"
-                              >Another action</a
-                            >
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="#"
-                              >Something else here</a
-                            >
-                          </li>
-                        </ul>
-                        <input
-                          type="box"
-                          class="form-control"
-                          aria-label="Text input with dropdown button"
-                        />
-                      </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-lg-6 mt-2">
-                      <label class="form-label text-color"
-                        >Modelo</label
-                      >
-                      <div class="input-group">
-                        <button
-                          class="btn btn-primary dropdown-toggle"
-                          type="button"
-                          id="dropdownMenuButton1"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          SELECIONE
-                        </button>
-                        <ul class="dropdown-menu">
-                          <li>
-                            <a class="dropdown-item" href="#">Action</a>
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="#"
-                              >Another action</a
-                            >
-                          </li>
-                          <li>
-                            <a class="dropdown-item" href="#"
-                              >Something else here</a
-                            >
-                          </li>
-                        </ul>
-                        <input
-                          type="box"
-                          class="form-control"
-                          aria-label="Text input with dropdown button"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row justify-content-lg-around w-100 mt-2">
-                    <div class="col-12 col-sm-6 col-lg-6 mt-2">
-                      <label class="form-label text-color"
-                        >Matricula</label
-                      >
-                      <input
-                        type="box"
-                        class="form-control"
-                        placeholder="XX-XX-XX"
-                      />
-                    </div>
-                    <div class="col-12 col-sm-6 col-lg-6 mt-2">
-                      <label class="form-label text-color">Cor</label>
-                      <input type="box" class="form-control" />
-                    </div>
-                  </div>
-                  <div class="row justify-content-md-start w-100 mt-2">
-                    <div class="col-12 col-lg-6">
-                      <label class="form-label text-color"
-                        >Lugares</label
-                      >
-                      <input
-                        type="number"
-                        class="form-control"
-                        placeholder="Select"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-between align-items-center">
-          <div class="col">
-            <button
-              type="submit"
-              class="btn btn-secondary w-100"
-              data-bs-dismiss="modal"
-            >
-              <span class="fw-bold">Cancelar</span>
-            </button>
-          </div>
-          <div class="col">
-            <button
-              type="submit"
-              class="btn btn-primary w-100"
-              data-bs-dismiss="modal"
-            >
-              <span class="fw-bold"> Guardar Alterações</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
     </div>
   </body>
 </html>
