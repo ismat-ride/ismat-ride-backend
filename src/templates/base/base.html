@@ -106,6 +106,43 @@
           </a>
         </nav>
         <main class="content">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %} {% if category ==
+          "error"%}
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+            id="error"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% if category == "info" %}
+          <div
+            class="alert alert-info alert-dismissible fade show"
+            role="alert"
+            id="success"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% endfor %} {% endif %} {% endwith %}
           <div class="container-fluid p-0">
             <h1 class="fw-bold secondary-text-color">
               {% block container_title %} {% endblock container_title %}
@@ -141,6 +178,8 @@
     </div>
   </body>
 </html>
+
+<!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
 <script>
   var tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -148,4 +187,11 @@
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+</script>
+
+<!-- THIS IS THE SCRIPT THAT CLOSES THE ALERT AUTOMATICALLY -->
+<script type="text/javascript">
+  setTimeout(function () {
+    document.getElementById("close").click();
+  }, 5000);
 </script>
