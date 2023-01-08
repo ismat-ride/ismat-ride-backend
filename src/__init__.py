@@ -2,6 +2,7 @@ from flask import Flask
 from .extensions import db
 from .users.users import *
 from .rides.rides import *
+from .brands import *
 from .ride_requests.ride_requests import *
 from flask_login import LoginManager
 
@@ -26,6 +27,9 @@ def create_app():
 
     from src.ride_requests import ride_requests_bp
     app.register_blueprint(ride_requests_bp, url_prefix = '/ride-requests')
+
+    from src.brands import brand_bp
+    app.register_blueprint(brand_bp, url_prefix = '/brands')
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
