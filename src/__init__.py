@@ -3,10 +3,9 @@ from .extensions import db, migrate, mail, SECRET_KEY
 from flask_mail import Mail
 from .users.users import *
 from .rides.rides import *
+from .brands import *
+from .ride_requests.ride_requests import *
 from flask_login import LoginManager
-from .users.users import *
-from .rides.rides import *
-from .ride_requests import *
 
 DB_NAME = "rides.db"
 
@@ -37,6 +36,15 @@ def create_app():
 
     from src.rides import rides_bp
     app.register_blueprint(rides_bp, url_prefix = '/rides')
+
+    from src.ride_requests import ride_requests_bp
+    app.register_blueprint(ride_requests_bp, url_prefix = '/ride-requests')
+
+    from src.brands import brand_bp
+    app.register_blueprint(brand_bp, url_prefix = '/brands')
+
+    from src.models import models_bp
+    app.register_blueprint(models_bp, url_prefix = '/models')
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
