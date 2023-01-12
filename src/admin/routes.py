@@ -10,21 +10,15 @@ from src.users.users import Brand, Vehicle, Model
 from src.extensions import db, mail
 from flask_mail import Message
 
+ITEMS_PER_PAGE = 6
+
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 def list_users():
-    users = User.query.filter_by(type='student').all()
+    page = request.args.get('page', 1, type=int)
 
-    print(users)
+    users = User.query.filter_by(type = 'student').paginate(page=page, per_page=ITEMS_PER_PAGE)
 
-    response = list()
-
-    for user in users:
-        print(user.status)
-        response.append(
-            UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
-        )
-
-    return render_template('admin/users.html', user_list=response)
+    return render_template('admin/users.html', user_list=users)
 
 @admin_bp.route('brands/delete/<brand_id>')
 @login_required
