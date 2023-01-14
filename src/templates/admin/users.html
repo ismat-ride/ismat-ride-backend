@@ -35,7 +35,7 @@ Utilizadores
   </div>
 </div>
 <div class="row justify-content-evenly">
-  {% for user in user_list.items %}
+  {% for user in user_list['items'] %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
       <div class="card-body">
@@ -114,28 +114,27 @@ Utilizadores
         <a class="page-link" href="{{ url_for('admin.list_users', page=user_list.prev_num) }}" tabindex="-1">Anterior</a>
       </li>
       {% for page_num in user_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-      {% if page_num %}
-      <!-- Check for the active page and set the link to "Active"-->
-                  {% if user_list.page == page_num %}
-                  <li class="page-item"><a href="{{ url_for('admin.list_users', page=page_num) }}"
-                     class="page-link">
-                      {{ page_num }}
-                  </a></li>
-                  {% else %}
-                  <li class="page-item"><a href="{{ url_for('admin.list_users', page=page_num) }}"
-                     class="page-link">
-                      {{ page_num }}
-                  </a></li>
-                  {% endif %}
-              {% else %}
-                  ...
-              {% endif %}
-          {% endfor %}
-      <li class="page-item {% if user_list.page == 1 %}disabled{% endif %}">
+        {% if page_num %}
+            {% if user_list.page == page_num %}
+            <li class="page-item"><a href="{{ url_for('admin.list_users', page=page_num) }}"
+                class="page-link">
+                {{ page_num }}
+            </a></li>
+            {% else %}
+            <li class="page-item"><a href="{{ url_for('admin.list_users', page=page_num) }}"
+                class="page-link">
+                {{ page_num }}
+            </a></li>
+            {% endif %}
+            {% else %}
+              ...
+        {% endif %}
+      {% endfor %}
+      <li class="page-item {% if user_list.page == user_list.pages %}disabled{% endif %}">
         <a class="page-link" href="{{ url_for('admin.list_users', page=user_list.next_num) }}" tabindex="-1">Seguinte</a>
       </li>
     </ul>
-  </div>
+</div>
 </div>
 </div>
 </main>

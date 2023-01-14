@@ -7,10 +7,8 @@ from flask_login import login_required
 from src.users.users import User
 from src.admin.dto.user_list_dto import UserListDto
 from src.users.users import Brand, Vehicle, Model
-from src.extensions import db, mail
+from src.extensions import db, mail, ITEMS_PER_PAGE
 from flask_mail import Message
-
-ITEMS_PER_PAGE = 6
 
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 def list_users():
@@ -18,7 +16,19 @@ def list_users():
 
     users = User.query.filter_by(type = 'student').paginate(page=page, per_page=ITEMS_PER_PAGE)
 
-    return render_template('admin/users.html', user_list=users)
+    response = {'items': list(), 'iter_pages': users.iter_pages, 'page': page, 'pages': users.pages, 'next_num': users.next_num}
+
+    user_list_dto = list()
+
+    for user in users:
+        print(user.status)
+        user_list_dto.append(
+            UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
+        )
+
+    response['items'] = user_list_dto
+
+    return render_template('admin/users.html', user_list=response)
 
 @admin_bp.route('brands/delete/<brand_id>')
 @login_required
