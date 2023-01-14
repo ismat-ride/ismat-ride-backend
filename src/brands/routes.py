@@ -2,16 +2,23 @@ from flask import redirect, render_template, request, url_for, flash
 from flask_login import login_required
 from src.brands import brand_bp
 from src.users.users import Brand
-from src.extensions import db
+from src.extensions import db, ITEMS_PER_PAGE
 
 @brand_bp.route("get")
 @login_required
 def get():
-       db_brands = Brand.query.all()
-       return render_template("brands/index.html", brands = db_brands)
+       page = request.args.get('page', 1, type=int)
+
+       db_brands = Brand.query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+       
+       response = {'items': list(), 'iter_pages': db_brands.iter_pages, 'page': page, 'pages': db_brands.pages, 'next_num': db_brands.next_num}
+
+       response['items'] = db_brands
+
+       return render_template("brands/index.html", brands = response)
 
 @brand_bp.route("edit/<id>", methods = ["POST"])
-@login_required  
+@login_required
 def update(id):
        brand = Brand.query.get(id)
 

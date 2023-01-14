@@ -7,22 +7,26 @@ from flask_login import login_required
 from src.users.users import User
 from src.admin.dto.user_list_dto import UserListDto
 from src.users.users import Brand, Vehicle, Model
-from src.extensions import db, mail
+from src.extensions import db, mail, ITEMS_PER_PAGE
 from flask_mail import Message
 
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 def list_users():
-    users = User.query.filter_by(type='student').all()
+    page = request.args.get('page', 1, type=int)
 
-    print(users)
+    users = User.query.filter_by(type = 'student').paginate(page=page, per_page=ITEMS_PER_PAGE)
 
-    response = list()
+    response = {'items': list(), 'iter_pages': users.iter_pages, 'page': page, 'pages': users.pages, 'next_num': users.next_num}
+
+    user_list_dto = list()
 
     for user in users:
         print(user.status)
-        response.append(
+        user_list_dto.append(
             UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
         )
+
+    response['items'] = user_list_dto
 
     return render_template('admin/users.html', user_list=response)
 
