@@ -4,10 +4,10 @@
 {% block title %}
 Utilizadores 
 {% endblock title %}
-
+{%
+block container_title %} Utilizadores {% endblock container_title %}
 {%block content %} 
-<h1 class="secondary-text-color fw-bold">UTILIZADORES</h1>
-<hr />
+
 <div class="card mb-3">
   <div class="card-body">
     <div
@@ -138,102 +138,4 @@ Utilizadores
 </div>
 </div>
 </main>
-<div
-class="modal fade"
-id="createRideModal"
-tabindex="-1"
-aria-labelledby="createRideModal"
-aria-hidden="true"
->
-<div class="modal-dialog modal-dialog-centered modal-lg">
-<div class="modal-content">
-  <div class="modal-header m-2">
-    <h5 class="modal-title text-color" id="createRideModal">
-      CRIAR NOVA BOLEIA
-    </h5>
-  </div>
-  <div class="modal-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Desde</label
-            >
-            <select class="form-select" id="inputGroupSelect01">
-              <option selected>Portimão</option>
-              <option value="Lagoa">Lagoa</option>
-              <option value="Albufeira">Albufeira</option>
-              <option value="Faro">Faro</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Até</label
-            >
-            <select class="form-select" id="inputGroupSelect01">
-              <option selected>Ferrari</option>
-              <option value="Lagoa">Porsche</option>
-              <option value="Albufeira">Lada</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Veículo</label
-            >
-            <select class="form-select" id="inputGroupSelect01">
-              <option selected>Portimão</option>
-              <option value="Lagoa">Lagoa</option>
-              <option value="Albufeira">Albufeira</option>
-              <option value="Faro">Faro</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <input type="datetime-local" class="form-control" />
-        </div>
-        <div class="row mb-5">
-          <div class="col-6">
-            <label class="form-label" for="typeNumber"
-              >Lugares</label
-            >
-            <input
-              type="number"
-              id="typeNumber"
-              class="form-control"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row justify-content-between align-items-center">
-      <div class="col">
-        <button
-          type="submit"
-          class="btn btn-secondary w-100"
-          data-bs-dismiss="modal"
-        >
-          <span class="fw-bold">Cancelar</span>
-        </button>
-      </div>
-      <div class="col">
-        <button
-          type="submit"
-          class="btn btn-primary w-100"
-          data-bs-dismiss="modal"
-        >
-          <span class="fw-bold"> Guardar Alterações</span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
 {% endblock content %}
