@@ -33,21 +33,25 @@
           </h2>
           <ul class="sidebar-nav">
             <li class="sidebar-item">
-              <a class="sidebar-link" href="">
+              <!-- ÂDD HERE THE PROFILE URL -->
+              <a class="sidebar-link" href="{{ url_for('admin.list_rides') }}">
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold">PERFIL</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="">
+              <a class="sidebar-link" href="{{ url_for('admin.list_rides') }}">
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-registered fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold">BOLEIAS</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="#">
+              <a
+                class="sidebar-link"
+                href="{{ url_for('admin.list_ride_requests') }}"
+              >
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-paper-plane fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold">PEDIDOS DE BOLEIA</span>
@@ -72,7 +76,11 @@
                   <a class="sidebar-link fw-bold">CRIAR</a>
                 </li>
                 <li class="sidebar-item">
-                  <a class="sidebar-link fw-bold">VISUALIZAR</a>
+                  <a
+                    href="{{ url_for('admin.list_brands') }}"
+                    class="sidebar-link fw-bold"
+                    >VISUALIZAR</a
+                  >
                 </li>
               </ul>
             </li>
@@ -95,7 +103,11 @@
                   <a class="sidebar-link fw-bold">CRIAR</a>
                 </li>
                 <li class="sidebar-item">
-                  <a class="sidebar-link fw-bold">VISUALIZAR</a>
+                  <a
+                    href="{{ url_for('admin.list_models') }}"
+                    class="sidebar-link fw-bold"
+                    >VISUALIZAR</a
+                  >
                 </li>
               </ul>
             </li>

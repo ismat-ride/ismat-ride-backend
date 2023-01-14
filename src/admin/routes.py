@@ -72,8 +72,8 @@ def list_brands():
        response = {'items': list(), 'iter_pages': db_brands.iter_pages, 'page': page, 'pages': db_brands.pages, 'next_num': db_brands.next_num}
 
        response['items'] = db_brands
-       
-       if db_brands.__len__() == 0:
+
+       if not response['items'] :
         return(render_template("no_data/index.html"))
 
        return render_template("brands/index.html", brands = response)
@@ -147,7 +147,7 @@ def list_ride_requests():
 
       response['items'] = ride_requests_list
       
-      if db_ride_requests.__len__() == 0:
+      if ride_requests_list.__len__() == 0:
         return(render_template("no_data/index.html"))
 
       return render_template("ride_requests/index.html", request_list = response)
@@ -163,7 +163,7 @@ def list_models():
 
     response['items'] = db_models
 
-    if db_models.__len__() == 0:
+    if not response['items']:
         return(render_template("no_data/index.html"))
 
     return render_template("models/index.html", request_list = response)
