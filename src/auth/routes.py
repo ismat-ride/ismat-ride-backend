@@ -2,7 +2,7 @@ import secrets
 import string
 from src.auth import auth_bp
 from flask import render_template, redirect, request, flash, make_response, url_for
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.users.users import User
 from src.extensions import mail, db
@@ -70,3 +70,9 @@ def recover_post():
     flash('Email enviado com nova password', category='info')
 
     return render_template('auth/login.html')
+
+@auth_bp.route('logout', methods = [ 'GET' ])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('auth.login'))
