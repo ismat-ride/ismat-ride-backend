@@ -16,7 +16,7 @@ migrate = Migrate()
 
 mail = Mail()
 
-SECRET_KEY = "Zr4u7x!A%D*G-KaPdSgVkYp2s5v8y/B?" 
+SECRET_KEY = "Q68D65NhhTF9qLzYrXcFy9SIg2wgUu3PfiXUDL26Cug=" 
 SQLALCHEMY_TRACK_MODIFICATIONS=False
 
 ITEMS_PER_PAGE = 6
