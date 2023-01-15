@@ -4,7 +4,7 @@
 }
 
 .primary-color {
-  color: #0D6EFD !important;
+  color: #0d6efd !important;
 }
 
 .secondary-color {
@@ -12,11 +12,11 @@
 }
 
 .secondary-text-color {
-  color: #8391A2 !important;
+  color: #8391a2 !important;
 }
 
 .primary-bg {
-  background-color: #0D6EFD !important;
+  background-color: #0d6efd !important;
 }
 
 .secondary-bg {
@@ -32,7 +32,7 @@
 }
 
 .btn-primary {
-  background-color: #0D6EFD !important;
+  background-color: #0d6efd !important;
   border: none !important;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .page-item.active .page-link {
-  background-color: #0D6EFD !important;
+  background-color: #0d6efd !important;
   color: white !important;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .sidebar-content {
-  background-color: #313A46 !important;
+  background-color: #313a46 !important;
 }
 
 .body {
@@ -143,7 +143,7 @@ a {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #0D6EFD;
+  color: #0d6efd;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
@@ -179,8 +179,8 @@ a {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #0D6EFD;
-  border-color: #0D6EFD;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
 }
 
 .page-item.disabled .page-link {
@@ -237,7 +237,7 @@ a {
 
 button.form-control {
   color: white !important;
-  background-color: #0D6EFD !important;
+  background-color: #0d6efd !important;
 }
 
 .overlay {
@@ -414,7 +414,7 @@ button.form-control {
 }
 @media (min-width: 992px) {
   .modal-lg,
-.modal-xl {
+  .modal-xl {
     max-width: 800px;
   }
 }
@@ -557,4 +557,4 @@ button.form-control {
   .modal-fullscreen-xxl-down .modal-footer {
     border-radius: 0;
   }
-}/*# sourceMappingURL=global.css.map */
+} /*# sourceMappingURL=global.css.map */

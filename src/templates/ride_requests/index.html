@@ -68,15 +68,21 @@ container_title %} {% block filters %}
         >
           <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
             <div class="row align-items-center mb-2">
-              <div class="col">
-                <img
-                  src="https://cdn-icons-png.flaticon.com/512/147/147144.png"
-                  alt=""
-                  width="36"
-                  height="36"
-                  class="rounded-circle me-3"
-                />
-                <span class="fw-bold font-16px">{{item.driver_name}}</span>
+              <div class="col-12">
+                <div class="row align-items-center">
+                  <div class="col-12">
+                    <div
+                      class="d-flex w-100 align-items-center justify-content-start"
+                    >
+                      <div class="initial-avatar text-end">
+                        {{item.initials}}
+                      </div>
+                      <span class="ms-3 fw-bold font-16px"
+                        >{{item.driver_name}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row align-items-center mb-2">
