@@ -180,7 +180,7 @@ def list_ride_requests():
       for ride in query:
             ride_requests_list.append(
                   RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.local.name, ride.ride_request_state.name, 
-                  ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M')) 
+                  ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M'),ride.ride.driver.get_initials()) 
             )
 
       response['items'] = ride_requests_list
@@ -244,7 +244,7 @@ def list_rides():
     for ride in query:
         rides_list.append(
             RideListDto(ride.driver.get_full_name(),ride.origin, ride.status.name, 
-            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers)) 
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers),ride.driver.get_initials()) 
         )
 
     response['items'] = rides_list

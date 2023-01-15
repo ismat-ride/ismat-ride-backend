@@ -395,7 +395,7 @@ button.form-control {
 }
 @media (min-width: 992px) {
   .modal-lg,
-.modal-xl {
+  .modal-xl {
     max-width: 800px;
   }
 }
@@ -538,4 +538,4 @@ button.form-control {
   .modal-fullscreen-xxl-down .modal-footer {
     border-radius: 0;
   }
-}/*# sourceMappingURL=global.css.map */
+} /*# sourceMappingURL=global.css.map */

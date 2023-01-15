@@ -8,4 +8,4 @@ class RideRequestDto:
     status: str
     starting_date: str
     starting_hour: str
-   
+    initials: str
