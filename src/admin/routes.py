@@ -159,15 +159,13 @@ def list_ride_requests():
       query = RideRequest.query
 
       if request.args.get("name"):
-        query = query.filter(or_(
+        query = query.join(Ride, RideRequest.ride).join(User, Ride.driver).filter(or_(
             User.first_name.contains(request.args.get("name")),
             User.last_name.contains(request.args.get("name"))
             ))
       if request.args.get("origin"):
-        query = query.filter(or_(
-            Local.name.contains(request.args.get("origin")),
-            Local.name.contains(request.args.get("origin"))
-            ))
+        query = query.join(Ride, RideRequest.ride).filter(
+            Ride.origin.contains(request.args.get("origin")))
       if request.args.get("date"):
         query = query.filter(func.date(RideRequest.createdAt) == request.args.get("date"))
       if request.args.get("status"):
@@ -230,7 +228,8 @@ def list_rides():
             User.last_name.contains(request.args.get("name"))
             ))
     if request.args.get("origin"):
-        query = query.filter(Local.name.contains(request.args.get("origin")))
+        query = query.filter(or_(Ride.origin.contains(request.args.get("origin")),
+        Ride.destiny.contains(request.args.get("origin"))))
     if request.args.get("date"):
         query = query.filter(func.date(Ride.createdAt) == request.args.get("date"))
     if request.args.get("status"):
@@ -244,7 +243,7 @@ def list_rides():
     
     for ride in query:
         rides_list.append(
-            RideListDto(ride.driver.get_full_name(),ride.local, ride.status.name, 
+            RideListDto(ride.driver.get_full_name(),ride.origin, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers)) 
         )
 
