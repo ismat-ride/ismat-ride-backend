@@ -9,3 +9,4 @@ class RideListDto:
     starting_hour: str
     total_places: str
     total_available_places: str
+ 
