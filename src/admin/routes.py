@@ -7,22 +7,27 @@ from flask_login import current_user, login_required, login_user, logout_user
 from src.users.users import User
 from src.admin.dto.user_list_dto import UserListDto
 from src.users.users import Brand, Vehicle, Model
-from src.extensions import db, mail
+from src.extensions import db, mail, ITEMS_PER_PAGE
 from flask_mail import Message
 
 @admin_bp.route('/users/list', methods = [ 'GET' ])
+@login_required
 def list_users():
-    users = User.query.filter_by(type='student').all()
+    page = request.args.get('page', 1, type=int)
 
-    print(users)
+    users = User.query.filter_by(type = 'student').paginate(page=page, per_page=ITEMS_PER_PAGE)
 
-    response = list()
+    response = {'items': list(), 'iter_pages': users.iter_pages, 'page': page, 'pages': users.pages, 'next_num': users.next_num}
+
+    user_list_dto = list()
 
     for user in users:
         print(user.status)
-        response.append(
+        user_list_dto.append(
             UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
         )
+
+    response['items'] = user_list_dto
 
     return render_template('admin/users.html', user_list=response)
 
@@ -123,3 +128,37 @@ def logout():
     response.delete_cookie('admin')
 
     return response
+
+@admin_bp.route('/edit/<id>', methods=['GET'])
+@login_required
+def edit_user(id):
+    user = User.query.filter_by(id=id).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('admin.list_users'))
+
+    return render_template('admin/edit.html', user=user)
+
+
+@admin_bp.route('/edit/<id>', methods=['POST'])
+@login_required
+def edit_user_post(id):
+    user = User.query.filter_by(id=id).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('admin.list_users'))
+        
+    user.first_name = request.form.get('first_name')
+    user.last_name = request.form.get('last_name')
+    user.email = request.form.get('email')
+    user.phone_number = request.form.get('phone_number')
+
+    db.session.commit()
+
+    flash('Utilizador editado com sucesso', category='info')
+
+    return redirect(url_for('admin.edit_user', id=id))
