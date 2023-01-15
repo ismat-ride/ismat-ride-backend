@@ -1,6 +1,6 @@
-{% extends 'base/base_client.html' %} {% block title %} Boleias {% endblock
-title %} {% block container_title %} BOLEIAS {% endblock container_title %} {%
-block filters %}
+{% extends 'base/base.html' %} {% block title %} Boleias {% endblock title %} {%
+block container_title %} BOLEIAS {% endblock container_title %} {% block filters
+%}
 <form action="{{ url_for('admin.list_rides') }}" method="get">
   <div class="card mb-3">
     <div class="card-body">
@@ -141,7 +141,7 @@ block filters %}
     <li class="page-item {% if request_list.page == 1 %}disabled{% endif %}">
       <a
         class="page-link"
-        href="{{ url_for('rides.list', page=request_list.prev_num) }}"
+        href="{{ url_for('admin.list_rides', page=request_list.prev_num) }}"
         tabindex="-1"
         >Anterior</a
       >
@@ -150,13 +150,19 @@ block filters %}
     left_current=1, right_current=2) %} {% if page_num %} {% if
     request_list.page == page_num %}
     <li class="page-item">
-      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+      <a
+        href="{{ url_for('admin.list_rides', page=page_num) }}"
+        class="page-link"
+      >
         {{ page_num }}
       </a>
     </li>
     {% else %}
     <li class="page-item">
-      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+      <a
+        href="{{ url_for('admin.list_rides', page=page_num) }}"
+        class="page-link"
+      >
         {{ page_num }}
       </a>
     </li>
@@ -166,7 +172,7 @@ block filters %}
     >
       <a
         class="page-link"
-        href="{{ url_for('rides.list', page=request_list.next_num) }}"
+        href="{{ url_for('admin.list_rides', page=request_list.next_num) }}"
         tabindex="-1"
         >Seguinte</a
       >
