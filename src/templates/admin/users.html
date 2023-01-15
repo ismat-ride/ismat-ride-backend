@@ -1,100 +1,115 @@
-
-{% extends 'base/base.html' %}
-
-{% block title %}
-Utilizadores 
-{% endblock title %}
-
-{%block content %} 
-<h1 class="secondary-text-color fw-bold">UTILIZADORES</h1>
-<hr />
-<div class="card mb-3">
-  <div class="card-body">
-    <div
-      class="d-flex flex-row flex-wrap gap-4 justify-content-center justify-content-sm-start"
-    >
-      <div class="flex-fill">
-        <label class="form-label secondary-secondary-text-color">Origem</label>
-        <input type="text" class="form-control" />
-      </div>
-      <div class="flex-fill">
-        <label class="form-label secondary-secondary-text-color">Destino</label>
-        <input type="text" class="form-control" />
-      </div>
-      <div class="flex-fill">
-        <label class="form-label secondary-secondary-text-color">Hora Partida</label>
-        <input type="datetime-local" class="form-control" />
-      </div>
-      <div class="flex-fill">
-        <label class="form-label secondary-secondary-text-color">Estado</label>
-        <select class="form-select">
-          <option selected>Disponivel</option>
-        </select>
+{% extends 'base/base.html' %} {% block title %} Utilizadores {% endblock title
+%} {% block container_title %} UTILIZADORES {% endblock container_title %} {%
+block filters%}
+<form action="{{ url_for('admin.list_users') }}" method="get">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div
+        class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
+      >
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color">Nome</label>
+          <input
+            type="text"
+            value="{{ request.args.get('name') or ''}}"
+            name="name"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color">Email</label>
+          <input
+            type="text"
+            value="{{ request.args.get('email') or ''}}"
+            name="email"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color"
+            >Número de telefone</label
+          >
+          <input
+            type="text"
+            value="{{ request.args.get('number') or ''}}"
+            name="number"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color"
+            >Estado</label
+          >
+          <select name="status" class="form-select">
+            <option id="Active" value="Active">Ativo</option>
+            <option id="Inactive" value="Inactive">Inativo</option>
+            <option id="Pending" value="Pending">Pendente</option>
+          </select>
+        </div>
+        <div class="flex-fill justify-content-center">
+          <button class="btn btn-primary flex-fill w-100" type="submit">
+            FILTRAR
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</form>
+{% endblock filters %}{%block content %}
 <div class="row justify-content-evenly">
   {% for user in user_list['items'] %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
       <div class="card-body">
-        <div
-          class="row align-items-end justify-content-md-center"
-        >
+        <div class="row align-items-end justify-content-md-center">
           <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
             <div class="row align-items-center mb-2">
               <div class="col">
-                <span class="fw-bold font-16px"
-                  >{{ user.full_name }}</span
-                >
+                <span class="fw-bold font-16px">{{ user.full_name }}</span>
               </div>
             </div>
             <div class="row align-items-center mb-2">
               <div class="col-12">
-                <span class=" font-16px fw-bold secondary-text-color"
+                <span class="font-16px fw-bold secondary-text-color"
                   >{{ user.email }}</span
                 >
               </div>
             </div>
             <div class="row align-items-center mb-2">
               <div class="col-12">
-                <span class=" font-16px fw-bold secondary-text-color"
+                <span class="font-16px fw-bold secondary-text-color"
                   >{{ user.phone_number }}</span
                 >
               </div>
             </div>
             <div class="row align-items-center mb-2">
               <div class="col-12">
-                <span class=" font-16px fw-bold secondary-text-color"
+                <span class="font-16px fw-bold secondary-text-color"
                   >{{ user.student_number }}</span
                 >
               </div>
             </div>
           </div>
-          <div
-            class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2"
-          >
+          <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2">
             <div class="row">
-              <div class="col-12 mb-lg-3 mb-xl-6 mb-3 mb-md-3 mb-sm-6 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end">
+              <div
+                class="col-12 mb-lg-3 mb-xl-6 mb-3 mb-md-3 mb-sm-6 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end"
+              >
                 <span>{{ user.initials }}</span>
               </div>
-              <div class="col-12 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end">
+              <div
+                class="col-12 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end"
+              >
                 {% if user.status == 'active' %}
-                <span
-                  class="badge rounded-pill bg-success font-14px ps-2 pe-2"
+                <span class="badge rounded-pill bg-success font-14px ps-2 pe-2"
                   >ATIVO</span
                 >
-                {% endif %}
-                {% if user.status == 'inactive' %}
-                <span
-                  class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
+                {% endif %} {% if user.status == 'inactive' %}
+                <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                   >INATIVO</span
                 >
-                {% endif %}
-                {% if user.status == 'pending_confirmation' %}
-                <span
-                  class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
+                {% endif %} {% if user.status == 'pending_confirmation' %}
+                <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
                   >PENDENTE</span
                 >
                 {% endif %}
@@ -106,134 +121,57 @@ Utilizadores
     </div>
   </div>
   {% endfor %}
-<div
+  <div
     class="d-flex align-items-center justify-content-center justify-content-md-end"
   >
     <ul class="pagination">
       <li class="page-item {% if user_list.page == 1 %}disabled{% endif %}">
-        <a class="page-link" href="{{ url_for('admin.list_users', page=user_list.prev_num) }}" tabindex="-1">Anterior</a>
+        <a
+          class="page-link"
+          href="{{ url_for('admin.list_users', page=user_list.prev_num) }}"
+          tabindex="-1"
+          >Anterior</a
+        >
       </li>
-      {% for page_num in user_list.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if page_num %}
-            {% if user_list.page == page_num %}
-            <li class="page-item"><a href="{{ url_for('admin.list_users', page=page_num) }}"
-                class="page-link">
-                {{ page_num }}
-            </a></li>
-            {% else %}
-            <li class="page-item"><a href="{{ url_for('admin.list_users', page=page_num) }}"
-                class="page-link">
-                {{ page_num }}
-            </a></li>
-            {% endif %}
-            {% else %}
-              ...
-        {% endif %}
-      {% endfor %}
-      <li class="page-item {% if user_list.page == user_list.pages %}disabled{% endif %}">
-        <a class="page-link" href="{{ url_for('admin.list_users', page=user_list.next_num) }}" tabindex="-1">Seguinte</a>
+      {% for page_num in user_list.iter_pages(left_edge=1, right_edge=1,
+      left_current=1, right_current=2) %} {% if page_num %} {% if user_list.page
+      == page_num %}
+      <li class="page-item">
+        <a
+          href="{{ url_for('admin.list_users', page=page_num) }}"
+          class="page-link"
+        >
+          {{ page_num }}
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          href="{{ url_for('admin.list_users', page=page_num) }}"
+          class="page-link"
+        >
+          {{ page_num }}
+        </a>
+      </li>
+      {% endif %} {% else %} ... {% endif %} {% endfor %}
+      <li
+        class="page-item {% if user_list.page == user_list.pages %}disabled{% endif %}"
+      >
+        <a
+          class="page-link"
+          href="{{ url_for('admin.list_users', page=user_list.next_num) }}"
+          tabindex="-1"
+          >Seguinte</a
+        >
       </li>
     </ul>
-</div>
-</div>
-</div>
-</main>
-<div
-class="modal fade"
-id="createRideModal"
-tabindex="-1"
-aria-labelledby="createRideModal"
-aria-hidden="true"
->
-<div class="modal-dialog modal-dialog-centered modal-lg">
-<div class="modal-content">
-  <div class="modal-header m-2">
-    <h5 class="modal-title text-color" id="createRideModal">
-      CRIAR NOVA BOLEIA
-    </h5>
-  </div>
-  <div class="modal-body">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Desde</label
-            >
-            <select class="form-select" id="inputGroupSelect01">
-              <option selected>Portimão</option>
-              <option value="Lagoa">Lagoa</option>
-              <option value="Albufeira">Albufeira</option>
-              <option value="Faro">Faro</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Até</label
-            >
-            <select class="form-select" id="inputGroupSelect01">
-              <option selected>Ferrari</option>
-              <option value="Lagoa">Porsche</option>
-              <option value="Albufeira">Lada</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="input-group mb-3">
-            <label class="input-group-text" for="inputGroupSelect01"
-              >Veículo</label
-            >
-            <select class="form-select" id="inputGroupSelect01">
-              <option selected>Portimão</option>
-              <option value="Lagoa">Lagoa</option>
-              <option value="Albufeira">Albufeira</option>
-              <option value="Faro">Faro</option>
-            </select>
-          </div>
-        </div>
-        <div class="col-6">
-          <input type="datetime-local" class="form-control" />
-        </div>
-        <div class="row mb-5">
-          <div class="col-6">
-            <label class="form-label" for="typeNumber"
-              >Lugares</label
-            >
-            <input
-              type="number"
-              id="typeNumber"
-              class="form-control"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row justify-content-between align-items-center">
-      <div class="col">
-        <button
-          type="submit"
-          class="btn btn-secondary w-100"
-          data-bs-dismiss="modal"
-        >
-          <span class="fw-bold">Cancelar</span>
-        </button>
-      </div>
-      <div class="col">
-        <button
-          type="submit"
-          class="btn btn-primary w-100"
-          data-bs-dismiss="modal"
-        >
-          <span class="fw-bold"> Guardar Alterações</span>
-        </button>
-      </div>
-    </div>
   </div>
 </div>
-</div>
-</div>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const product = urlParams.get("status");
+  const select = document.getElementById(product);
+  select.setAttribute("selected", "");
+</script>
 {% endblock content %}
