@@ -1,18 +1,30 @@
 {% extends 'base/base.html' %} {% block title %} Marcas {% endblock title %} {%
 block container_title %} MARCAS {% endblock container_title %} {% block filters
 %}
-<div class="card mb-3">
-  <div class="card-body">
-    <div
-      class="d-flex flex-row flex-wrap gap-4 justify-content-center justify-content-sm-start"
-    >
-      <div class="flex-fill">
-        <label class="form-label secondary-secondary-text-color">Marca</label>
-        <input type="text" class="form-control" />
+<form action="{{ url_for('admin.list_brands') }}" method="get">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div
+        class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
+      >
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color">Marca</label>
+          <input
+            type="text"
+            value="{{ request.args.get('brand') or ''}}"
+            name="brand"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill justify-content-center">
+          <button class="btn btn-primary flex-fill w-100" type="submit">
+            FILTRAR
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</form>
 {% endblock filters %} {%block content %}
 <div class="row justify-content-evenly">
   {% for item in brands['items'] %}

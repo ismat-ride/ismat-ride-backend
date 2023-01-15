@@ -1,11 +1,14 @@
+from operator import or_
 import secrets
 import string
+
+from sqlalchemy import func
 from src.admin import admin_bp
 from flask import render_template, flash, request, redirect, url_for
 from werkzeug.security import generate_password_hash
 from flask_login import login_required
 from src.users.users import Brand, Vehicle, Model
-from src.rides.rides import Ride
+from src.rides.rides import Local, Ride, RideStatus
 from src.users.users import User
 from src.admin.dto.user_list_dto import UserListDto
 from src.admin.dto.ride_list_dto import RideListDto
@@ -17,15 +20,30 @@ from flask_mail import Message
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 def list_users():
     page = request.args.get('page', 1, type=int)
+    
+    query = User.query.filter(User.type == "student")
 
-    users = User.query.filter_by(type = 'student').paginate(page=page, per_page=ITEMS_PER_PAGE)
+    if request.args.get("name"):
+        query = query.filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+    if request.args.get("email"):
+        query = query.filter(
+            User.email.contains(request.args.get("email")))
+    if request.args.get("number"):
+        query = query.filter(
+            User.phone_number.contains(request.args.get("number")))
+    if request.args.get("status"):
+        query = query.filter(User.status == request.args.get("status"))
 
-    response = {'items': list(), 'iter_pages': users.iter_pages, 'page': page, 'pages': users.pages, 'next_num': users.next_num}
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
 
     user_list_dto = list()
 
-    for user in users:
-        print(user.status)
+    for user in query:
         user_list_dto.append(
             UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
         )
@@ -33,7 +51,7 @@ def list_users():
     response['items'] = user_list_dto
 
     if user_list_dto.__len__() == 0:
-        return(render_template("no_data/index.html"))
+        return(render_template("admin/no_data.html"))
 
     return render_template('admin/users.html', user_list=response)
 
@@ -66,15 +84,21 @@ def send_recovery(id):
 @login_required
 def list_brands():
        page = request.args.get('page', 1, type=int)
-
-       db_brands = Brand.query.paginate(page=page, per_page=ITEMS_PER_PAGE)
        
-       response = {'items': list(), 'iter_pages': db_brands.iter_pages, 'page': page, 'pages': db_brands.pages, 'next_num': db_brands.next_num}
+       query = Brand.query
+       
+       if request.args.get("brand"):
+        query = query.filter(
+            Brand.name.contains(request.args.get("brand")))
+       
+       query = query.paginate(page=page, per_page=ITEMS_PER_PAGE) 
+       
+       response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
 
-       response['items'] = db_brands
+       response['items'] = query
 
-       if not response['items'] :
-        return(render_template("no_data/index.html"))
+       if len(query.items) == 0 :
+        return(render_template("brands/no_data.html"))
 
        return render_template("brands/index.html", brands = response)
 
@@ -133,13 +157,30 @@ def delete_brand(brand_id):
 def list_ride_requests():
       page = request.args.get('page', 1, type=int)
 
-      db_ride_requests = RideRequest.query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+      query = RideRequest.query
 
-      response = {'items': list(), 'iter_pages': db_ride_requests.iter_pages, 'page': page, 'pages': db_ride_requests.pages, 'next_num': db_ride_requests.next_num}
+      if request.args.get("name"):
+        query = query.filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+      if request.args.get("origin"):
+        query = query.filter(or_(
+            Local.name.contains(request.args.get("origin")),
+            Local.name.contains(request.args.get("origin"))
+            ))
+      if request.args.get("date"):
+        query = query.filter(func.date(RideRequest.createdAt) == request.args.get("date"))
+      if request.args.get("status"):
+        query = query.filter(RideRequest.ride_request_state_id == request.args.get("status"))
+        
+      query = query.paginate(page=page, per_page=ITEMS_PER_PAGE) 
+
+      response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
 
       ride_requests_list = list()
 
-      for ride in db_ride_requests:
+      for ride in query:
             ride_requests_list.append(
                   RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.local.name, ride.ride_request_state.name, 
                   ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M')) 
@@ -148,7 +189,7 @@ def list_ride_requests():
       response['items'] = ride_requests_list
       
       if ride_requests_list.__len__() == 0:
-        return(render_template("no_data/index.html"))
+        return(render_template("ride_requests/no_data.html"))
 
       return render_template("ride_requests/index.html", request_list = response)
 
@@ -157,14 +198,23 @@ def list_ride_requests():
 def list_models():
     page = request.args.get('page', 1, type=int)
 
-    db_models = Model.query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+    query = Model.query
 
-    response = {'items': list(), 'iter_pages': db_models.iter_pages, 'page': page, 'pages': db_models.pages, 'next_num': db_models.next_num}
+    if request.args.get("brand"):
+        query = query.filter(
+            Brand.name.contains(request.args.get("brand")))
+    if request.args.get("model"):
+        query = query.filter(
+            Model.name.contains(request.args.get("model")))
 
-    response['items'] = db_models
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE) 
 
-    if not response['items']:
-        return(render_template("no_data/index.html"))
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
+
+    response['items'] = query
+
+    if len(query.items) == 0:
+        return(render_template("models/no_data.html"))
 
     return render_template("models/index.html", request_list = response)
 
@@ -172,14 +222,28 @@ def list_models():
 @login_required
 def list_rides():
     page = request.args.get('page', 1, type=int)
-     
-    db_rides = Ride.query.paginate(page=page, per_page=ITEMS_PER_PAGE)
 
-    response = {'items': list(), 'iter_pages': db_rides.iter_pages, 'page': page, 'pages': db_rides.pages, 'next_num': db_rides.next_num}
+    query = Ride.query
+
+    if request.args.get("name"):
+        query = query.filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+    if request.args.get("origin"):
+        query = query.filter(Local.name.contains(request.args.get("origin")))
+    if request.args.get("date"):
+        query = query.filter(func.date(Ride.createdAt) == request.args.get("date"))
+    if request.args.get("status"):
+        query = query.filter(Ride.status_id == request.args.get("status"))
+
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
 
     rides_list = list()
     
-    for ride in db_rides:
+    for ride in query:
         rides_list.append(
             RideListDto(ride.driver.get_full_name(),ride.local, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers)) 
@@ -188,6 +252,6 @@ def list_rides():
     response['items'] = rides_list
 
     if rides_list.__len__() == 0:
-        return(render_template("no_data/index.html"))
+        return(render_template("rides/no_data.html"))
 
     return render_template("rides/index.html", request_list = response)    
