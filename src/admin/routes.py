@@ -11,6 +11,7 @@ from src.extensions import db, mail, ITEMS_PER_PAGE
 from flask_mail import Message
 
 @admin_bp.route('/users/list', methods = [ 'GET' ])
+@login_required
 def list_users():
     page = request.args.get('page', 1, type=int)
 
@@ -75,3 +76,37 @@ def send_recovery(id):
     flash('Email de recuperação enviado', category='info')
 
     return redirect(request.url)
+
+@admin_bp.route('/edit/<id>', methods=['GET'])
+@login_required
+def edit_user(id):
+    user = User.query.filter_by(id=id).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('admin.list_users'))
+
+    return render_template('admin/edit.html', user=user)
+
+
+@admin_bp.route('/edit/<id>', methods=['POST'])
+@login_required
+def edit_user_post(id):
+    user = User.query.filter_by(id=id).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('admin.list_users'))
+        
+    user.first_name = request.form.get('first_name')
+    user.last_name = request.form.get('last_name')
+    user.email = request.form.get('email')
+    user.phone_number = request.form.get('phone_number')
+
+    db.session.commit()
+
+    flash('Utilizador editado com sucesso', category='info')
+
+    return redirect(url_for('admin.edit_user', id=id))
