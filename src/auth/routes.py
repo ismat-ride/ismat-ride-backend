@@ -2,7 +2,7 @@ import secrets
 import string
 from src.auth import auth_bp
 from flask import render_template, redirect, request, flash, make_response, url_for
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.users.users import User
 from src.extensions import mail, db
@@ -18,8 +18,6 @@ def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
     remember_me = request.form.get('remember_me')
-
-    print(generate_password_hash(password))
 
     user = User.query.filter_by(email=email).first()
 
@@ -70,3 +68,13 @@ def recover_post():
     flash('Email enviado com nova password', category='info')
 
     return render_template('auth/login.html')
+
+@auth_bp.route('logout')
+def logout():
+    logout_user()
+    response = make_response(redirect('login'))
+    response.delete_cookie('email')
+    response.delete_cookie('password')
+    response.delete_cookie('remember_me')
+
+    return response
