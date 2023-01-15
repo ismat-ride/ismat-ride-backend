@@ -92,8 +92,12 @@ def confirm_account_post():
     flash('Esta conta não existe', 'error')
     return render_template('auth/confirm_account.html')
 
-@auth_bp.route('logout', methods = [ 'GET' ])
-@login_required
+@auth_bp.route('logout')
 def logout():
     logout_user()
-    return redirect(url_for('auth.login'))
+    response = make_response(redirect('login'))
+    response.delete_cookie('email')
+    response.delete_cookie('password')
+    response.delete_cookie('remember_me')
+
+    return response
