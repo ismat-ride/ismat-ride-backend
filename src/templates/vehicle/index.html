@@ -1,0 +1,54 @@
+{% extends 'base/base_client.html' %} {% block title %} Veiculos {% endblock
+title %} {% block container_title %} VEÍCULOS {% endblock container_title %} {%
+block filters %} {% endblock filters %} {%block content %}
+<div class="row justify-content-evenly">
+  {% for item in request_list['items'] %}
+</div>
+{% endfor %}
+<div
+  class="d-flex align-items-center justify-content-center justify-content-md-end"
+>
+  <ul class="pagination">
+    <li class="page-item {% if request_list.page == 1 %}disabled{% endif %}">
+      <a
+        class="page-link"
+        href="{{ url_for('rides.list', page=request_list.prev_num) }}"
+        tabindex="-1"
+        >Anterior</a
+      >
+    </li>
+    {% for page_num in request_list.iter_pages(left_edge=1, right_edge=1,
+    left_current=1, right_current=2) %} {% if page_num %} {% if
+    request_list.page == page_num %}
+    <li class="page-item">
+      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+        {{ page_num }}
+      </a>
+    </li>
+    {% else %}
+    <li class="page-item">
+      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+        {{ page_num }}
+      </a>
+    </li>
+    {% endif %} {% else %} ... {% endif %} {% endfor %}
+    <li
+      class="page-item {% if request_list.page == request_list.pages %}disabled{% endif %}"
+    >
+      <a
+        class="page-link"
+        href="{{ url_for('rides.list', page=request_list.next_num) }}"
+        tabindex="-1"
+        >Seguinte</a
+      >
+    </li>
+  </ul>
+</div>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const product = urlParams.get("status");
+  const select = document.getElementById(product);
+  select.setAttribute("selected", "");
+</script>
+{% endblock content %}
