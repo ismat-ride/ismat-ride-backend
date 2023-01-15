@@ -39,7 +39,7 @@
           <input
             type="text"
             class="form-control"
-            name="first_name"
+            name="username"
             placeholder="Nome do utilizador"
           />
         </div>
@@ -76,6 +76,39 @@
               class="form-control"
               name="phone_number"
               placeholder="Número de telefone"
+            />
+          </div>
+          <div class="input-group mb-4 p-0">
+            <span class="input-group-text"
+              ><i class="fa-solid fa-signature icon-color"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              name="first_name"
+              placeholder="Primeiro Nome"
+            />
+          </div>
+          <div class="input-group mb-4 p-0">
+            <span class="input-group-text"
+              ><i class="fa-solid fa-signature icon-color"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              name="last_name"
+              placeholder="Último Nome"
+            />
+          </div>
+          <div class="input-group mb-4 p-0">
+            <span class="input-group-text"
+              ><i class="fa-sharp fa-solid fa-graduation-cap icon-color"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control"
+              name="student_number"
+              placeholder="Número de estudante"
             />
           </div>
           {% with messages = get_flashed_messages(category_filter=["validation_error"]) %}

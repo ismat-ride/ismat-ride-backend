@@ -5,9 +5,10 @@ from flask import render_template, redirect, request, flash, make_response, url_
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.users.users import User
-from src.extensions import mail, db
+from src.extensions import mail, db, SECRET_KEY
 from flask_mail import Message
-
+from cryptography.fernet import Fernet
+import base64
 
 @auth_bp.route('/login')
 def login():
@@ -68,6 +69,28 @@ def recover_post():
     flash('Email enviado com nova password', category='info')
 
     return render_template('auth/login.html')
+
+@auth_bp.route('confirm-account', methods = [ 'GET' ])
+def confirm_account():
+    return render_template('auth/confirm_account.html')
+
+@auth_bp.route('confirm-account', methods = [ 'POST' ])
+def confirm_account_post():
+    teste = request.args.get('token')
+
+    print(teste)
+
+    user_to_confirm = User.query.filter(User.status.like('Pending')).all()
+
+    for user in user_to_confirm:
+        if check_password_hash(teste, user.email):
+            user.status = 'Active'
+            db.session.commit()
+
+            return redirect(url_for('auth.login'))
+
+    flash('Esta conta não existe', 'error')
+    return render_template('auth/confirm_account.html')
 
 @auth_bp.route('logout')
 def logout():
