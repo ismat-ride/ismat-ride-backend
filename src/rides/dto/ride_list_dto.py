@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class RideListDto:
+    id: int
     driver_name: str
     starting_location: str
     status: str

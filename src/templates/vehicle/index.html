@@ -1,54 +1,130 @@
 {% extends 'base/base_client.html' %} {% block title %} Veiculos {% endblock
 title %} {% block container_title %} VEÍCULOS {% endblock container_title %} {%
-block filters %} {% endblock filters %} {%block content %}
-<div class="row justify-content-evenly">
-  {% for item in request_list['items'] %}
+block filters %}
+<form action="{{ url_for('vehicles.vehicles_list') }}" method="get">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div
+        class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
+      >
+        <div class="flex-fill">
+          <label class="form-label text-color">Marca</label>
+          <input
+            type="text"
+            value="{{ request.args.get('brand') or ''}}"
+            name="brand"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label text-color">Modelo</label>
+          <input
+            type="text"
+            value="{{ request.args.get('modelo') or ''}}"
+            name="model"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label text-color">VIN</label>
+          <input
+            type="text"
+            value="{{ request.args.get('vin') or ''}}"
+            name="vin"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill justify-content-center">
+          <button class="btn btn-primary flex-fill w-100" type="submit">
+            FILTRAR
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock filters %} {%block content %}
+<div class="row">
+  {% for item in vehicles['items'] %}
+  <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="row justify-content-center align-items-center">
+          <div class="col-12">
+            <div class="row p-3">
+              <div class="col-12 col-sm-4 col-md-12 p-1">
+                <span class="fw-bold text-color">{{item.brand}}</span>
+              </div>
+              <div class="col-12 col-sm-12 p-1">
+                <span class="fw-bold text-color">{{item.model}}</span>
+              </div>
+              <div class="col-12 col-sm-12 p-1">
+                <span class="fw-bold text-color">{{item.color}}</span>
+              </div>
+              <div class="col-12 col-sm-12 p-1">
+                <span class="fw-bold text-color">{{item.license_plate}}</span>
+              </div>
+              <div class="col-12 col-sm-6 p-1">
+                <button class="btn btn-sm btn-secondary w-100">
+                  <span class="fw-bold">APAGAR</span>
+                </button>
+              </div>
+              <div class="col-12 col-sm-6 p-1">
+                <button class="btn btn-sm btn-primary w-100">
+                  <span class="fw-bold">EDITAR</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %}
 <div
   class="d-flex align-items-center justify-content-center justify-content-md-end"
 >
   <ul class="pagination">
-    <li class="page-item {% if request_list.page == 1 %}disabled{% endif %}">
+    <li class="page-item {% if vehicles.page == 1 %}disabled{% endif %}">
       <a
         class="page-link"
-        href="{{ url_for('rides.list', page=request_list.prev_num) }}"
+        href="{{ url_for('vehicles.vehicles_list', page=vehicles.prev_num) }}"
         tabindex="-1"
         >Anterior</a
       >
     </li>
-    {% for page_num in request_list.iter_pages(left_edge=1, right_edge=1,
-    left_current=1, right_current=2) %} {% if page_num %} {% if
-    request_list.page == page_num %}
+    {% for page_num in vehicles.iter_pages(left_edge=1, right_edge=1,
+    left_current=1, right_current=2) %} {% if page_num %} {% if vehicles.page ==
+    page_num %}
     <li class="page-item">
-      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+      <a
+        href="{{ url_for('vehicles.vehicles_list', page=page_num) }}"
+        class="page-link"
+      >
         {{ page_num }}
       </a>
     </li>
     {% else %}
     <li class="page-item">
-      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+      <a
+        href="{{ url_for('vehicles.vehicles_list', page=page_num) }}"
+        class="page-link"
+      >
         {{ page_num }}
       </a>
     </li>
     {% endif %} {% else %} ... {% endif %} {% endfor %}
     <li
-      class="page-item {% if request_list.page == request_list.pages %}disabled{% endif %}"
+      class="page-item {% if vehicles.page == vehicles.pages %}disabled{% endif %}"
     >
       <a
         class="page-link"
-        href="{{ url_for('rides.list', page=request_list.next_num) }}"
+        href="{{ url_for('vehicles.vehicles_list', page=vehicles.next_num) }}"
         tabindex="-1"
         >Seguinte</a
       >
     </li>
   </ul>
 </div>
-<script>
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const product = urlParams.get("status");
-  const select = document.getElementById(product);
-  select.setAttribute("selected", "");
-</script>
 {% endblock content %}

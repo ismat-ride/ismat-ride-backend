@@ -1,7 +1,7 @@
 {% extends 'base/base_client.html' %} {% block title %} Boleias {% endblock
 title %} {% block container_title %} BOLEIAS {% endblock container_title %} {%
 block filters %}
-<form action="{{ url_for('admin.list_rides') }}" method="get">
+<form action="{{ url_for('rides.list_rides') }}" method="get">
   <div class="card mb-3">
     <div class="card-body">
       <div
@@ -40,18 +40,47 @@ block filters %}
           <label class="form-label secondary-secondary-text-color"
             >Estado</label
           >
-            <div class="flex-fill">
-              <label class="form-label secondary-secondary-text-color">Nome</label>
-              <input
-                type="text"
-                value="{{ request.args.get('name') or ''}}"
-                name="name"
-                class="form-control"
+          <select name="status" class="form-select">
+            <option id="1" value="1">Activa</option>
+            <option id="2" value="2">A Decorrer</option>
+            <option id="3" value="3">Finalizada</option>
+            <option id="4" value="4">Cancelada</option>
+          </select>
+        </div>
+        <div class="flex-fill justify-content-center">
+          <button class="btn btn-primary flex-fill w-100" type="submit">
+            FILTRAR
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock filters %} {%block content %}
+<div class="row justify-content-evenly">
+  {% for item in request_list['items'] %}
+  <div class="col-12 col-md-6 col-lg-6">
+    <div class="card shadow">
+      <div class="card-body">
+        <div
+          class="row align-items-end justify-content-start justify-content-md-center"
+        >
+          <div class="row align-items-center mb-2">
+            <div class="col">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/147/147144.png"
+                alt=""
+                width="36"
+                height="36"
+                class="rounded-circle me-3"
               />
+              <span class="fw-bold font-16px">{{item.driver_name}}</span>
             </div>
-            <div class="flex-fill">
-              <label class="form-label secondary-secondary-text-color"
-                >Origem/Destino</label
+          </div>
+          <div class="row align-items-center mb-2">
+            <div class="col">
+              <span class="fw-bold font-14px me-1"
+                >{{item.starting_location}}</span
               >
               <i class="fa-solid fa-arrow-right icon-color me-1"></i>
               <span class="fw-bold font-14px">ISMAT</span>
@@ -88,81 +117,15 @@ block filters %}
               <span class="font-16px fw-bold">{{item.starting_hour}}</span>
             </div>
           </div>
-        </div>
-      </div>
-    </form>
-    {% endblock filters %} {%block content %}
-    <div class="row justify-content-evenly">
-      {% for item in request_list['items'] %}
-      <div class="col-12 col-md-6 col-lg-6">
-        <div class="card shadow">
-          <div class="card-body">
-            <div
-              class="row align-items-end justify-content-start justify-content-md-center"
-            >
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/147/147144.png"
-                    alt=""
-                    width="36"
-                    height="36"
-                    class="rounded-circle me-3"
-                  />
-                  <span class="fw-bold font-16px">{{item.driver_name}}</span>
-                </div>
-              </div>
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <span class="fw-bold font-14px me-1"
-                    >{{item.starting_location}}</span
-                  >
-                  <i class="fa-solid fa-arrow-right icon-color me-1"></i>
-                  <span class="fw-bold font-14px">ISMAT</span>
-                </div>
-              </div>
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  {% if 'Active' == item.status %}
-                  <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% elif 'On Going' == item.status %}
-                  <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% elif 'Finished' == item.status %}
-                  <span class="badge rounded-pill bg-info font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% elif 'Canceled' == item.status %}
-                  <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% endif %}
-                </div>
-              </div>
-              <div class="row align-items-center">
-                <div class="col">
-                  <span class="font-16px fw-bold">{{item.starting_date}}</span>
-                </div>
-              </div>
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <span class="font-16px fw-bold">{{item.starting_hour}}</span>
-                </div>
-              </div>
-              <div class="row align-items-center">
-                <div class="col-12 col-sm-6 col-md-4 mb-2 mb-sm-0">
-                  <i class="fa-solid fa-user-group me-2"></i>
-                  <span class="fw-bold font-14px me-5">{{item.total_places}}</span>
-                </div>
-                <div class="col-12 col-sm-6 col-md-8 text-start text-sm-end">
-                  <span class="font-14px"
-                    >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
-                  >
-                </div>
-              </div>
+          <div class="row align-items-center">
+            <div class="col-12 col-sm-6 col-md-4 mb-2 mb-sm-0">
+              <i class="fa-solid fa-user-group me-2"></i>
+              <span class="fw-bold font-14px me-5">{{item.total_places}}</span>
+            </div>
+            <div class="col-12 col-sm-6 col-md-8 text-start text-sm-end">
+              <span class="font-14px"
+                >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
+              >
             </div>
           </div>
         </div>
@@ -178,7 +141,7 @@ block filters %}
     <li class="page-item {% if request_list.page == 1 %}disabled{% endif %}">
       <a
         class="page-link"
-        href="{{ url_for('rides.list', page=request_list.prev_num) }}"
+        href="{{ url_for('rides.list_rides', page=request_list.prev_num) }}"
         tabindex="-1"
         >Anterior</a
       >
@@ -187,13 +150,19 @@ block filters %}
     left_current=1, right_current=2) %} {% if page_num %} {% if
     request_list.page == page_num %}
     <li class="page-item">
-      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+      <a
+        href="{{ url_for('rides.list_rides', page=page_num) }}"
+        class="page-link"
+      >
         {{ page_num }}
       </a>
     </li>
     {% else %}
     <li class="page-item">
-      <a href="{{ url_for('rides.list', page=page_num) }}" class="page-link">
+      <a
+        href="{{ url_for('rides.list_rides', page=page_num) }}"
+        class="page-link"
+      >
         {{ page_num }}
       </a>
     </li>
@@ -203,7 +172,7 @@ block filters %}
     >
       <a
         class="page-link"
-        href="{{ url_for('rides.list', page=request_list.next_num) }}"
+        href="{{ url_for('rides.list_rides', page=request_list.next_num) }}"
         tabindex="-1"
         >Seguinte</a
       >

@@ -46,6 +46,9 @@ def create_app():
     from src.models import models_bp
     app.register_blueprint(models_bp, url_prefix = '/models')
 
+    from src.vehicles import vehicles_bp
+    app.register_blueprint(vehicles_bp, url_prefix = '/vehicles')
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
