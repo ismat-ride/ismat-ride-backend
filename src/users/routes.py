@@ -16,7 +16,8 @@ def register():
 def register_post():
     is_valid = True
     email = request.form.get("email")
-    password = request.form.get("password_confirmation")
+    password = request.form.get("password")
+    password_confirmation = request.form.get('password_confirmation')
     phone_number = request.form.get("phone_number")
     username = request.form.get('username')
     first_name = request.form.get("first_name")
@@ -29,6 +30,10 @@ def register_post():
 
     if password is "" or None:
         flash('Por favor introduza uma password', 'validation_error')
+        is_valid = False
+
+    if password != password_confirmation:
+        flash('Passwords nao são iguais', 'validation_error')
         is_valid = False
 
     if phone_number is "" or None:
