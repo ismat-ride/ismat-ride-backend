@@ -1,7 +1,6 @@
 from operator import or_
 import secrets
 import string
-
 from sqlalchemy import func
 from src.admin import admin_bp
 from flask import render_template, flash, request, redirect, url_for
