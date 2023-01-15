@@ -1,3 +1,16 @@
+.initial-avatar {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  background-color: #d1d5db;
+  color: #fff;
+
+  border-radius: 50%;
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
 .logo-font {
   font-size: 64px;
   font-weight: 700;

@@ -62,71 +62,87 @@
       <div class="col-12 col-md-6 col-lg-6">
         <div class="card shadow">
           <div class="card-body">
+            <a class="stretched-link" href="{{item.id}}"></a>
             <div
               class="row align-items-end justify-content-start justify-content-md-center"
             >
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/147/147144.png"
-                    alt=""
-                    width="36"
-                    height="36"
-                    class="rounded-circle me-3"
-                  />
-                  <span class="fw-bold font-16px">{{item.driver_name}}</span>
+              <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
+                <div class="row align-items-center mb-2">
+                  <div class="col-12">
+                    <div
+                      class="d-flex w-100 align-items-center justify-content-start"
+                    >
+                      <div class="initial-avatar text-end">{{item.driver_initials}}</div>
+                      <span class="ms-3 fw-bold font-16px"
+                        >{{item.driver_name}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="row align-items-center mb-2">
+                  <div class="col">
+                    <span class="fw-bold font-14px me-1">{{item.starting_location}}</span>
+                    <i
+                      class="fa-solid fa-arrow-right icon-color me-1"
+                    ></i>
+                    <span class="fw-bold font-14px">{{item.end_location or ''}}</span>
+                  </div>
+                </div>
+                <div class="row align-items-center mb-2">
+                  <div class="col">
+                    {% if 'Active' == item.status %}
+                    <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
+                      >{{item.status}}</span
+                    >
+                    {% elif 'On Going' == item.status %}
+                    <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
+                      >{{item.status}}</span
+                    >
+                    {% elif 'Finished' == item.status %}
+                    <span class="badge rounded-pill bg-info font-14px ps-2 pe-2"
+                      >{{item.status}}</span
+                    >
+                    {% elif 'Canceled' == item.status %}
+                    <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
+                      >{{item.status}}</span
+                    >
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col">
+                    <span class="font-16px fw-bold text-color"
+                      >{{item.starting_date}}</span
+                    >
+                  </div>
+                </div>
+                <div class="row align-items-center mb-2">
+                  <div class="col">
+                    <span class="font-16px fw-bold text-color"
+                      >{{item.starting_hour}}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="row align-items-center justify-content-evenly"
+                >
+                  <div class="col">
+                    <i class="fa-solid fa-user-group me-2"></i>
+                    <span class="fw-bold font-14px text-color me-5"
+                      >{{item.total_places}}</span
+                    >
+                    <span class="font-14px text-color"
+                      >{{item.total_available_places}} LUGARES DISPONIVEIS</span
+                    >
+                  </div>
                 </div>
               </div>
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <span class="fw-bold font-14px me-1"
-                    >{{item.starting_location}}</span
-                  >
-                  <i class="fa-solid fa-arrow-right icon-color me-1"></i>
-                  <span class="fw-bold font-14px">ISMAT</span>
-                </div>
-              </div>
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  {% if 'Active' == item.status %}
-                  <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% elif 'On Going' == item.status %}
-                  <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% elif 'Finished' == item.status %}
-                  <span class="badge rounded-pill bg-info font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% elif 'Canceled' == item.status %}
-                  <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
-                    >{{item.status}}</span
-                  >
-                  {% endif %}
-                </div>
-              </div>
-              <div class="row align-items-center">
-                <div class="col">
-                  <span class="font-16px fw-bold">{{item.starting_date}}</span>
-                </div>
-              </div>
-              <div class="row align-items-center mb-2">
-                <div class="col">
-                  <span class="font-16px fw-bold">{{item.starting_hour}}</span>
-                </div>
-              </div>
-              <div class="row align-items-center">
-                <div class="col-12 col-sm-6 col-md-4 mb-2 mb-sm-0">
-                  <i class="fa-solid fa-user-group me-2"></i>
-                  <span class="fw-bold font-14px me-5">{{item.total_places}}</span>
-                </div>
-                <div class="col-12 col-sm-6 col-md-8 text-start text-sm-end">
-                  <span class="font-14px"
-                    >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
-                  >
-                </div>
+              <div
+                class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2 d-flex"
+              >
+                <button style="position: relative;" class="btn btn-primary w-100" type="submit">
+                  <span class="fw-bold"><a class="stretched-link"  href="teste"></a>JUNTAR-ME</span>
+                </button>
               </div>
             </div>
           </div>

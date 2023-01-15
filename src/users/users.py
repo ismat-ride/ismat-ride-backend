@@ -25,7 +25,6 @@ class User(db.Model, UserMixin):
 		last_name_initial = str.upper(self.last_name[0])
 		return f'{first_name_initial}{last_name_initial}'	
 
-
 class Brand(db.Model):
 	__tablename__ = 'brand'
 	id = db.Column(db.Integer, primary_key=True)

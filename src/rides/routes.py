@@ -1,10 +1,10 @@
 from operator import or_
 from sqlalchemy import func
 from flask_login import login_required
-from src.rides.dto.ride_list_dto import RideListDto
+from src.rides.dto.ride_list_dto import RideListDto, RideDto, PassengerListDto
 from src.rides.rides import Ride
 from src.users.users import User
-from flask import render_template, request
+from flask import render_template, request, url_for
 from src.rides import rides_bp
 from src.extensions import student_required, ITEMS_PER_PAGE
 
@@ -37,7 +37,7 @@ def list_rides():
     
     for ride in query:
         rides_list.append(
-            RideListDto(ride.id, ride.driver.get_full_name(),ride.origin, ride.status.name, 
+            RideListDto(str(ride.id), ride.driver.get_full_name(), ride.driver.get_initials(),ride.origin, ride.destiny, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers)) 
         )
 
@@ -47,3 +47,21 @@ def list_rides():
         return(render_template("rides/no_data.html"))
 
     return render_template("rides/index.html", request_list = response)
+
+@rides_bp.route('<id>', methods = [ 'GET' ])
+@login_required
+@student_required
+def get_ride(id):
+    ride = Ride.query.filter_by(id=id).first()
+
+    if ride:
+        passengers = list()
+        for passenger in ride.passengers:
+            passengers.append(PassengerListDto(passenger.id, passenger.get_initials()))
+
+        response = RideDto(str(ride.id), ride.origin, ride.destiny, ride.vehicle.model,
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, passengers)
+
+        return render_template('rides/ride.html', ride = response)
+
+    return url_for('rides.list_rides')
