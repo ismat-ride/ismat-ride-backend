@@ -3,12 +3,11 @@ import secrets
 import string
 from sqlalchemy import func
 from src.admin import admin_bp
-from flask import render_template, flash, request, redirect, url_for
-from werkzeug.security import generate_password_hash
-from flask_login import login_required
-from src.users.users import Brand, Vehicle, Model
-from src.rides.rides import Local, Ride, RideStatus
-from src.users.users import User
+from flask import render_template, flash, request, redirect, url_for,make_response
+from src.users.users import User, Brand, Vehicle, Model
+from src.rides.rides import Local, Ride
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import current_user, login_required, login_user, logout_user
 from src.admin.dto.user_list_dto import UserListDto
 from src.admin.dto.ride_list_dto import RideListDto
 from src.admin.dto.ride_requests_dto import RideRequestDto
@@ -256,6 +255,58 @@ def list_rides():
 
     return render_template("rides/index.html", request_list = response)    
     return redirect(request.url)
+
+@admin_bp.route('login')
+def login():
+    print(current_user.is_authenticated)
+    if current_user.is_authenticated:
+         return redirect(url_for('rides.get'))
+
+    return render_template('admin/login.html')
+
+@admin_bp.route('/login', methods = ['POST'])
+def login_post():
+    print(current_user)
+
+    email = request.form.get('email')
+    password = request.form.get('password')
+    remember_me = request.form.get('remember_me')
+
+    user = User.query.filter_by(email=email).first()
+    print(user)
+    if not user or user.type != 'admin' or not check_password_hash(user.password, password):
+        flash('Credenciais invalidas', 'invalid_credentials')
+
+        return render_template('admin/login.html')  
+
+    response = make_response(redirect('login'))
+    login_user(user)
+
+    if remember_me:
+        response.set_cookie('email', email, max_age=2880)
+        response.set_cookie('password', password, max_age=2880)
+        response.set_cookie('remember_me', remember_me, max_age=2880)
+        response.set_cookie('admin', user.type, max_age=2880)
+
+        return response
+
+    response.delete_cookie('email')
+    response.delete_cookie('password')
+    response.delete_cookie('remember_me')
+    response.delete_cookie('admin')
+
+    return response
+
+@admin_bp.route('/logout')
+def logout():
+    logout_user()
+    response = make_response(redirect('login'))
+    response.delete_cookie('email')
+    response.delete_cookie('password')
+    response.delete_cookie('remember_me')
+    response.delete_cookie('admin')
+
+    return response
 
 @admin_bp.route('/edit/<id>', methods=['GET'])
 @login_required

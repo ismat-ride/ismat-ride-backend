@@ -2,12 +2,13 @@ import secrets
 import string
 from src.auth import auth_bp
 from flask import render_template, redirect, request, flash, make_response, url_for
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.users.users import User
-from src.extensions import mail, db
+from src.extensions import mail, db, SECRET_KEY
 from flask_mail import Message
-
+from cryptography.fernet import Fernet
+import base64
 
 @auth_bp.route('/login')
 def login():
@@ -18,8 +19,6 @@ def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
     remember_me = request.form.get('remember_me')
-
-    print(generate_password_hash(password))
 
     user = User.query.filter_by(email=email).first()
 
@@ -70,3 +69,35 @@ def recover_post():
     flash('Email enviado com nova password', category='info')
 
     return render_template('auth/login.html')
+
+@auth_bp.route('confirm-account', methods = [ 'GET' ])
+def confirm_account():
+    return render_template('auth/confirm_account.html')
+
+@auth_bp.route('confirm-account', methods = [ 'POST' ])
+def confirm_account_post():
+    teste = request.args.get('token')
+
+    print(teste)
+
+    user_to_confirm = User.query.filter(User.status.like('Pending')).all()
+
+    for user in user_to_confirm:
+        if check_password_hash(teste, user.email):
+            user.status = 'Active'
+            db.session.commit()
+
+            return redirect(url_for('auth.login'))
+
+    flash('Esta conta não existe', 'error')
+    return render_template('auth/confirm_account.html')
+
+@auth_bp.route('logout')
+def logout():
+    logout_user()
+    response = make_response(redirect('login'))
+    response.delete_cookie('email')
+    response.delete_cookie('password')
+    response.delete_cookie('remember_me')
+
+    return response

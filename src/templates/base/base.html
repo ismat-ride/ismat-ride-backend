@@ -123,11 +123,11 @@
           <div class="row w-100 m-0 logout-wrapper">
             <div class="col-12">
               <div class="decoration-none row justify-items-center p-2">
-                <span class="fw-bold secondary-color text-center">
+                <span onclick="logout()" class="fw-bold secondary-color text-center">
                   <i
                     class="fa-solid fa-right-from-bracket fa-lg me-2 logout"
                   ></i
-                  ><span>SAIR</span></span
+                  ><span>SAIR</span></a
                 >
               </div>
             </div>
@@ -207,4 +207,12 @@
   setTimeout(function () {
     document.getElementById("close").click();
   }, 5000);
+
+  function logout() {
+    if (document.cookie.includes("admin") ) {
+      window.location.href = "/admin/logout";
+    } else {
+      window.location.href = "/auth/logout";
+    }
+  }
 </script>
