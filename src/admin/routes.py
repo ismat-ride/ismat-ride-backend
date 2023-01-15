@@ -79,7 +79,6 @@ def send_recovery(id):
 
 @admin_bp.route('login')
 def login():
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
          return redirect(url_for('rides.get'))
 
@@ -87,14 +86,11 @@ def login():
 
 @admin_bp.route('/login', methods = ['POST'])
 def login_post():
-    print(current_user)
-
     email = request.form.get('email')
     password = request.form.get('password')
     remember_me = request.form.get('remember_me')
 
     user = User.query.filter_by(email=email).first()
-    print(user)
     if not user or user.type != 'admin' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
 

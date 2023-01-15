@@ -76,14 +76,12 @@ def confirm_account():
 
 @auth_bp.route('confirm-account', methods = [ 'POST' ])
 def confirm_account_post():
-    teste = request.args.get('token')
-
-    print(teste)
+    token = request.args.get('token')
 
     user_to_confirm = User.query.filter(User.status.like('Pending')).all()
 
     for user in user_to_confirm:
-        if check_password_hash(teste, user.email):
+        if check_password_hash(token, user.email):
             user.status = 'Active'
             db.session.commit()
 
