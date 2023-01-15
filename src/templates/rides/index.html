@@ -179,4 +179,11 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
     </li>
   </ul>
 </div>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const product = urlParams.get("status");
+  const select = document.getElementById(product);
+  select.setAttribute("selected", "");
+</script>
 {% endblock content %}
