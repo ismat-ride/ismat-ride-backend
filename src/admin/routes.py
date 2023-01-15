@@ -1,12 +1,17 @@
+from operator import or_
 import secrets
 import string
+from sqlalchemy import func
 from src.admin import admin_bp
-from flask import render_template, flash, request, redirect, url_for, make_response
+from flask import render_template, flash, request, redirect, url_for,make_response
+from src.users.users import User, Brand, Vehicle, Model
+from src.rides.rides import Local, Ride
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import current_user, login_required, login_user, logout_user
-from src.users.users import User
 from src.admin.dto.user_list_dto import UserListDto
-from src.users.users import Brand, Vehicle, Model
+from src.admin.dto.ride_list_dto import RideListDto
+from src.admin.dto.ride_requests_dto import RideRequestDto
+from src.ride_requests.ride_requests import RideRequest
 from src.extensions import db, mail, ITEMS_PER_PAGE
 from flask_mail import Message
 
@@ -14,43 +19,40 @@ from flask_mail import Message
 @login_required
 def list_users():
     page = request.args.get('page', 1, type=int)
+    
+    query = User.query.filter(User.type == "student")
 
-    users = User.query.filter_by(type = 'student').paginate(page=page, per_page=ITEMS_PER_PAGE)
+    if request.args.get("name"):
+        query = query.filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+    if request.args.get("email"):
+        query = query.filter(
+            User.email.contains(request.args.get("email")))
+    if request.args.get("number"):
+        query = query.filter(
+            User.phone_number.contains(request.args.get("number")))
+    if request.args.get("status"):
+        query = query.filter(User.status == request.args.get("status"))
 
-    response = {'items': list(), 'iter_pages': users.iter_pages, 'page': page, 'pages': users.pages, 'next_num': users.next_num}
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
 
     user_list_dto = list()
 
-    for user in users:
-        print(user.status)
+    for user in query:
         user_list_dto.append(
             UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
         )
 
     response['items'] = user_list_dto
 
+    if user_list_dto.__len__() == 0:
+        return(render_template("admin/no_data.html"))
+
     return render_template('admin/users.html', user_list=response)
-
-@admin_bp.route('brands/delete/<brand_id>')
-@login_required
-def delete_brand(brand_id):
-    brand_to_delete = Brand.query.filter_by(id=brand_id).first()
-
-    if brand_to_delete is None:
-        flash('Esta marca nao existe', category='not_found_error')
-        
-        return redirect(request.url)
-
-    vehicles = db.session.query(Vehicle).filter(Vehicle.model.has(Model.brand_id == brand_id))
-
-    if vehicles is None:
-        db.session.remove(brand_to_delete)
-        db.session.commit()
-
-        return redirect(request.url)
-
-    flash('Marca está a ser utilizada, não pode ser apagada', category='error')
-    return redirect(request.url)
 
 @admin_bp.route('send/recovery/<id>')
 @login_required
@@ -75,6 +77,182 @@ def send_recovery(id):
 
     flash('Email de recuperação enviado', category='info')
 
+    return redirect(request.url)
+
+@admin_bp.route("/brands/list")
+@login_required
+def list_brands():
+       page = request.args.get('page', 1, type=int)
+       
+       query = Brand.query
+       
+       if request.args.get("brand"):
+        query = query.filter(
+            Brand.name.contains(request.args.get("brand")))
+       
+       query = query.paginate(page=page, per_page=ITEMS_PER_PAGE) 
+       
+       response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
+
+       response['items'] = query
+
+       if len(query.items) == 0 :
+        return(render_template("brands/no_data.html"))
+
+       return render_template("brands/index.html", brands = response)
+
+@admin_bp.route("/brand/<id>", methods = ["POST"])
+@login_required
+def update_brand(id):
+       brand = Brand.query.get(id)
+
+       if(brand is None):
+              flash('Esta marca nao existe', 'error')
+              return redirect(url_for('admin.list_brands'))
+
+       request_data = request.form.get("name")
+
+       if(request_data is None):
+              flash('Nome da marca nao pode vir vazio: ${name}', 'error')
+              return redirect(url_for('admin.list_brands'))
+
+       if(request_data == brand.name):
+              flash('Esta marca já existe', 'error')
+              return redirect(url_for('admin.list_brands'))
+
+       brand.name = request_data
+
+       try:
+              db.session.commit()
+              flash("MARCA ATUALIZADA COM SUCESSO!", 'info')
+              return redirect(url_for('admin.list_brands'))
+       except Exception as e:
+              print(e)
+              flash(f'Ocorreu um erro inesperado', 'error')
+
+@admin_bp.route('/brand/delete/<brand_id>')
+@login_required
+def delete_brand(brand_id):
+    brand_to_delete = Brand.query.filter_by(id=brand_id).first()
+
+    if brand_to_delete is None:
+        flash('Esta marca nao existe', category='not_found_error')
+        
+        return redirect(request.url)
+
+    vehicles = db.session.query(Vehicle).filter(Vehicle.model.has(Model.brand_id == brand_id))
+
+    if vehicles is None:
+        db.session.remove(brand_to_delete)
+        db.session.commit()
+
+        return redirect(request.url)
+
+    flash('Marca está a ser utilizada, não pode ser apagada', category='error')
+    return redirect(request.url)
+
+@admin_bp.route("/ride-requests/list")
+@login_required
+def list_ride_requests():
+      page = request.args.get('page', 1, type=int)
+
+      query = RideRequest.query
+
+      if request.args.get("name"):
+        query = query.join(Ride, RideRequest.ride).join(User, Ride.driver).filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+      if request.args.get("origin"):
+        query = query.join(Ride, RideRequest.ride).filter(
+            Ride.origin.contains(request.args.get("origin")))
+      if request.args.get("date"):
+        query = query.filter(func.date(RideRequest.createdAt) == request.args.get("date"))
+      if request.args.get("status"):
+        query = query.filter(RideRequest.ride_request_state_id == request.args.get("status"))
+        
+      query = query.paginate(page=page, per_page=ITEMS_PER_PAGE) 
+
+      response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
+
+      ride_requests_list = list()
+
+      for ride in query:
+            ride_requests_list.append(
+                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.local.name, ride.ride_request_state.name, 
+                  ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M')) 
+            )
+
+      response['items'] = ride_requests_list
+      
+      if ride_requests_list.__len__() == 0:
+        return(render_template("ride_requests/no_data.html"))
+
+      return render_template("ride_requests/index.html", request_list = response)
+
+@admin_bp.route("/models/list")
+@login_required
+def list_models():
+    page = request.args.get('page', 1, type=int)
+
+    query = Model.query
+
+    if request.args.get("brand"):
+        query = query.filter(
+            Brand.name.contains(request.args.get("brand")))
+    if request.args.get("model"):
+        query = query.filter(
+            Model.name.contains(request.args.get("model")))
+
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE) 
+
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
+
+    response['items'] = query
+
+    if len(query.items) == 0:
+        return(render_template("models/no_data.html"))
+
+    return render_template("models/index.html", request_list = response)
+
+@admin_bp.route("rides/list")
+@login_required
+def list_rides():
+    page = request.args.get('page', 1, type=int)
+
+    query = Ride.query
+
+    if request.args.get("name"):
+        query = query.filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+    if request.args.get("origin"):
+        query = query.filter(or_(Ride.origin.contains(request.args.get("origin")),
+        Ride.destiny.contains(request.args.get("origin"))))
+    if request.args.get("date"):
+        query = query.filter(func.date(Ride.createdAt) == request.args.get("date"))
+    if request.args.get("status"):
+        query = query.filter(Ride.status_id == request.args.get("status"))
+
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
+
+    rides_list = list()
+    
+    for ride in query:
+        rides_list.append(
+            RideListDto(ride.driver.get_full_name(),ride.origin, ride.status.name, 
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers)) 
+        )
+
+    response['items'] = rides_list
+
+    if rides_list.__len__() == 0:
+        return(render_template("rides/no_data.html"))
+
+    return render_template("rides/index.html", request_list = response)    
     return redirect(request.url)
 
 @admin_bp.route('login')
@@ -136,7 +314,6 @@ def edit_user(id):
         return redirect(url_for('admin.list_users'))
 
     return render_template('admin/edit.html', user=user)
-
 
 @admin_bp.route('/edit/<id>', methods=['POST'])
 @login_required
