@@ -2,13 +2,11 @@ import secrets
 import string
 from src.auth import auth_bp
 from flask import render_template, redirect, request, flash, make_response, url_for
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.users.users import User
-from src.extensions import mail, db, SECRET_KEY
+from src.extensions import mail, db
 from flask_mail import Message
-from cryptography.fernet import Fernet
-import base64
 
 @auth_bp.route('/login')
 def login():

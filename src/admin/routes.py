@@ -186,9 +186,9 @@ def list_ride_requests():
       response['items'] = ride_requests_list
       
       if ride_requests_list.__len__() == 0:
-        return(render_template("ride_requests/no_data.html"))
+        return(render_template("admin/ride_requests_no_data.html"))
 
-      return render_template("ride_requests/index.html", request_list = response)
+      return render_template("admin/ride_requests.html", request_list = response)
 
 @admin_bp.route("/models/list")
 @login_required
@@ -250,10 +250,9 @@ def list_rides():
     response['items'] = rides_list
 
     if rides_list.__len__() == 0:
-        return(render_template("rides/no_data.html"))
+        return(render_template("rides/rides_no_data.html"))
 
-    return render_template("rides/index.html", request_list = response)    
-    return redirect(request.url)
+    return render_template("admin/rides.html", request_list = response)    
 
 @admin_bp.route('login')
 def login():

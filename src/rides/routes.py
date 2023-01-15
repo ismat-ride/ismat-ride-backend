@@ -11,7 +11,7 @@ from src.extensions import student_required, ITEMS_PER_PAGE
 @rides_bp.route("list")
 @login_required
 @student_required
-def get():
+def list():
     page = request.args.get('page', 1, type=int)
 
     query = Ride.query
