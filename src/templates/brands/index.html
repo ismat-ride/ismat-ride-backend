@@ -1,58 +1,70 @@
 {% extends 'base/base.html' %} {% block title %} Marcas {% endblock title %} {%
-block container_title %} MARCAS {% endblock container_title %} {% block filters
-%}
-<form action="{{ url_for('admin.list_brands') }}" method="get">
-  <div class="card mb-3">
-    <div class="card-body">
-      <div
-        class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
-      >
-        <div class="flex-fill">
-          <label class="form-label secondary-secondary-text-color">Marca</label>
-          <input
-            type="text"
-            value="{{ request.args.get('brand') or ''}}"
-            name="brand"
-            class="form-control"
-          />
-        </div>
-        <div class="flex-fill justify-content-center">
-          <button class="btn btn-primary flex-fill w-100" type="submit">
-            FILTRAR
-          </button>
+  block container_title %} MARCAS {% endblock container_title %} {% block filters
+  %}
+  <form action="{{ url_for('admin.list_brands') }}" method="get">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div
+          class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
+        >
+          <div class="flex-fill">
+            <label class="form-label secondary-secondary-text-color">Marca</label>
+            <input
+              type="text"
+              value="{{ request.args.get('brand') or ''}}"
+              name="brand"
+              class="form-control"
+            />
+          </div>
+          <div class="flex-fill justify-content-center">
+            <button class="btn btn-primary flex-fill w-100" type="submit">
+              FILTRAR
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </form>
+  {% endblock filters %} {%block content %}
+  <div class="row justify-content-end align-items-end">
+    <div class="col-12 col-sm-6 col-md-2 d-flex flex-column mb-3 justify-content-end">
+      <button  type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#addModal"
+      class="btn btn-primary w-100 fw-bold">
+      ADICIONAR</button>
+    </div> 
   </div>
-</form>
-{% endblock filters %} {%block content %}
-<div class="row justify-content-evenly">
-  {% for item in brands['items'] %}
-  <div class="col-12 col-md-6 col-lg-6">
-    <div class="card shadow">
-      <div class="card-body">
-        <div class="row h-100">
-          <div class="col-12 col-sm-6 col-md-4">
-            <div class="col-12 d-flex flex-column">
-              <span class="font-16px mb-0">Marca</span>
-              <span class="font-20px fw-bold mb-0">{{item.name}}</span>
+  <div class="row justify-content-start">
+    {% for item in brands['items'] %}
+    <div class="col-12 col-md-6 col-lg-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="row h-100">
+            <div class="col-12 col-sm-6 col-md-4">
+              <div class="col-12 d-flex flex-column">
+                <h4 class="mb-0">Marca</h4>
+                <h3 class="fw-bold mb-0">{{item.name}}</h3>
+              </div>
             </div>
-          </div>
-          <div class="col-12 col-sm-6 col-md-8">
-            <div class="d-flex flex-column h-100 justify-content-end">
-              <div class="row align-items-end">
-                <div class="col-6 col-sm-6">
-                  <button
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit{{item.name}}"
-                    class="btn btn-primary w-100 fw-bold"
-                  >
-                    EDITAR
-                  </button>
-                </div>
-                <div class="col-6 col-sm-6">
-                  <button class="btn btn-danger w-100 fw-bold">APAGAR</button>
+            <div class="col-12 col-sm-6 col-md-8">
+              <div class="d-flex flex-column h-100 justify-content-end">
+                <div class="row align-items-end">
+                  <div class="col-6 col-sm-6">
+                    <button
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#edit{{item.name}}"
+                      class="btn btn-primary w-100 fw-bold"
+                    >
+                      EDITAR
+                    </button>
+                  </div>
+                  <div class="col-12 col-sm-6">  
+                    <form action="/admin/brand/delete/{{item.id}}" id="delete">           
+                      <button type="submit"  name="delete_model" class="btn btn-danger w-100 fw-bold">APAGAR</button>
+                    </form>
+                  </div> 
                 </div>
               </div>
             </div>
@@ -60,107 +72,162 @@ block container_title %} MARCAS {% endblock container_title %} {% block filters
         </div>
       </div>
     </div>
-  </div>
-  <div
-    class="modal fade"
-    id="edit{{item.name}}"
-    tabindex="-1"
-    aria-labelledby="edit{{item.name}}"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered modal-md">
-      <div class="modal-content">
-        <div class="modal-header m-2">
-          <h5 class="modal-title" id="createBrandModal">EDITAR MARCA</h5>
-        </div>
-        <div class="modal-body">
-          <form action="/admin/brand/{{item.id}}" method="POST">
-            <div class="row justify-content-center">
-              <div class="col-12 col-md-12 col-lg-10">
-                <div class="card shadow">
-                  <div class="card-body">
-                    <label class="form-label fw-bold">Marca</label>
-                    <div class="input-group mb-3">
-                      <input
-                        type="text"
-                        value="{{item.name}}"
-                        class="form-control"
-                        name="name"
-                      />
+    <div
+      class="modal fade"
+      id="edit{{item.name}}"
+      tabindex="-1"
+      aria-labelledby="edit{{item.name}}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+          <div class="modal-header m-2">
+            <h5 class="modal-title" id="createBrandModal">EDITAR MARCA</h5>
+          </div>
+          <div class="modal-body">
+            <form action="/admin/brand/{{item.id}}" method="POST">
+              <div class="row justify-content-center">
+                <div class="col-12 col-md-12 col-lg-10">
+                  <div class="card shadow">
+                    <div class="card-body">
+                      <label class="form-label fw-bold">Marca</label>
+                      <div class="input-group mb-3">
+                        <input
+                          type="text"
+                          value="{{item.name}}"
+                          class="form-control"
+                          name="name"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="d-flex flex-column flex-sm-row gap-2">
-                <div class="col-12 col-sm-6">
-                  <button
-                    type="button"
-                    class="btn btn-secondary w-100"
-                    data-bs-dismiss="modal"
-                  >
-                    <span class="fw-bold">Cancelar</span>
-                  </button>
+              <div class="row">
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                  <div class="col-12 col-sm-6">
+                    <button
+                      type="button"
+                      class="btn btn-secondary w-100"
+                      data-bs-dismiss="modal"
+                    >
+                      <span class="fw-bold">Cancelar</span>
+                    </button>
+                  </div>
+  
+                  <div class="col-12 col-sm-6">
+                    <button type="submit" class="btn btn-primary w-100">
+                      <span class="fw-bold"> Guardar Alterações</span>
+                    </button>
+                  </div>
                 </div>
-
-                <div class="col-12 col-sm-6">
-                  <button type="submit" class="btn btn-primary w-100">
-                    <span class="fw-bold"> Guardar Alterações</span>
-                  </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>      
+    </div>
+    {% endfor %}
+  </div>    
+  
+  <div
+  class="modal fade"
+  id="addModal"
+  tabindex="-1"
+  aria-labelledby="addModal"
+  aria-hidden="true"
+  >
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="modal-header m-2">
+        <h5 class="modal-title" id="createBrandModal">ADICIONAR MARCA</h5>
+      </div>
+      <div class="modal-body">
+        <form action="/admin/brand/insert" id="insert" method="POST"> 
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-10">
+              <div class="card shadow">
+                <div class="card-body">
+                  <label class="form-label fw-bold">Marca</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"                      
+                      class="form-control"
+                      name="name"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+          <div class="row">
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              <div class="col-12 col-sm-6">
+                <button
+                  type="button"
+                  class="btn btn-secondary w-100"
+                  data-bs-dismiss="modal"
+                >
+                  <span class="fw-bold">Cancelar</span>
+                </button>
+              </div>              
+              <div class="col-12 col-sm-6">                            
+                    <button type="submit" class="btn btn-primary w-100">
+                      <span class="fw-bold">Confirmar</span>     
+                    </button>            
+              </div>            
+            </div>
+          </div>  
+        </form>      
       </div>
     </div>
   </div>
-  {% endfor %}
-</div>
-<div
-  class="d-flex align-items-center justify-content-center justify-content-md-end"
->
-  <ul class="pagination">
-    <li class="page-item {% if brands.page == 1 %}disabled{% endif %}">
-      <a
-        class="page-link"
-        href="{{ url_for('admin.list_brands', page=brands.prev_num) }}"
-        tabindex="-1"
-        >Anterior</a
+  </div>
+  </div>
+  <div
+    class="d-flex align-items-center justify-content-center justify-content-md-end"
+  >
+    <ul class="pagination">
+      <li class="page-item {% if brands.page == 1 %}disabled{% endif %}">
+        <a
+          class="page-link"
+          href="{{ url_for('admin.list_brands', page=brands.prev_num) }}"
+          tabindex="-1"
+          >Anterior</a
+        >
+      </li>
+      {% for page_num in brands.iter_pages(left_edge=1, right_edge=1,
+      left_current=1, right_current=2) %} {% if page_num %} {% if brands.page ==
+      page_num %}
+      <li class="page-item">
+        <a
+          href="{{ url_for('admin.list_brands', page=page_num) }}"
+          class="page-link"
+        >
+          {{ page_num }}
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          href="{{ url_for('admin.list_brands', page=page_num) }}"
+          class="page-link"
+        >
+          {{ page_num }}
+        </a>
+      </li>
+      {% endif %} {% else %} ... {% endif %} {% endfor %}
+      <li
+        class="page-item {% if brands.page == brands.pages %}disabled{% endif %}"
       >
-    </li>
-    {% for page_num in brands.iter_pages(left_edge=1, right_edge=1,
-    left_current=1, right_current=2) %} {% if page_num %} {% if brands.page ==
-    page_num %}
-    <li class="page-item">
-      <a
-        href="{{ url_for('admin.list_brands', page=page_num) }}"
-        class="page-link"
-      >
-        {{ page_num }}
-      </a>
-    </li>
-    {% else %}
-    <li class="page-item">
-      <a
-        href="{{ url_for('admin.list_brands', page=page_num) }}"
-        class="page-link"
-      >
-        {{ page_num }}
-      </a>
-    </li>
-    {% endif %} {% else %} ... {% endif %} {% endfor %}
-    <li
-      class="page-item {% if brands.page == brands.pages %}disabled{% endif %}"
-    >
-      <a
-        class="page-link"
-        href="{{ url_for('admin.list_brands', page=brands.next_num) }}"
-        tabindex="-1"
-        >Seguinte</a
-      >
-    </li>
-  </ul>
-</div>
-{% endblock content %}
+        <a
+          class="page-link"
+          href="{{ url_for('admin.list_brands', page=brands.next_num) }}"
+          tabindex="-1"
+          >Seguinte</a
+        >
+      </li>
+    </ul>
+  </div>
+  {% endblock content %}
+  
