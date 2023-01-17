@@ -68,7 +68,10 @@ def create_app():
     @app.context_processor
     def inject_user():
         user = current_user
-        return dict(user = user)      
+        try:
+             return dict(user = user, initials = user.get_initials())
+        except:
+            return dict(user = "user", initials = "user")   
 
     @login_manager.user_loader
     def load_user(user_id):

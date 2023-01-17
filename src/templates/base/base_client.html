@@ -142,14 +142,20 @@
               </ul>
             </li>
           </ul>
-          <div class="border-top border-bottom border-black mb-2 p-2">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="fa-solid fa-user fa-lg me-2"></i>
-              <span class="text-color">Dummy User</span>
+          <div
+            style="cursor: pointer"
+            class="border-top border-bottom border-black mb-2"
+          >
+            <div class="d-flex align-items-center justify-content-left">
+              <div class="initial-avatar text-end me-3">{{initials}}</div>
+              <span class="ms-5 font-16px">{{user.username}}</span>
             </div>
           </div>
           <div class="row w-100 m-0">
-            <button class="btn btn-primary rounded-0 decoration-none p-2">
+            <button
+              onclick="logout()"
+              class="btn btn-primary rounded-0 decoration-none p-2"
+            >
               <i class="fa-solid fa-right-from-bracket fa-lg me-2 logout"></i>
               <span class="fw-bold">SAIR</span>
             </button>

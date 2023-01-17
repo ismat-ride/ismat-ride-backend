@@ -1,6 +1,6 @@
 
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 from src.extensions import db,ITEMS_PER_PAGE
 from src.rides.rides import Ride
 from src.users.users import Brand, Model, Vehicle
@@ -8,6 +8,7 @@ from src.vehicles import vehicles_bp
 from src.vehicles.dto.vehicles_dto import VehicleDto
 
 @vehicles_bp.route("/list")
+@login_required
 def vehicles_list():
     page = request.args.get('page', 1, type=int)
 
@@ -41,6 +42,7 @@ def vehicles_list():
     return render_template("vehicle/index.html", vehicles = response, models = models_list)    
 
 @vehicles_bp.route("/delete/<id>", methods = ["POST"])
+@login_required
 def delete_vehicle(id):
     
     vehicle_to_delete = db.session.query(Vehicle).filter(Vehicle.id == id).one()
@@ -62,6 +64,7 @@ def delete_vehicle(id):
     return redirect(url_for('vehicles.vehicles_list'))
 
 @vehicles_bp.route("/edit/<id>", methods = ["POST"])
+@login_required
 def edit_vehicle(id):
     vehicle = Vehicle.query.filter_by(id=id).first()
 
@@ -92,6 +95,7 @@ def edit_vehicle(id):
     return redirect(url_for('vehicles.vehicles_list'))  
 
 @vehicles_bp.route("/create", methods = ["POST"])
+@login_required
 def create_vehicle():
 
     vin = request.form.get('vin')
