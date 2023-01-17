@@ -60,6 +60,11 @@ def create_app():
         db.create_all()
         migrate.init_app(app, db, render_as_batch=True)
 
+    @app.context_processor
+    def inject_models():
+        models = Model.query.all()
+        return dict(models_list = models)  
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))

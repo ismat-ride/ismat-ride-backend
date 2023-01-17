@@ -123,7 +123,7 @@
                     class="sidebar-link fw-bold"
                     type="button"
                     data-bs-toggle="modal"
-                    data-bs-target="#createVehicleModal"
+                    data-bs-target="#createVehicle"
                     >CRIAR</a
                   >
                 </li>
@@ -156,78 +156,170 @@
           </a>
         </nav>
         <main class="content">
-            {% with messages = get_flashed_messages(with_categories=true) %} {% if
-            messages %} {% for category, message in messages %} {% if category ==
-            "error"%}
-            <div
-              class="alert alert-danger alert-dismissible fade show"
-              role="alert"
-              id="error"
-            >
-              <div class="alert-message">
-                {{message}}
-                <button
-                  type="button"
-                  class="btn-close"
-                  id="close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"
-                ></button>
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %} {% if category ==
+          "error"%}
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+            id="error"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% if category == "info" %}
+          <div
+            class="alert alert-info alert-dismissible fade show"
+            role="alert"
+            id="success"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% endfor %} {% endif %} {% endwith %}
+          <div class="container-fluid p-0">
+            <h1 class="fw-bold secondary-text-color">
+              {% block container_title %} {% endblock container_title %}
+            </h1>
+            <hr />
+            {% block filters %} {% endblock filters %} {% block content %} {%
+            endblock content %}
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+  <div
+    class="modal fade"
+    id="createVehicle"
+    tabindex="-1"
+    aria-labelledby="createVehicle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">CRIAR VEÍCULO</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('vehicles.create_vehicle') }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Modelo</label>
+                        <div class="input-group mb-3">
+                          <select name="model" class="form-select">
+                            {% for model in models %}
+                            <option value="{{model.id}}">{{model.name}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Cor</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="color"
+                            maxlength="10"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">VIN</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="vin"
+                            maxlength="10"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">Lugares</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="places"
+                            max="20"
+                            min="2"
+                            maxlength="1"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            {% endif %} {% if category == "info" %}
-            <div
-              class="alert alert-info alert-dismissible fade show"
-              role="alert"
-              id="success"
-            >
-              <div class="alert-message">
-                {{message}}
-                <button
-                  type="button"
-                  class="btn-close"
-                  id="close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"
-                ></button>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
               </div>
             </div>
-            {% endif %} {% endfor %} {% endif %} {% endwith %}
-            <div class="container-fluid p-0">
-              <h1 class="fw-bold secondary-text-color">
-                {% block container_title %} {% endblock container_title %}
-              </h1>
-              <hr />
-              {% block filters %} {% endblock filters %} {% block content %} {%
-              endblock content %}
-            </div>
-          </main>
+          </form>
         </div>
       </div>
-    </body>
-  </html>
-  
-  <!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
-  <script>
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-  </script>
-  
-  <!-- THIS IS THE SCRIPT THAT CLOSES THE ALERT AUTOMATICALLY -->
-  <script type="text/javascript">
-    setTimeout(function () {
-      document.getElementById("close").click();
-    }, 5000);
-  
-    function logout() {
-      if (document.cookie.includes("admin") ) {
-        window.location.href = "/admin/logout";
-      } else {
-        window.location.href = "/auth/logout";
-      }
+    </div>
+  </div>
+</html>
+
+<!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
+<script>
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
+
+<!-- THIS IS THE SCRIPT THAT CLOSES THE ALERT AUTOMATICALLY -->
+<script type="text/javascript">
+  setTimeout(function () {
+    document.getElementById("close").click();
+  }, 5000);
+
+  function logout() {
+    if (document.cookie.includes("admin")) {
+      window.location.href = "/admin/logout";
+    } else {
+      window.location.href = "/auth/logout";
     }
-  </script>
+  }
+</script>

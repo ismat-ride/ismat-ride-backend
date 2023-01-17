@@ -1,5 +1,6 @@
 
-from flask import flash, redirect, render_template, request, url_for
+from flask import Response, flash, redirect, render_template, request, url_for
+from flask_login import current_user
 from src.extensions import db,ITEMS_PER_PAGE
 from src.rides.rides import Ride
 from src.users.users import Brand, Model, Vehicle
@@ -78,3 +79,16 @@ def edit_vehicle(id):
     flash('Veículo atualizado com sucesso', 'info')
 
     return redirect(url_for('vehicles.vehicles_list'))  
+
+@vehicles_bp.route("/create", methods = ["POST"])
+def create_vehicle():
+    new_vehicle = Vehicle(user_id = current_user.id,
+    license_plate = request.form.get('vin'),
+    color = request.form.get('color'),
+    seats = request.form.get('places'),
+    model_id = request.form.get('model'))
+    
+    db.session.add(new_vehicle)
+    db.session.commit()
+
+    return redirect(request.referrer)
