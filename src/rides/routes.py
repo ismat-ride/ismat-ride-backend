@@ -4,9 +4,11 @@ from flask_login import login_required
 from src.rides.dto.ride_list_dto import RideListDto, RideDto, PassengerListDto
 from src.rides.rides import Ride
 from src.users.users import User
-from flask import render_template, request, url_for
+from src.ride_requests.ride_requests import RideRequest, RideRequestState
+from flask import render_template, request, url_for, flash
 from src.rides import rides_bp
-from src.extensions import student_required, ITEMS_PER_PAGE
+from src.extensions import student_required, ITEMS_PER_PAGE, db
+from flask_login import current_user
 
 @rides_bp.route("list")
 @login_required
@@ -56,12 +58,38 @@ def get_ride(id):
 
     if ride:
         passengers = list()
+        print(RideRequest.query.all())
+        is_joinable = RideRequest.query.filter_by(user_id=current_user.id, ride_id=ride.id) == None
+
         for passenger in ride.passengers:
             passengers.append(PassengerListDto(passenger.id, passenger.get_initials()))
 
         response = RideDto(str(ride.id), ride.origin, ride.destiny, ride.vehicle.model,
-            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, passengers)
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, passengers, is_joinable)
 
         return render_template('rides/ride.html', ride = response)
 
+    return url_for('rides.list_rides')
+
+@login_required
+@student_required
+@rides_bp.route('<id>/join', methods = [ 'POST' ])
+def join_ride(id):
+    ride_to_join = Ride.query.filter_by(id=id).first()
+
+    if ride_to_join:
+        initial_ride_request_state = RideRequestState.query.filter_by(name='Pending').first()
+
+        ride_to_join_request = RideRequest(
+            user=current_user,
+            ride=ride_to_join,
+            ride_request_state=initial_ride_request_state)
+
+        db.session.add(ride_to_join_request)
+        db.session.commit()
+
+        flash('Pedido de boleia foi enviado para o condutor, podes verificar o estado na aba pedidos de boleia', category='info')
+        return render_template('rides/ride.html', ride = ride_to_join)
+
+    flash('Error while entering ride, try again later', category='error')
     return url_for('rides.list_rides')

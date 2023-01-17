@@ -23,6 +23,7 @@ class RideDto:
     starting_hour: str
     total_places: str
     passengers: list
+    is_joinable: bool
     
 @dataclass
 class PassengerListDto:
