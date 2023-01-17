@@ -82,13 +82,39 @@ def edit_vehicle(id):
 
 @vehicles_bp.route("/create", methods = ["POST"])
 def create_vehicle():
+
+    vin = request.form.get('vin')
+
+    if vin is None:
+        flash("Vin invalido!", "error")
+        return redirect(request.referrer)
+
+    color = request.form.get('color')
+
+    if color is None:
+        flash("Cor invalida!", "error")
+        return redirect(request.referrer)
+
+    seats = request.form.get('places')
+
+    if seats is None:
+        flash("Lugares invalidos!", "error")
+        return redirect(request.referrer)
+
+    model_id = request.form.get('model')
+
+    if model_id is None:
+        flash("Modelo invalido!", "error")
+        return redirect(request.referrer)
+
     new_vehicle = Vehicle(user_id = current_user.id,
-    license_plate = request.form.get('vin'),
-    color = request.form.get('color'),
-    seats = request.form.get('places'),
-    model_id = request.form.get('model'))
+    license_plate = vin,
+    color = color,
+    seats = seats,
+    model_id = model_id)
     
     db.session.add(new_vehicle)
     db.session.commit()
 
+    flash("Veículo adicionado com sucesso!", 'info')
     return redirect(request.referrer)
