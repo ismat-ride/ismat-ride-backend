@@ -56,7 +56,7 @@ block filters%}
   </div>
 </form>
 {% endblock filters %}{%block content %}
-<div class="row justify-content-evenly">
+<div class="row justify-content-start">
   {% for user in user_list['items'] %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
@@ -94,15 +94,15 @@ block filters%}
               <div
                 class="col-12 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end"
               >
-                {% if user.status == 'active' %}
+                {% if user.status == 'Active' %}
                 <span class="badge rounded-pill bg-success font-14px ps-2 pe-2"
                   >ATIVO</span
                 >
-                {% endif %} {% if user.status == 'inactive' %}
+                {% endif %} {% if user.status == 'Inactive' %}
                 <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                   >INATIVO</span
                 >
-                {% endif %} {% if user.status == 'pending_confirmation' %}
+                {% endif %} {% if user.status == 'Pending' %}
                 <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
                   >PENDENTE</span
                 >
@@ -115,6 +115,7 @@ block filters%}
     </div>
   </div>
   {% endfor %}
+</div>
   <div
     class="d-flex align-items-center justify-content-center justify-content-md-end"
   >
@@ -160,7 +161,6 @@ block filters%}
       </li>
     </ul>
   </div>
-</div>
 <script>
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);

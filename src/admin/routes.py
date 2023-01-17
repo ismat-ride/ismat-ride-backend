@@ -20,7 +20,7 @@ from flask_mail import Message
 def list_users():
     page = request.args.get('page', 1, type=int)
     
-    query = User.query.filter(User.type == "student")
+    query = User.query.filter(User.type == "Student")
 
     if request.args.get("name"):
         query = query.filter(or_(
