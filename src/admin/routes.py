@@ -44,7 +44,7 @@ def list_users():
 
     for user in query:
         user_list_dto.append(
-            UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
+            UserListDto(user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
         )
 
     response['items'] = user_list_dto
@@ -339,3 +339,31 @@ def edit_user_post(id):
     flash('Utilizador editado com sucesso', category='info')
 
     return redirect(url_for('admin.edit_user', id=id))
+
+@admin_bp.route('users/update/<user_id>', methods=['GET', 'POST'])
+@login_required
+def update_user(user_id):    
+	
+	user_to_update = User.query.get_or_404(id=user_id)
+	if request.method == "POST":
+		user_to_update.name = request.form.get['name']
+		user_to_update.email = request.form['email']
+		user_to_update.favorite_color = request.form['favorite_color']
+		user_to_update.username = request.form['username']
+		try:
+			db.session.commit()
+			flash("User Updated Successfully!")
+			return render_template("admin.list_users", 
+				
+				user_to_update = user_to_update, id=user_id)
+		except:
+			flash("Error!  Looks like there was a problem...try again!")
+			return render_template("admin.list_users", 
+				
+				user_to_update = user_to_update,
+				id=user_id)
+	else:
+		return render_template("admin.list_users", 
+			
+				user_to_update = user_to_update,
+				id = user_id)
