@@ -5,7 +5,7 @@ from .users.users import *
 from .rides.rides import *
 from .brands import *
 from .ride_requests.ride_requests import *
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 DB_NAME = "rides.db"
 
@@ -63,7 +63,12 @@ def create_app():
     @app.context_processor
     def inject_models():
         models = Model.query.all()
-        return dict(models_list = models)  
+        return dict(models_list = models)
+
+    @app.context_processor
+    def inject_user():
+        user = current_user
+        return dict(user = user)      
 
     @login_manager.user_loader
     def load_user(user_id):

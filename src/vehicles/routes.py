@@ -1,5 +1,5 @@
 
-from flask import Response, flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
 from src.extensions import db,ITEMS_PER_PAGE
 from src.rides.rides import Ride
@@ -68,7 +68,19 @@ def edit_vehicle(id):
     if vehicle is None:
         flash('Não existe este veículo', 'error')
         return redirect(url_for('vehicles.vehicles_list'))
-        
+    if request.form.get('model') is None or request.form.get('model') == "":
+        flash('Insira um modelo!', 'error')
+        return redirect(url_for('vehicles.vehicles_list'))
+    if request.form.get('color') is None or request.form.get('color') == "":
+        flash('Cor invalida!', 'error')
+        return redirect(url_for('vehicles.vehicles_list'))
+    if request.form.get('vin') is None or request.form.get('vin') == "":
+        flash('Matricula invalida!', 'error')
+        return redirect(url_for('vehicles.vehicles_list'))
+    if request.form.get('places') is None or request.form.get('places') == "":
+        flash('Número de lugares invalido!', 'error')
+        return redirect(url_for('vehicles.vehicles_list'))            
+
     vehicle.model_id = request.form.get('model')
     vehicle.color = request.form.get('color')
     vehicle.license_plate = request.form.get('vin')
@@ -77,7 +89,6 @@ def edit_vehicle(id):
     db.session.commit()
 
     flash('Veículo atualizado com sucesso', 'info')
-
     return redirect(url_for('vehicles.vehicles_list'))  
 
 @vehicles_bp.route("/create", methods = ["POST"])
@@ -85,25 +96,25 @@ def create_vehicle():
 
     vin = request.form.get('vin')
 
-    if vin is None:
+    if vin is None or vin == "":
         flash("Vin invalido!", "error")
         return redirect(request.referrer)
 
     color = request.form.get('color')
 
-    if color is None:
+    if color is None or color == "":
         flash("Cor invalida!", "error")
         return redirect(request.referrer)
 
     seats = request.form.get('places')
 
-    if seats is None:
+    if seats is None or seats == "":
         flash("Lugares invalidos!", "error")
         return redirect(request.referrer)
 
     model_id = request.form.get('model')
 
-    if model_id is None:
+    if model_id is None or model_id == "":
         flash("Modelo invalido!", "error")
         return redirect(request.referrer)
 

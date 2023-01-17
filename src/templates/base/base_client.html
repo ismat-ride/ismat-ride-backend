@@ -32,7 +32,12 @@
           </h2>
           <ul class="sidebar-nav">
             <li class="sidebar-item">
-              <a class="sidebar-link" href="../edit-profile-page/">
+              <a
+                class="sidebar-link"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#editProfile"
+              >
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold"> PERFIL</span>
@@ -128,7 +133,9 @@
                   >
                 </li>
                 <li class="sidebar-item">
-                  <a href="../vehicles-page/" class="sidebar-link fw-bold"
+                  <a
+                    href="{{ url_for('vehicles.vehicles_list') }}"
+                    class="sidebar-link fw-bold"
                     >OS MEUS VEÍCULOS</a
                   >
                 </li>
@@ -205,6 +212,7 @@
       </div>
     </div>
   </body>
+  <!-- THIS IS THE CREATE VEHICLE MODAL -->
   <div
     class="modal fade"
     id="createVehicle"
@@ -266,6 +274,122 @@
                             max="20"
                             min="2"
                             maxlength="1"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- THIS IS THE EDIT PROFILE MDOAL -->
+  <div
+    class="modal fade"
+    id="editProfile"
+    tabindex="-1"
+    aria-labelledby="editProfile"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="editProfile">EDITAR PERFIL</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('users.edit_profile') }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Primeiro nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="firstname"
+                            value="{{user.first_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Último nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="lastname"
+                            value="{{user.last_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">Username</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="username"
+                            value="{{user.username}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Telefone</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="phone"
+                            value="{{user.phone_number}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="email"
+                            value="{{user.email}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold"
+                          >Número de aluno</label
+                        >
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="process"
+                            value="{{user.student_number}}"
                           />
                         </div>
                       </div>

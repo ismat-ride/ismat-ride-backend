@@ -14,9 +14,6 @@ class User(db.Model, UserMixin):
 	phone_number = db.Column(db.String(100))
 	type = db.Column(db.String(20))
 	
-	def __str__(self):
-		return self.email
-
 	def get_full_name(self):
 		return self.first_name + " " + self.last_name	
 
