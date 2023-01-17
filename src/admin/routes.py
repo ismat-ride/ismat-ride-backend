@@ -257,9 +257,8 @@ def list_rides():
 
 @admin_bp.route('login')
 def login():
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
-         return redirect(url_for('rides.get'))
+         return redirect(url_for('admin.profile'))
 
     return render_template('admin/login.html')
 
@@ -272,7 +271,7 @@ def login_post():
     remember_me = request.form.get('remember_me')
 
     user = User.query.filter_by(email=email).first()
-    print(user)
+    
     if not user or user.type != 'admin' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
 
@@ -339,3 +338,10 @@ def edit_user_post(id):
     flash('Utilizador editado com sucesso', category='info')
 
     return redirect(url_for('admin.edit_user', id=id))
+
+@admin_bp.route('/profile')
+@login_required
+def profile():
+    user = User.query.filter_by(email=request.cookies.get('email')).first()
+
+    return redirect(url_for('admin.edit_user', id=user.id))
