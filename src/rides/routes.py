@@ -38,9 +38,11 @@ def list_rides():
     rides_list = list()
     
     for ride in query:
+        is_joinable = RideRequest.query.filter_by(user_id=current_user.id, ride_id=ride.id) == None
+
         rides_list.append(
             RideListDto(str(ride.id), ride.driver.get_full_name(), ride.driver.get_initials(),ride.origin, ride.destiny, ride.status.name, 
-            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers)) 
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers), is_joinable) 
         )
 
     response['items'] = rides_list
@@ -58,7 +60,6 @@ def get_ride(id):
 
     if ride:
         passengers = list()
-        print(RideRequest.query.all())
         is_joinable = RideRequest.query.filter_by(user_id=current_user.id, ride_id=ride.id) == None
 
         for passenger in ride.passengers:
