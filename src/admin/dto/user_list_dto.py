@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class UserListDto:
+    id: str
     email: str
     username: str
     first_name: str

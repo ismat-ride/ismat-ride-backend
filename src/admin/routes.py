@@ -44,7 +44,7 @@ def list_users():
 
     for user in query:
         user_list_dto.append(
-            UserListDto(user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
+            UserListDto(user.id, user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
         )
 
     response['items'] = user_list_dto
@@ -257,9 +257,8 @@ def list_rides():
 
 @admin_bp.route('login')
 def login():
-    print(current_user.is_authenticated)
     if current_user.is_authenticated:
-         return redirect(url_for('rides.get'))
+         return redirect(url_for('admin.profile'))
 
     return render_template('admin/login.html')
 
@@ -272,7 +271,7 @@ def login_post():
     remember_me = request.form.get('remember_me')
 
     user = User.query.filter_by(email=email).first()
-    print(user)
+    
     if not user or user.type != 'admin' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
 
@@ -340,30 +339,29 @@ def edit_user_post(id):
 
     return redirect(url_for('admin.edit_user', id=id))
 
-@admin_bp.route('users/update/<user_id>', methods=['GET', 'POST'])
+@admin_bp.route('/users/update/<id>', methods=['GET', 'POST'])
 @login_required
-def update_user(user_id):    
-	
-	user_to_update = User.query.get_or_404(id=user_id)
-	if request.method == "POST":
-		user_to_update.name = request.form.get['name']
-		user_to_update.email = request.form['email']
-		user_to_update.favorite_color = request.form['favorite_color']
-		user_to_update.username = request.form['username']
-		try:
-			db.session.commit()
-			flash("User Updated Successfully!")
-			return render_template("admin.list_users", 
-				
-				user_to_update = user_to_update, id=user_id)
-		except:
-			flash("Error!  Looks like there was a problem...try again!")
-			return render_template("admin.list_users", 
-				
-				user_to_update = user_to_update,
-				id=user_id)
-	else:
-		return render_template("admin.list_users", 
-			
-				user_to_update = user_to_update,
-				id = user_id)
+def update_user(id):
+    # brand = Brand.query.get(id)
+    user = User.query.filter_by(id=id).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('admin.list_users'))
+
+    user.username = request.form.get('username')    
+    user.email = request.form.get('email')
+    user.phone_number = request.form.get('phone_number')
+    user.status = request.form.get('status')
+    
+    if request.form.get("status") is None:
+        user.status = "Active"
+    if request.form.get("status") == "on":
+        user.status = "Inactive"
+
+    db.session.commit()
+
+    flash('Utilizador editado com sucesso', category='info')
+
+    return redirect(url_for('admin.list_users'))
