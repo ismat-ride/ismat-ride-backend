@@ -20,7 +20,7 @@ from flask_mail import Message
 def list_users():
     page = request.args.get('page', 1, type=int)
     
-    query = User.query.filter(User.type == "student")
+    query = User.query.filter(User.type == "Student")
 
     if request.args.get("name"):
         query = query.filter(or_(
@@ -44,7 +44,7 @@ def list_users():
 
     for user in query:
         user_list_dto.append(
-            UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
+            UserListDto(user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
         )
 
     response['items'] = user_list_dto
@@ -339,9 +339,30 @@ def edit_user_post(id):
 
     return redirect(url_for('admin.edit_user', id=id))
 
-@admin_bp.route('/profile')
+@admin_bp.route('users/update/<user_id>', methods=['GET', 'POST'])
 @login_required
-def profile():
-    user = User.query.filter_by(email=request.cookies.get('email')).first()
-
-    return redirect(url_for('admin.edit_user', id=user.id))
+def update_user(user_id):    
+	
+	user_to_update = User.query.get_or_404(id=user_id)
+	if request.method == "POST":
+		user_to_update.name = request.form.get['name']
+		user_to_update.email = request.form['email']
+		user_to_update.favorite_color = request.form['favorite_color']
+		user_to_update.username = request.form['username']
+		try:
+			db.session.commit()
+			flash("User Updated Successfully!")
+			return render_template("admin.list_users", 
+				
+				user_to_update = user_to_update, id=user_id)
+		except:
+			flash("Error!  Looks like there was a problem...try again!")
+			return render_template("admin.list_users", 
+				
+				user_to_update = user_to_update,
+				id=user_id)
+	else:
+		return render_template("admin.list_users", 
+			
+				user_to_update = user_to_update,
+				id = user_id)
