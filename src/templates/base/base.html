@@ -34,10 +34,12 @@
           <ul class="sidebar-nav">
             <li class="sidebar-item">
               <!-- ÂDD HERE THE PROFILE URL -->
-              <a class="sidebar-link"      
+              <a
+                class="sidebar-link"
                 type="button"
                 data-bs-toggle="modal"
-                data-bs-target="#editProfile">
+                data-bs-target="#editProfile"
+              >
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold">PERFIL</span>
@@ -126,12 +128,15 @@
           <div class="row w-100 m-0 logout-wrapper">
             <div class="col-12">
               <div class="decoration-none row justify-items-center p-2">
-                <span onclick="logout()" class="fw-bold secondary-color text-center">
+                <span
+                  onclick="logout()"
+                  class="fw-bold secondary-color text-center"
+                >
                   <i
                     class="fa-solid fa-right-from-bracket fa-lg me-2 logout"
                   ></i
-                  ><span>SAIR</span></a
-                >
+                  ><span>SAIR</span>
+                </span>
               </div>
             </div>
           </div>
@@ -193,7 +198,7 @@
       </div>
     </div>
   </body>
-   <div
+  <div
     class="modal fade"
     id="editProfile"
     tabindex="-1"
@@ -234,7 +239,7 @@
                           />
                         </div>
                       </div>
-               
+
                       <div class="col-12 mb-3">
                         <label class="form-label fw-bold">Telefone</label>
                         <div class="input-group mb-3">
@@ -304,7 +309,7 @@
   }, 5000);
 
   function logout() {
-    if (document.cookie.includes("admin") ) {
+    if (document.cookie.includes("admin")) {
       window.location.href = "/admin/logout";
     } else {
       window.location.href = "/auth/logout";

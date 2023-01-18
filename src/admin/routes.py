@@ -257,7 +257,7 @@ def list_rides():
 @admin_bp.route('login')
 def login():
     if current_user.is_authenticated:
-         return redirect(url_for('admin.profile'))
+         return redirect(url_for('admin.list_rides'))
 
     return render_template('admin/login.html')
 
@@ -329,9 +329,3 @@ def edit_user_post():
 
     flash('Perfil atualizado com sucesso!', 'info')
     return redirect(request.referrer)
-
-@admin_bp.route('/profile')
-@login_required
-def profile():
-    user = current_user
-    return redirect(url_for('admin.edit_user', id=user.id))
