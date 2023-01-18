@@ -20,7 +20,7 @@ from flask_mail import Message
 def list_users():
     page = request.args.get('page', 1, type=int)
     
-    query = User.query.filter(User.type == "student")
+    query = User.query.filter(User.type == "Student")
 
     if request.args.get("name"):
         query = query.filter(or_(
@@ -257,7 +257,7 @@ def list_rides():
 @admin_bp.route('login')
 def login():
     if current_user.is_authenticated:
-         return redirect(url_for('rides.get'))
+         return redirect(url_for('admin.profile'))
 
     return render_template('admin/login.html')
 
@@ -268,6 +268,7 @@ def login_post():
     remember_me = request.form.get('remember_me')
 
     user = User.query.filter_by(email=email).first()
+    
     if not user or user.type != 'admin' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
 
@@ -334,3 +335,10 @@ def edit_user_post(id):
     flash('Utilizador editado com sucesso', category='info')
 
     return redirect(url_for('admin.edit_user', id=id))
+
+@admin_bp.route('/profile')
+@login_required
+def profile():
+    user = User.query.filter_by(email=request.cookies.get('email')).first()
+
+    return redirect(url_for('admin.edit_user', id=user.id))
