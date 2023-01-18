@@ -354,6 +354,11 @@ def update_user(id):
     user.email = request.form.get('email')
     user.phone_number = request.form.get('phone_number')
     user.status = request.form.get('status')
+    
+    if request.form.get("status") is None:
+        user.status = "Active"
+    if request.form.get("status") == "on":
+        user.status = "Inactive"
 
     db.session.commit()
 
