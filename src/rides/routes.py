@@ -9,7 +9,7 @@ from flask import render_template, request, url_for, flash, redirect
 from src.rides import rides_bp
 from src.extensions import student_required, ITEMS_PER_PAGE, db
 from flask_login import current_user
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @rides_bp.route("list")
 @login_required
@@ -94,17 +94,21 @@ def create_ride():
         flash('A boleia tem que ter um veículo associado', category='error')
         is_valid = False
 
-    if int(total_seats) < 0:
+    if total_seats is '':
         flash('Uma boleia tem que ter no minimo 1 lugar disponível', category='error')
         is_valid = False
 
-    if date is None:
+    if date is '':
         flash('Uma boleia tem que ter uma data associada', category='error')
+        is_valid = False
+
+    if is_less_than_30_minutes(datetime.utcnow(), datetime.strptime(date, '%Y-%m-%dT%H:%M')):
+        flash('Uma boleia nao pode acontecer em menos de 30 Minutos', category='error')
         is_valid = False
 
     if not is_valid:
         return redirect(request.referrer)
-    
+
     ride_pending_status = RideStatus.query.filter_by(name='Active').first()
 
     new_ride = Ride(
@@ -145,3 +149,8 @@ def join_ride(id):
 
     flash('Error while entering ride, try again later', category='error')
     return url_for('rides.list_rides')
+
+def is_less_than_30_minutes(currentTime, rideTime):
+    time_dif = (rideTime - currentTime) // timedelta(minutes=1)
+
+    return time_dif < 30
