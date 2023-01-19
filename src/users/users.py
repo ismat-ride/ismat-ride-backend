@@ -20,8 +20,7 @@ class User(db.Model, UserMixin):
 	def get_initials(self):
 		first_name_initial = str.upper(self.first_name[0])
 		last_name_initial = str.upper(self.last_name[0])
-		return f'{first_name_initial}{last_name_initial}'	
-
+		return f'{first_name_initial}{last_name_initial}'
 
 class Brand(db.Model):
 	__tablename__ = 'brand'
