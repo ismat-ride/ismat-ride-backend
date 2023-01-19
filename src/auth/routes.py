@@ -11,7 +11,7 @@ from flask_mail import Message
 @auth_bp.route('/login')
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('admin.profile'))
+        return redirect(url_for('vehicles.vehicles_list'))
 
     return render_template('auth/login.html')
 

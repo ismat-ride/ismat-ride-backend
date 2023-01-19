@@ -32,7 +32,12 @@
           </h2>
           <ul class="sidebar-nav">
             <li class="sidebar-item">
-              <a class="sidebar-link" href="../edit-profile-page/">
+              <a
+                class="sidebar-link"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#editProfile"
+              >
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold"> PERFIL</span>
@@ -123,26 +128,34 @@
                     class="sidebar-link fw-bold"
                     type="button"
                     data-bs-toggle="modal"
-                    data-bs-target="#createVehicleModal"
+                    data-bs-target="#createVehicle"
                     >CRIAR</a
                   >
                 </li>
                 <li class="sidebar-item">
-                  <a href="../vehicles-page/" class="sidebar-link fw-bold"
+                  <a
+                    href="{{ url_for('vehicles.vehicles_list') }}"
+                    class="sidebar-link fw-bold"
                     >OS MEUS VEÍCULOS</a
                   >
                 </li>
               </ul>
             </li>
           </ul>
-          <div class="border-top border-bottom border-black mb-2 p-2">
-            <div class="d-flex align-items-center justify-content-center">
-              <i class="fa-solid fa-user fa-lg me-2"></i>
-              <span class="text-color">Dummy User</span>
+          <div
+            style="cursor: pointer"
+            class="border-top border-bottom border-black mb-2"
+          >
+            <div class="d-flex align-items-center justify-content-left">
+              <div class="initial-avatar text-end me-3">{{initials}}</div>
+              <span class="ms-5 font-16px">{{user.username}}</span>
             </div>
           </div>
           <div class="row w-100 m-0">
-            <button class="btn btn-primary rounded-0 decoration-none p-2">
+            <button
+              onclick="logout()"
+              class="btn btn-primary rounded-0 decoration-none p-2"
+            >
               <i class="fa-solid fa-right-from-bracket fa-lg me-2 logout"></i>
               <span class="fw-bold">SAIR</span>
             </button>
@@ -156,52 +169,144 @@
           </a>
         </nav>
         <main class="content">
-            {% with messages = get_flashed_messages(with_categories=true) %} {% if
-            messages %} {% for category, message in messages %} {% if category ==
-            "error"%}
-            <div
-              class="alert alert-danger alert-dismissible fade show"
-              role="alert"
-              id="error"
-            >
-              <div class="alert-message">
-                {{message}}
-                <button
-                  type="button"
-                  class="btn-close"
-                  id="close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"
-                ></button>
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %} {% if category ==
+          "error"%}
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+            id="error"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% if category == "info" %}
+          <div
+            class="alert alert-info alert-dismissible fade show"
+            role="alert"
+            id="success"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% endfor %} {% endif %} {% endwith %}
+          <div class="container-fluid p-0">
+            <h1 class="fw-bold secondary-text-color">
+              {% block container_title %} {% endblock container_title %}
+            </h1>
+            <hr />
+            {% block filters %} {% endblock filters %} {% block content %} {%
+            endblock content %}
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+  <!-- THIS IS THE CREATE VEHICLE MODAL -->
+  <div
+    class="modal fade"
+    id="createVehicle"
+    tabindex="-1"
+    aria-labelledby="createVehicle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">CRIAR VEÍCULO</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('vehicles.create_vehicle') }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Modelo</label>
+                        <div class="input-group mb-3">
+                          <select name="model" class="form-select">
+                            {% for model in models %}
+                            <option value="{{model.id}}">{{model.name}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Cor</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="color"
+                            maxlength="10"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">VIN</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="vin"
+                            maxlength="10"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">Lugares</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="places"
+                            max="20"
+                            min="2"
+                            maxlength="1"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            {% endif %} {% if category == "info" %}
-            <div
-              class="alert alert-info alert-dismissible fade show"
-              role="alert"
-              id="success"
-            >
-              <div class="alert-message">
-                {{message}}
-                <button
-                  type="button"
-                  class="btn-close"
-                  id="close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"
-                ></button>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
               </div>
             </div>
-            {% endif %} {% endfor %} {% endif %} {% endwith %}
-            <div class="container-fluid p-0">
-              <h1 class="fw-bold secondary-text-color">
-                {% block container_title %} {% endblock container_title %}
-              </h1>
-              <hr />
-              {% block filters %} {% endblock filters %} {% block content %} {%
-              endblock content %}
-            </div>
-          </main>
+          </form>
         </div>
       </div>
       <div
@@ -299,36 +404,147 @@
                     >
                       <span class="fw-bold"> Guardar Alterações</span>
                     </button>
+    </div>
+  </div>
+  <!-- THIS IS THE EDIT PROFILE MDOAL -->
+  <div
+    class="modal fade"
+    id="editProfile"
+    tabindex="-1"
+    aria-labelledby="editProfile"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="editProfile">EDITAR PERFIL</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('users.edit_profile') }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Primeiro nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="firstname"
+                            value="{{user.first_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Último nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="lastname"
+                            value="{{user.last_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">Username</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="username"
+                            value="{{user.username}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Telefone</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="phone"
+                            value="{{user.phone_number}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="email"
+                            value="{{user.email}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold"
+                          >Número de aluno</label
+                        >
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="process"
+                            value="{{user.student_number}}"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
-    </body>
-  </html>
-  
-  <!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
-  <script>
-    var tooltipTriggerList = [].slice.call(
-      document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-  </script>
-  
-  <!-- THIS IS THE SCRIPT THAT CLOSES THE ALERT AUTOMATICALLY -->
-  <script type="text/javascript">
-    setTimeout(function () {
-      document.getElementById("close").click();
-    }, 5000);
-  
-    function logout() {
-      if (document.cookie.includes("admin") ) {
-        window.location.href = "/admin/logout";
-      } else {
-        window.location.href = "/auth/logout";
-      }
+      </div>
+    </div>
+  </div>
+</html>
+
+<!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
+<script>
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
+
+<!-- THIS IS THE SCRIPT THAT CLOSES THE ALERT AUTOMATICALLY -->
+<script type="text/javascript">
+  setTimeout(function () {
+    document.getElementById("close").click();
+  }, 5000);
+
+  function logout() {
+    if (document.cookie.includes("admin")) {
+      window.location.href = "/admin/logout";
+    } else {
+      window.location.href = "/auth/logout";
     }
-  </script>
+  }
+</script>

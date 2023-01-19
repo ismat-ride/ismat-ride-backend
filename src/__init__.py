@@ -46,6 +46,9 @@ def create_app():
     from src.models import models_bp
     app.register_blueprint(models_bp, url_prefix = '/models')
 
+    from src.vehicles import vehicles_bp
+    app.register_blueprint(vehicles_bp, url_prefix = '/vehicles')
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -60,9 +63,20 @@ def create_app():
     @app.context_processor
     def inject_user_vehicles():
         vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
-
-        print(vehicles)
         return dict(vehicles = vehicles)
+    
+    @app.context_processor
+    def inject_models():
+        models = Model.query.all()
+        return dict(models_list = models)
+
+    @app.context_processor
+    def inject_user():
+        user = current_user
+        try:
+             return dict(user = user, initials = user.get_initials())
+        except:
+            return dict(user = "user", initials = "user")   
 
     @login_manager.user_loader
     def load_user(user_id):

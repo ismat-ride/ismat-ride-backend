@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
 	student_number = db.Column(db.String(50))
 	phone_number = db.Column(db.String(100))
 	type = db.Column(db.String(20))
-
+	
 	def get_full_name(self):
 		return self.first_name + " " + self.last_name	
 
