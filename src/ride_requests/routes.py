@@ -2,10 +2,10 @@
 import datetime
 from datetime import timedelta
 from operator import or_
-from flask import render_template, request
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import func
-from src.extensions import ITEMS_PER_PAGE
+from src.extensions import db, ITEMS_PER_PAGE
 from src.ride_requests.dto.my_requests_list_dto import MyRequestsListDto
 from src.ride_requests.ride_requests import RideRequest
 from src.ride_requests import ride_requests_bp
@@ -62,3 +62,13 @@ def getIsCancalable(currentTime, rideTime, rideStatus):
             return 'True'
         return 'False'
     return 'False'        
+
+@ride_requests_bp.route("my-request/cancel_request/<id>", methods=["POST"])
+@login_required
+def cancel_request(id):
+    ride_request = RideRequest.query.get(id)
+    ride_request.ride_request_state_id = 4
+
+    db.session.commit()
+    flash("Pedido de boleia cancelado com sucesso!", "info")
+    return redirect(url_for('ride_requests.my_requests_list'))
