@@ -341,8 +341,7 @@ def edit_user_post(id):
 
 @admin_bp.route('/users/update/<id>', methods=['GET', 'POST'])
 @login_required
-def update_user(id):
-    # brand = Brand.query.get(id)
+def update_user(id):    
     user = User.query.filter_by(id=id).first()
 
     if user is None:
@@ -356,9 +355,9 @@ def update_user(id):
     user.status = request.form.get('status')
     
     if request.form.get("status") is None:
-        user.status = "Active"
-    if request.form.get("status") == "on":
         user.status = "Inactive"
+    if request.form.get("status") == "on":
+        user.status = "Active"
 
     db.session.commit()
 
