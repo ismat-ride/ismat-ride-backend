@@ -59,11 +59,6 @@ def create_app():
     with app.app_context():
         db.create_all()
         migrate.init_app(app, db, render_as_batch=True)
-
-    @app.context_processor
-    def inject_user_vehicles():
-        vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
-        return dict(vehicles = vehicles)
     
     @app.context_processor
     def inject_models():
@@ -76,10 +71,19 @@ def create_app():
         try:
              return dict(user = user, initials = user.get_initials())
         except:
-            return dict(user = "user", initials = "user")   
+            return dict(user = "user", initials = "user")
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    @app.context_processor
+    def inject_user_vehicles():
+        if current_user.is_authenticated:
+            vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
+            print(vehicles)
+            return dict(vehicles = vehicles)
+
+        return dict(vehicles = None)
 
     return app
