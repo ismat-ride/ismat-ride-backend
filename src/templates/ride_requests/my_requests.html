@@ -35,6 +35,7 @@ container_title %} {% block filters %}
             <option id="1" value="1">Aceite</option>
             <option id="2" value="2">Pendente</option>
             <option id="3" value="3">Rejeitada</option>
+            <option id="4" value="4">Cancelado</option>
           </select>
         </div>
         <div class="flex-fill justify-content-center">
@@ -75,6 +76,10 @@ container_title %} {% block filters %}
                 <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
+                {% elif "CANCELADO" == item.status %}
+                <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
+                  >{{item.status}}</span
+                >
                 {% endif %}
               </div>
             </div>
@@ -93,21 +98,24 @@ container_title %} {% block filters %}
               </div>
             </div>
           </div>
+
           <div class="col-5 d-flex justify-content-end">
-            {% if 'True' == item.isCancelable %}
             <form
               action="{{ url_for('ride_requests.cancel_request', id=item.id) }}"
               method="post"
             >
+              {% if 'True' == item.isCancelable %}
+
               <button type="submit" class="btn btn-primary w-100">
                 <span class="fw-bold">CANCELAR</span>
               </button>
+
+              {% elif 'False' == item.isCancelable %}
+              <button class="btn btn-primary w-100 disabled">
+                <span class="fw-bold">CANCELAR</span>
+              </button>
+              {% endif %}
             </form>
-            {% elif 'False' == item.isCancelable %}
-            <button class="btn btn-primary w-100 disabled">
-              <span class="fw-bold">CANCELAR</span>
-            </button>
-            {% endif %}
           </div>
         </div>
       </div>
