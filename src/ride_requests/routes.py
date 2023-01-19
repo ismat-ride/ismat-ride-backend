@@ -1,10 +1,15 @@
 
+import datetime
+from datetime import timedelta
+from operator import or_
 from flask import render_template, request
 from flask_login import current_user, login_required
+from sqlalchemy import func
 from src.extensions import ITEMS_PER_PAGE
 from src.ride_requests.dto.my_requests_list_dto import MyRequestsListDto
 from src.ride_requests.ride_requests import RideRequest
 from src.ride_requests import ride_requests_bp
+from src.rides.rides import Ride
 
 @ride_requests_bp.route("/list")
 @login_required
@@ -13,28 +18,47 @@ def my_requests_list():
 
     query = RideRequest.query.filter(RideRequest.user_id == current_user.id)
 
-    """ if request.args.get("model"):
-        query = query.join(Model, Vehicle.model).filter(Model.name.contains(request.args.get("model")))
-    if request.args.get("brand"):
-        query = query.join(Model, Vehicle.model).join(Brand, Model.brand).filter(Brand.name.contains(request.args.get("brand")))
-    if request.args.get("vin"):
-        query = query.filter(Vehicle.license_plate.contains(request.args.get("vin"))) """
+    if request.args.get("origin"):
+        query = query.join(Ride, RideRequest.ride).filter(or_(
+            Ride.origin.contains(request.args.get("origin")),
+            Ride.destiny.contains(request.args.get("origin"))
+            ))
+    if request.args.get("date"):
+        query = query.filter(func.date(RideRequest.createdAt) == request.args.get("date"))
+    if request.args.get("status"):
+        query = query.filter(RideRequest.ride_request_state_id == request.args.get("status"))
 
     query = query.paginate(page=page, per_page=ITEMS_PER_PAGE)
 
     response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
 
     my_requests_lid = list()
-    
+
+    time_format = "%Y-%d-%m %H:%M:%S"
+
+    currentTime = datetime.datetime.strptime(datetime.datetime.now().strftime(time_format), time_format)
+
     for item in query:
         my_requests_lid.append(
             MyRequestsListDto(item.id, item.ride.origin, item.ride.destiny, item.ride_request_state.name,
-            item.ride.start_time, item.ride.start_time, True) 
+            item.ride.start_time.strftime('%d-%m-%Y'), item.ride.start_time.strftime('%H:%M'), getIsCancalable(currentTime, 
+            datetime.datetime.strptime(item.ride.start_time.strftime(time_format), time_format),
+            item.ride_request_state.name)) 
         )
 
     response['items'] = my_requests_lid
 
     if my_requests_lid.__len__() == 0:
-        return(render_template("ride_requests/no_data.html"))
+        return(render_template("ride_requests/my_requests_no_data.html"))
 
     return render_template("ride_requests/my_requests.html", request_list = response)    
+
+def getIsCancalable(currentTime, rideTime, rideStatus):
+
+    time_dif = (rideTime - currentTime) // timedelta(minutes=1)
+
+    if rideStatus == "ACEITE" or rideStatus == "PENDENTE":
+        if time_dif > 30:
+            return 'True'
+        return 'False'
+    return 'False'        
