@@ -147,7 +147,7 @@
             class="border-top border-bottom border-black mb-2"
           >
             <div class="d-flex align-items-center justify-content-left">
-              <div class="initial-avatar text-end me-3">{{initials}}</div>
+              <div class="initial-avatar-rounded text-end me-3">{{initials}}</div>
               <span class="ms-5 font-16px">{{user.username}}</span>
             </div>
           </div>
@@ -450,12 +450,12 @@
                 <label class="input-group-text" for="inputGroupSelect01"
                   >Desde</label
                 >
-                <select class="form-select" id="inputGroupSelect01" name="origin">
-                  <option value="ISMAT" selected>Portimão</option>
-                  <option value="Lagoa">Lagoa</option>
-                  <option value="Albufeira">Albufeira</option>
-                  <option value="Faro">Faro</option>
-                </select>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="origin"
+                    placeholder="ex: Lagoa"
+                  />
               </div>
             </div>
             <div class="col-6">
@@ -463,11 +463,12 @@
                 <label class="input-group-text" for="inputGroupSelect01"
                   >Até</label
                 >
-                <select class="form-select" id="inputGroupSelect01" name="destiny">
-                  <option value="ISMAT" selected>Ferrari</option>
-                  <option value="Lagoa">Porsche</option>
-                  <option value="Albufeira">Lada</option>
-                </select>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="destiny"
+                  placeholder="ex: ISMAT"
+                />
               </div>
             </div>
           </div>
@@ -478,7 +479,7 @@
                   >Veículo</label
                 >
                 <select class="form-select" id="inputGroupSelect01" name="vehicle">
-                  {% for vehicle in vehicles %}
+                  {% for vehicle in create_ride_vehicles %}
                     <option value="{{vehicle.id}}">{{vehicle.model.name}}</option>
                   {% endfor %}
                 </select>
