@@ -186,9 +186,9 @@ def list_ride_requests():
       response['items'] = ride_requests_list
       
       if ride_requests_list.__len__() == 0:
-        return(render_template("ride_requests/no_data.html"))
+        return(render_template("admin/ride_requests_no_data.html"))
 
-      return render_template("ride_requests/index.html", request_list = response)
+      return render_template("admin/ride_requests.html", request_list = response)
 
 @admin_bp.route("/models/list")
 @login_required
@@ -250,22 +250,20 @@ def list_rides():
     response['items'] = rides_list
 
     if rides_list.__len__() == 0:
-        return(render_template("rides/no_data.html"))
+        return(render_template("rides/rides_no_data.html"))
 
-    return render_template("rides/index.html", request_list = response)    
-    return redirect(request.url)
+    return render_template("admin/rides.html", request_list = response)    
+
 
 @admin_bp.route('login')
 def login():
     if current_user.is_authenticated:
-         return redirect(url_for('admin.profile'))
+         return redirect(url_for('admin.list_rides'))
 
     return render_template('admin/login.html')
 
 @admin_bp.route('/login', methods = ['POST'])
 def login_post():
-    print(current_user)
-
     email = request.form.get('email')
     password = request.form.get('password')
     remember_me = request.form.get('remember_me')
@@ -306,57 +304,29 @@ def logout():
 
     return response
 
-@admin_bp.route('/edit/<id>', methods=['GET'])
-@login_required
-def edit_user(id):
-    user = User.query.filter_by(id=id).first()
+@admin_bp.route("/edit", methods=["POST"])
+def edit_user_post():
+    new_user = current_user
 
-    if user is None:
-        flash('Utilizador com este email nao existe', category='error')
+    if request.form.get('firstname') == "" or request.form.get('firstname') is None:
+        flash('Insira um primeiro nome!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('lastname') == "" or request.form.get('lastname') is None:
+        flash('Insira um ultimo nome!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('email') == "" or request.form.get('email') is None:
+        flash('Insira um email!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('phone') == "" or request.form.get('phone') is None:
+        flash('Insira um número de telefone!', 'error')
+        return redirect(request.referrer)
 
-        return redirect(url_for('admin.list_users'))
-
-    return render_template('admin/edit.html', user=user)
-
-@admin_bp.route('/edit/<id>', methods=['POST'])
-@login_required
-def edit_user_post(id):
-    user = User.query.filter_by(id=id).first()
-
-    if user is None:
-        flash('Utilizador com este email nao existe', category='error')
-
-        return redirect(url_for('admin.list_users'))
-        
-    user.first_name = request.form.get('first_name')
-    user.last_name = request.form.get('last_name')
-    user.email = request.form.get('email')
-    user.phone_number = request.form.get('phone_number')
+    new_user.first_name = request.form.get('firstname')
+    new_user.last_name = request.form.get('lastname')
+    new_user.email = request.form.get('email')
+    new_user.phone_number = request.form.get('phone')
 
     db.session.commit()
 
-    flash('Utilizador editado com sucesso', category='info')
-
-    return redirect(url_for('admin.edit_user', id=id))
-
-@admin_bp.route('/users/update/<id>', methods=['GET', 'POST'])
-@login_required
-def update_user(id):
-    # brand = Brand.query.get(id)
-    user = User.query.filter_by(id=id).first()
-
-    if user is None:
-        flash('Utilizador com este email nao existe', category='error')
-
-        return redirect(url_for('admin.list_users'))
-
-    user.username = request.form.get('username')    
-    user.email = request.form.get('email')
-    user.phone_number = request.form.get('phone_number')
-    user.status = request.form.get('status')
-
-    db.session.commit()
-
-    flash('Utilizador editado com sucesso', category='info')
-
-    return redirect(url_for('admin.list_users'))
+    flash('Perfil atualizado com sucesso!', 'info')
+    return redirect(request.referrer)

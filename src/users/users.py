@@ -14,17 +14,13 @@ class User(db.Model, UserMixin):
 	phone_number = db.Column(db.String(100))
 	type = db.Column(db.String(20))
 	
-	def __str__(self):
-		return self.email
-
 	def get_full_name(self):
 		return self.first_name + " " + self.last_name	
 
 	def get_initials(self):
 		first_name_initial = str.upper(self.first_name[0])
 		last_name_initial = str.upper(self.last_name[0])
-		return f'{first_name_initial}{last_name_initial}'	
-
+		return f'{first_name_initial}{last_name_initial}'
 
 class Brand(db.Model):
 	__tablename__ = 'brand'
