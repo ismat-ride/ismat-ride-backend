@@ -5,7 +5,7 @@ from .users.users import *
 from .rides.rides import *
 from .brands import *
 from .ride_requests.ride_requests import *
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 
 DB_NAME = "rides.db"
 
@@ -46,6 +46,9 @@ def create_app():
     from src.models import models_bp
     app.register_blueprint(models_bp, url_prefix = '/models')
 
+    from src.vehicles import vehicles_bp
+    app.register_blueprint(vehicles_bp, url_prefix = '/vehicles')
+
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
@@ -56,9 +59,31 @@ def create_app():
     with app.app_context():
         db.create_all()
         migrate.init_app(app, db, render_as_batch=True)
+    
+    @app.context_processor
+    def inject_models():
+        models = Model.query.all()
+        return dict(models_list = models)
+
+    @app.context_processor
+    def inject_user():
+        user = current_user
+        try:
+             return dict(user = user, initials = user.get_initials())
+        except:
+            return dict(user = "user", initials = "user")
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    @app.context_processor
+    def inject_user_vehicles():
+        if current_user.is_authenticated:
+            vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
+            print(vehicles)
+            return dict(vehicles = vehicles)
+
+        return dict(vehicles = None)
 
     return app

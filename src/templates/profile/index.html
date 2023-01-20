@@ -1,0 +1,87 @@
+{% extends 'base/base_client.html' %} {% block title %} Pedidos Boleia {%
+endblock title %} {% block container_title %} PEDIDOS DE BOLEIA {% endblock
+container_title %} {%block content %}
+<div class="row justify-content-evenly">
+  {% for item in request_list['items'] %}
+  <div class="col-12 col-md-6 col-lg-6">
+    <div class="card shadow">
+      <div class="card-body">
+        <div
+          class="row align-items-end justify-content-start justify-content-md-center"
+        >
+          <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
+            <div class="row align-items-center mb-2">
+              <div class="col-12">
+                <div class="row align-items-center">
+                  <div class="col-12">
+                    <div
+                      class="d-flex w-100 align-items-center justify-content-start"
+                    >
+                      <div class="initial-avatar text-end">
+                        {{item.initials}}
+                      </div>
+                      <span class="ms-3 fw-bold font-16px"
+                        >{{item.driver_name}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row align-items-center mb-2">
+              <div class="col">
+                <span class="fw-bold font-16px">{{item.passanger_name}}</span>
+              </div>
+            </div>
+            <div class="row align-items-center mb-2">
+              <div class="col">
+                {% if 'Accepted' == item.status %}
+                <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
+                  >{{item.status}}</span
+                >
+                {% elif 'Pending' == item.status %}
+                <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
+                  >{{item.status}}</span
+                >
+                {% elif 'Denied' == item.status %}
+                <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
+                  >{{item.status}}</span
+                >
+                {% endif %}
+              </div>
+            </div>
+            <div class="row align-items-center mb-2">
+              <div class="col">
+                <span class="fw-bold font-14px me-1"
+                  >{{item.starting_location}}</span
+                >
+                <i class="fa-solid fa-arrow-right icon-color me-1"></i>
+                <span class="fw-bold font-14px">ISMAT</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2 d-flex">
+            <div class="row">
+              <div
+                class="col-12 text-lg-start text-xl-end text-md-start text-sm-end"
+              >
+                <span class="font-14px fw-bold secondary-text-color"
+                  >{{item.starting_date}}</span
+                >
+              </div>
+              <div
+                class="col-12 text-lg-start text-xl-end text-md-start text-sm-end"
+              >
+                <span class="font-14px fw-bold secondary-text-color"
+                  >{{item.starting_hour}}</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock content %}

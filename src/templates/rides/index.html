@@ -1,7 +1,7 @@
-{% extends 'base/base.html' %} {% block title %} Boleias {% endblock title %} {%
-block container_title %} BOLEIAS {% endblock container_title %} {% block filters
-%}
-<form action="{{ url_for('admin.list_rides') }}" method="get">
+{% extends 'base/base_client.html' %} {% block title %} Boleias {% endblock
+title %} {% block container_title %} BOLEIAS {% endblock container_title %} {%
+block filters %}
+<form action="{{ url_for('rides.list_rides') }}" method="get">
   <div class="card mb-3">
     <div class="card-body">
       <div
@@ -66,22 +66,17 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
           class="row align-items-end justify-content-start justify-content-md-center"
         >
           <div class="row align-items-center mb-2">
-            <div class="col-12">
-              <div class="row align-items-center">
-                <div class="col-12">
-                  <div
-                    class="d-flex w-100 align-items-center justify-content-start"
-                  >
-                    <div class="initial-avatar text-end">{{item.initials}}</div>
-                    <span class="ms-3 fw-bold font-16px"
-                      >{{item.driver_name}}</span
-                    >
-                  </div>
-                </div>
-              </div>
+            <div class="col">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/147/147144.png"
+                alt=""
+                width="36"
+                height="36"
+                class="rounded-circle me-3"
+              />
+              <span class="fw-bold font-16px">{{item.driver_name}}</span>
             </div>
           </div>
-
           <div class="row align-items-center mb-2">
             <div class="col">
               <span class="fw-bold font-14px me-1"
@@ -128,7 +123,7 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
               <span class="fw-bold font-14px me-5">{{item.total_places}}</span>
             </div>
             <div class="col-12 col-sm-6 col-md-8 text-start text-sm-end">
-              <span class="font-14px fw-bold"
+              <span class="font-14px"
                 >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
               >
             </div>
@@ -146,7 +141,7 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
     <li class="page-item {% if request_list.page == 1 %}disabled{% endif %}">
       <a
         class="page-link"
-        href="{{ url_for('admin.list_rides', page=request_list.prev_num) }}"
+        href="{{ url_for('rides.list_rides', page=request_list.prev_num) }}"
         tabindex="-1"
         >Anterior</a
       >
@@ -156,7 +151,7 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
     request_list.page == page_num %}
     <li class="page-item">
       <a
-        href="{{ url_for('admin.list_rides', page=page_num) }}"
+        href="{{ url_for('rides.list_rides', page=page_num) }}"
         class="page-link"
       >
         {{ page_num }}
@@ -165,7 +160,7 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
     {% else %}
     <li class="page-item">
       <a
-        href="{{ url_for('admin.list_rides', page=page_num) }}"
+        href="{{ url_for('rides.list_rides', page=page_num) }}"
         class="page-link"
       >
         {{ page_num }}
@@ -177,7 +172,7 @@ block container_title %} BOLEIAS {% endblock container_title %} {% block filters
     >
       <a
         class="page-link"
-        href="{{ url_for('admin.list_rides', page=request_list.next_num) }}"
+        href="{{ url_for('rides.list_rides', page=request_list.next_num) }}"
         tabindex="-1"
         >Seguinte</a
       >
