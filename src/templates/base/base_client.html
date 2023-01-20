@@ -59,7 +59,9 @@
                 data-bs-parent="#sidebar"
               >
                 <li class="sidebar-item">
-                  <a class="sidebar-link fw-bold" href="{{url_for('rides.list_rides')}}"
+                  <a
+                    class="sidebar-link fw-bold"
+                    href="{{url_for('rides.list_rides')}}"
                     >PESQUISAR</a
                   >
                 </li>
@@ -97,7 +99,7 @@
                 <li class="sidebar-item">
                   <a
                     class="sidebar-link fw-bold"
-                    href="../my-ride-request-page/"
+                    href="{{url_for('ride_requests.my_requests_list')}}"
                     >OS MEUS PEDIDOS</a
                   >
                 </li>
@@ -242,7 +244,7 @@
                         <label class="form-label fw-bold">Modelo</label>
                         <div class="input-group mb-3">
                           <select name="model" class="form-select">
-                            {% for model in models %}
+                            {% for model in models_list %}
                             <option value="{{model.id}}">{{model.name}}</option>
                             {% endfor %}
                           </select>
@@ -427,103 +429,121 @@
       </div>
     </div>
   </div>
+  <!-- THIS IS THE CREATE RIDE MODAL -->
   <div
-  class="modal fade"
-  id="createRideModal"
-  tabindex="-1"
-  aria-labelledby="createRideModal"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header m-2">
-        <h5 class="modal-title text-color" id="createRideModal">
-          CRIAR NOVA BOLEIA
-        </h5>
-      </div>
-      <div class="modal-body">
-       <form action="{{ url_for('rides.create_ride') }}" method="POST">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-6">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01"
-                  >Desde</label
-                >
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="origin"
-                    placeholder="ex: Lagoa"
-                  />
-              </div>
-            </div>
-            <div class="col-6">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01"
-                  >Até</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  name="destiny"
-                  placeholder="ex: ISMAT"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01"
-                  >Veículo</label
-                >
-                <select class="form-select" id="inputGroupSelect01" name="vehicle">
-                  {% for vehicle in create_ride_vehicles %}
-                    <option value="{{vehicle.id}}">{{vehicle.model.name}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-            <div class="col-6">
-              <input type="datetime-local" class="form-control" name="date" />
-            </div>
-            <div class="row mb-5">
-              <div class="col-6">
-                <label class="form-label" for="typeNumber"
-                  >Lugares</label
-                >
-                <input
-                  type="number"
-                  id="typeNumber"
-                  class="form-control"
-                  name="seats"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-<div class="row justify-content-between align-items-center">
-  <div class="col">
-    <button
-      type="button"
-      class="btn btn-secondary w-100"
-      data-bs-dismiss="modal"
-    >
-      <span class="fw-bold">Cancelar</span>
-    </button>
-  </div>
-<div class="col">
-  <button
-    type="submit"
-    class="btn btn-primary w-100"
-    data-bs-dismiss="modal"
+    class="modal fade"
+    id="createRideModal"
+    tabindex="-1"
+    aria-labelledby="createRideModal"
+    aria-hidden="true"
   >
-    <span class="fw-bold"> Guardar Alterações</span>
-  </button>
-</form>
-</div>
-</div>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title text-color" id="createRideModal">
+            CRIAR NOVA BOLEIA
+          </h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('rides.create_ride') }}" method="POST">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-6">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01"
+                      >Desde</label
+                    >
+                    <select
+                      class="form-select"
+                      id="inputGroupSelect01"
+                      name="origin"
+                    >
+                      <option value="ISMAT" selected>Portimão</option>
+                      <option value="Lagoa">Lagoa</option>
+                      <option value="Albufeira">Albufeira</option>
+                      <option value="Faro">Faro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01"
+                      >Até</label
+                    >
+                    <select
+                      class="form-select"
+                      id="inputGroupSelect01"
+                      name="destiny"
+                    >
+                      <option value="ISMAT" selected>Ferrari</option>
+                      <option value="Lagoa">Porsche</option>
+                      <option value="Albufeira">Lada</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01"
+                      >Veículo</label
+                    >
+                    <select
+                      class="form-select"
+                      id="inputGroupSelect01"
+                      name="vehicle"
+                    >
+                      {% for vehicle in vehicles %}
+                      <option value="{{vehicle.id}}">{{vehicle.id}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    name="date"
+                  />
+                </div>
+                <div class="row mb-5">
+                  <div class="col-6">
+                    <label class="form-label" for="typeNumber">Lugares</label>
+                    <input
+                      type="number"
+                      id="typeNumber"
+                      class="form-control"
+                      name="seats"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-between align-items-center">
+                <div class="col">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col">
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </html>
 
 <!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
