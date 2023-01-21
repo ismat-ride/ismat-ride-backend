@@ -243,7 +243,7 @@ def list_rides():
     
     for ride in query:
         rides_list.append(
-            RideListDto(ride.driver.get_full_name(),ride.origin, ride.status.name, 
+            RideListDto(ride.driver.get_full_name(),ride.origin,ride.destiny, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers),ride.driver.get_initials()) 
         )
 

@@ -35,7 +35,7 @@ container_title %} {% block filters %}
             <option id="1" value="1">Aceite</option>
             <option id="2" value="2">Pendente</option>
             <option id="3" value="3">Rejeitada</option>
-            <option id="4" value="4">Cancelado</option>
+            <option id="4" value="4">Cancelada</option>
           </select>
         </div>
         <div class="flex-fill justify-content-center">
@@ -64,19 +64,19 @@ container_title %} {% block filters %}
             </div>
             <div class="row align-items-center mb-2">
               <div class="col">
-                {% if "ACEITE" == item.status %}
+                {% if "Aceite" == item.status %}
                 <span class="badge rounded-pill bg-success font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
-                {% elif "PENDENTE" == item.status %}
+                {% elif "Pendente" == item.status %}
                 <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
-                {% elif "REJEITADA" == item.status %}
+                {% elif "Rejeitada" == item.status %}
                 <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
-                {% elif "CANCELADO" == item.status %}
+                {% elif "Cancelada" == item.status %}
                 <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
