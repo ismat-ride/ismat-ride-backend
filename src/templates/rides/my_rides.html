@@ -101,31 +101,149 @@
                   <span class="font-16px fw-bold">{{item.starting_hour}}</span>
                 </div>
               </div>
-              <div class="row align-items-center">
+              <div class="row align-items-center justify-content-end">
                 <div class="col-12 col-sm-6 col-md-4 mb-2 mb-sm-0">
                   <i class="fa-solid fa-user-group me-2"></i>
                   <span class="fw-bold font-14px me-5">{{item.total_places}}</span>
                 </div>
-                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
+                <div class="col-12 col-sm-6 col-md-8 text-start text-sm-end">
                   <span class="font-14px"
                     >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
                   >
                 </div>
-                <div class="col-12 col-sm-6 col-md-2 text-start text-sm-end">
-                    <button class="btn btn-secondary flex-fill w-100" type="submit">
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
+                    <button class="btn btn-secondary flex-fill w-100" type="button" data-bs-toggle="modal" data-bs-target="#update{{item.id}}">
                         Editar
                     </button>
                 </div>
-                <div class="col-12 col-sm-6 col-md-2 text-start text-sm-end">
-                    <button class="btn btn-primary flex-fill w-100" type="submit">
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
+                  <form action="{{ item.id }}">
+                    <button class="btn btn-primary flex-fill w-100" type="submit" name="cancel_" value="cancel">
                         Cancelar
                     </button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div
+      class="modal fade"
+      id="update{{item.id}}"
+      tabindex="-1"
+      id="update{{item.id}}"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header m-2">
+            <h5 class="modal-title text-color">
+              EDITAR BOLEIA
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form action="{{ url_for('rides.edit_ride') }}" method="POST">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="input-group mb-3">
+                      <label class="input-group-text" for="inputGroupSelect01"
+                        >Desde</label
+                      >
+                      <select
+                        class="form-select"
+                        id="inputGroupSelect01"
+                        name="origin"
+                      >
+                        <option value="ISMAT" selected>Portimão</option>
+                        <option value="Lagoa">Lagoa</option>
+                        <option value="Albufeira">Albufeira</option>
+                        <option value="Faro">Faro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="input-group mb-3">
+                      <label class="input-group-text" for="inputGroupSelect01"
+                        >Até</label
+                      >
+                      <select
+                        class="form-select"
+                        id="inputGroupSelect01"
+                        name="destiny"
+                      >
+                        <option value="ISMAT" selected>ISMAT</option>
+                        <option value="Lagoa">Lagoa</option>
+                        <option value="Albufeira">Albufeira</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="input-group mb-3">
+                      <label class="input-group-text" for="inputGroupSelect01"
+                        >Veículo</label
+                      >
+                      <select
+                        class="form-select"
+                        id="inputGroupSelect01"
+                        name="vehicle"
+                      >
+                        {% for vehicle in vehicles %}
+                        <option value="{{vehicle.id}}">{{vehicle.id}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <input
+                      type="datetime-local"
+                      value="{{ item.starting_date }}"
+                      class="form-control"
+                      name="date"
+                    />
+                  </div>
+                  <div class="row mb-5">
+                    <div class="col-6">
+                      <label class="form-label" for="typeNumber">Lugares</label>
+                      <input
+                        type="number"
+                        id="typeNumber"
+                        value="{{ item.total_places }}"
+                        class="form-control"
+                        name="seats"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-between align-items-center">
+                  <div class="col">
+                    <button
+                      type="button"
+                      class="btn btn-secondary w-100"
+                      data-bs-dismiss="modal"
+                    >
+                      <span class="fw-bold">Cancelar</span>
+                    </button>
+                  </div>
+                  <div class="col">
+                    <button
+                      type="submit"
+                      class="btn btn-primary w-100"
+                      data-bs-dismiss="modal"
+                    >
+                      <span class="fw-bold"> Guardar Alterações</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
       {% endfor %}
     </div>
     <div
