@@ -1,6 +1,6 @@
-{% extends 'base/base_client.html' %} {% block title %} Boleias {% endblock title %} {%
-block container_title %} BOLEIAS {% endblock container_title %} {% block
-filters%}
+{% extends 'base/base_client.html' %} {% block title %} Boleias {% endblock
+title %} {% block container_title %} BOLEIAS {% endblock container_title %} {%
+block filters%}
 <form action="{{ url_for('rides.list_rides') }}" method="get">
   <div class="card mb-3">
     <div class="card-body">
@@ -42,7 +42,7 @@ filters%}
           >
           <select name="status" class="form-select">
             <option id="1" value="1">Activa</option>
-            <option id="2" value="2">A Decorrer</option>
+            <option id="2" value="2">Em Progresso</option>
             <option id="3" value="3">Finalizada</option>
             <option id="4" value="4">Cancelada</option>
           </select>

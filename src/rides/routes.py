@@ -40,7 +40,7 @@ def list_rides():
     
     for ride in query:
         is_joinable = RideRequest.query.filter_by(user_id=current_user.id, ride_id=ride.id) == None
-
+   
         rides_list.append(
             RideListDto(str(ride.id), ride.driver.get_full_name(), ride.driver.get_initials(),ride.origin, ride.destiny, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers), is_joinable) 
@@ -151,7 +151,7 @@ def create_ride():
     if not is_valid:
         return redirect(request.referrer)
 
-    ride_pending_status = RideStatus.query.filter_by(name='Active').first()
+    ride_pending_status = RideStatus.query.filter_by(name='Activa').first()
 
     new_ride = Ride(
         start_time=datetime.strptime(date, '%Y-%m-%dT%H:%M'),
@@ -230,7 +230,7 @@ def join_ride(id):
     ride_to_join = Ride.query.filter_by(id=id).first()
 
     if ride_to_join:
-        initial_ride_request_state = RideRequestState.query.filter_by(name='Pending').first()
+        initial_ride_request_state = RideRequestState.query.filter_by(name='Pendente').first()
 
         ride_to_join_request = RideRequest(
             user=current_user,

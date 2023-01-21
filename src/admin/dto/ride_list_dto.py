@@ -4,6 +4,7 @@ from dataclasses import dataclass
 class RideListDto:
     driver_name: str
     starting_location: str
+    end_location: str
     status: str
     starting_date: str
     starting_hour: str

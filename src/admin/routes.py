@@ -179,7 +179,7 @@ def list_ride_requests():
 
       for ride in query:
             ride_requests_list.append(
-                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.local.name, ride.ride_request_state.name, 
+                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.ride.origin, ride.ride_request_state.name, 
                   ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M'),ride.ride.driver.get_initials()) 
             )
 
@@ -243,14 +243,14 @@ def list_rides():
     
     for ride in query:
         rides_list.append(
-            RideListDto(ride.driver.get_full_name(),ride.origin, ride.status.name, 
+            RideListDto(ride.driver.get_full_name(),ride.origin,ride.destiny, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers),ride.driver.get_initials()) 
         )
 
     response['items'] = rides_list
 
     if rides_list.__len__() == 0:
-        return(render_template("rides/rides_no_data.html"))
+        return(render_template("admin/rides_no_data.html"))
 
     return render_template("admin/rides.html", request_list = response)    
 
