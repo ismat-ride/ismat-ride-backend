@@ -1,0 +1,78 @@
+{% extends 'base/base_client.html' %} {% block title %} Pedidos Para As Minhas
+Boleias{% endblock title %} {% block container_title %} PEDIDOS PARA AS MINHAS
+BOLEIAS {% endblock container_title %} {% block filters%}
+<form action="{{ url_for('ride_requests.my_ride_requests') }}" method="get">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div
+        class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
+      >
+        <div class="flex-fill">
+          <label class="form-label">Nome</label>
+          <input
+            type="text"
+            value="{{ request.args.get('name') or ''}}"
+            name="name"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color"
+            >Origem/Destino</label
+          >
+          <input
+            type="text"
+            value="{{ request.args.get('origin') or ''}}"
+            name="origin"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color">Data</label>
+          <input
+            type="date"
+            value="{{ request.args.get('date') or ''}}"
+            name="date"
+            class="form-control"
+          />
+        </div>
+        <div class="flex-fill">
+          <label class="form-label secondary-secondary-text-color"
+            >Estado</label
+          >
+          <select name="status" class="form-select">
+            <option id="1" value="1">Aceite</option>
+            <option id="2" value="2">Pendente</option>
+            <option id="3" value="3">Rejeitada</option>
+            <option id="4" value="4">Cancelada</option>
+          </select>
+        </div>
+        <div class="flex-fill justify-content-center">
+          <button class="btn btn-primary flex-fill w-100" type="submit">
+            FILTRAR
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock filters %} {%block content %}
+<div class="card shadow-none">
+  <div class="card-body">
+    <div class="row align-items-center justify-content-center">
+      <div class="col-12">
+        <h3 class="text-secondary mb-0 text-center">
+          De momento não temos dados disponiveis!
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const product = urlParams.get("status");
+  const select = document.getElementById(product);
+  select.setAttribute("selected", "");
+</script>
+{% endblock content %}
