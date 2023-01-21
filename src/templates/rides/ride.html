@@ -1,0 +1,148 @@
+{% extends 'base/base_client.html' %} {% block title %} Boleias {% endblock title %} {%
+    block container_title %} BOLEIAS {% endblock container_title %} {% block filters
+    %}
+{% endblock filters %}
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-12 col-lg-8">
+        <div class="card shadow">
+            <div class="card-body">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-12">
+                <h2 class="text-center text-color fw-bold">DETAILS</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6 mt-3">
+                <label class="form-label text-color">De</label>
+                <input
+                    type="box"
+                    class="form-control"
+                    placeholder="{{ride.starting_location}}"
+                    disabled
+                />
+                </div>
+                <div class="col-12 col-sm-6 mt-3">
+                <label class="form-label text-color">Para</label>
+                <input
+                    type="box"
+                    class="form-control"
+                    placeholder="{{ride.end_location}}"
+                    disabled
+                />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6 mt-3">
+                <label class="form-label text-color">Veiculo</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="{{ride.vehicle.name or ''}}"
+                    disabled
+                />
+                </div>
+                <div class="col-12 col-sm-6 mt-3">
+                <label class="form-label text-color">Data e Hora</label>
+                <input
+                    type="box"
+                    class="form-control"
+                    placeholder="{{ride.starting_date}}, {{ride.starting_hour}}"
+                    disabled
+                />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6 mt-3">
+                <label class="form-label text-color">Lugares</label>
+                <input
+                    type="number"
+                    id="form1"
+                    class="form-control form-icon-trailing"
+                    placeholder="{{ride.total_places}}"
+                    disabled
+                />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3">
+                  <label class="form-label text-color">Passageiros</label>
+                  <div class="d-flex align-items-center">
+                    <div class="row ps-3">
+                        {% for passenger in ride.passengers %}
+                        <div class="col p-0 me-2">
+                            <span class="initial-avatar-rounded text-end">{{passenger.initials}}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-sm-5 col-md-4 mt-2">
+            <form action="list" method="GET">
+                <button type="submit" class="btn btn-secondary w-100">
+                    <span class="fw-bold">VOLTAR</span>
+                </button>
+            </form>
+        </div>
+        <div class="col-12 col-sm-5 col-md-4 mt-2">
+            <button class="btn btn-primary w-100 {% if ride.is_joinable == False %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#joinride{{ride.id}}">
+                <span class="fw-bold">JUNTAR-ME</span>
+            </button>
+        </div>
+        </div>
+    </div>
+    </div>
+    <div
+    class="modal fade"
+    id="joinride{{ride.id}}"
+    tabindex="-1"
+    aria-labelledby="joinride{{ride.id}}"
+    aria-hidden="true"
+    >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">JUNTAR Á BOLEIA</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('rides.join_ride', id=ride.id) }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body d-flex justify-content-center">
+                    <span class="fw-bold">Pretendes juntar-te á boleia?</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold">Confirmar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+    

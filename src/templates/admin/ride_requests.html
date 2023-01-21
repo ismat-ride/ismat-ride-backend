@@ -1,4 +1,4 @@
-{% extends 'base/base_client.html' %} {% block title %} Pedidos Boleia {% endblock
+{% extends 'base/base.html' %} {% block title %} Pedidos Boleia {% endblock
 title %} {% block container_title %} PEDIDOS DE BOLEIA {% endblock
 container_title %} {% block filters %}
 <form action="{{ url_for('admin.list_ride_requests') }}" method="get">
@@ -43,9 +43,10 @@ container_title %} {% block filters %}
             >Estado</label
           >
           <select name="status" class="form-select">
-            <option id="1" value="1">Disponivel</option>
+            <option id="1" value="1">Aceite</option>
             <option id="2" value="2">Pendente</option>
-            <option id="3" value="3">Negado</option>
+            <option id="3" value="3">Rejeitada</option>
+            <option id="4" value="4">Cancelada</option>
           </select>
         </div>
         <div class="flex-fill justify-content-center">
@@ -58,7 +59,7 @@ container_title %} {% block filters %}
   </div>
 </form>
 {% endblock filters %} {%block content %}
-<div class="row justify-content-evenly">
+<div class="row justify-content-start">
   {% for item in request_list['items'] %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
@@ -92,15 +93,19 @@ container_title %} {% block filters %}
             </div>
             <div class="row align-items-center mb-2">
               <div class="col">
-                {% if 'Accepted' == item.status %}
+                {% if 'Aceite' == item.status %}
                 <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
-                {% elif 'Pending' == item.status %}
+                {% elif 'Pendente' == item.status %}
                 <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
-                {% elif 'Denied' == item.status %}
+                {% elif 'Rejeitada' == item.status %}
+                <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
+                  >{{item.status}}</span
+                >
+                {% elif 'Cancelada' == item.status %}
                 <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >

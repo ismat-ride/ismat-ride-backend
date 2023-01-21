@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} {% endblock title %}</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='styles/global.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='styles/adminkit.css') }}"
+    />
+    <script
+      src="https://kit.fontawesome.com/86102a7658.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="{{ url_for('static',filename='js/app.js') }}"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar shadow js-sidebar">
+        <div class="sidebar-content border-end border-black js-simplebar">
+          <h2 class="fw-bold p-3 text-center">
+            <span class="primary-color" style="cursor: pointer"
+              >ISMAT<span class="secondary-color">RIDE</span></span
+            >
+          </h2>
+          <ul class="sidebar-nav">
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#editProfile"
+              >
+                <i class="align-middle"></i>
+                <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold"> PERFIL</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link"
+                data-bs-target="#rides"
+                data-bs-toggle="collapse"
+              >
+                <i class="align-middle"></i>
+                <i class="fa-solid fa-registered fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">BOLEIAS</span>
+              </a>
+              <ul
+                id="rides"
+                class="sidebar-dropdown list-unstyled collapse show"
+                data-bs-parent="#sidebar"
+              >
+                <li class="sidebar-item">
+                  <a
+                    class="sidebar-link fw-bold"
+                    href="{{url_for('rides.list_rides')}}"
+                    >PESQUISAR</a
+                  >
+                </li>
+                <li class="sidebar-item">
+                  <a
+                    class="sidebar-link fw-bold"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createRideModal"
+                    >CRIAR</a
+                  >
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link fw-bold" href="../my-rides-page/"
+                    >AS MINHAS BOLEIAS</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link collapsed"
+                data-bs-target="#riderequests"
+                data-bs-toggle="collapse"
+              >
+                <i class="align-middle"></i>
+                <i class="fa-solid fa-paper-plane fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">PEDIDOS DE BOLEIA</span>
+              </a>
+              <ul
+                id="riderequests"
+                class="sidebar-dropdown list-unstyled collapse show"
+                data-bs-parent="#sidebar"
+              >
+                <li class="sidebar-item">
+                  <a
+                    class="sidebar-link fw-bold"
+                    href="{{url_for('ride_requests.my_requests_list')}}"
+                    >OS MEUS PEDIDOS</a
+                  >
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link fw-bold" href="../ride-requests-page/"
+                    >PEDIDOS PARA AS MINHAS BOLEIAS</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link collapsed"
+                data-bs-target="#vehicles"
+                data-bs-toggle="collapse"
+              >
+                <i class="align-middle"></i>
+                <i class="fa-solid fa-car fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">VEÍCULOS</span>
+              </a>
+              <ul
+                id="vehicles"
+                class="sidebar-dropdown list-unstyled collapse show"
+                data-bs-parent="#sidebar"
+              >
+                <li class="sidebar-item">
+                  <a
+                    class="sidebar-link fw-bold"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createVehicle"
+                    >CRIAR</a
+                  >
+                </li>
+                <li class="sidebar-item">
+                  <a
+                    href="{{ url_for('vehicles.vehicles_list') }}"
+                    class="sidebar-link fw-bold"
+                    >OS MEUS VEÍCULOS</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <div class="row w-100 m-0">
+            <button
+              onclick="logout()"
+              class="btn btn-primary rounded-0 decoration-none p-2"
+            >
+              <i class="fa-solid fa-right-from-bracket fa-lg me-2 logout"></i>
+              <span class="fw-bold">SAIR</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div class="main">
+        <nav class="navbar navbar-expand navbar-light navbar-bg">
+          <a class="sidebar-toggle js-sidebar-toggle">
+            <i class="hamburger align-self-center"></i>
+          </a>
+        </nav>
+        <main class="content">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %} {% if category ==
+          "error"%}
+          <div
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+            id="error"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% if category == "info" %}
+          <div
+            class="alert alert-info alert-dismissible fade show"
+            role="alert"
+            id="success"
+          >
+            <div class="alert-message">
+              {{message}}
+              <button
+                type="button"
+                class="btn-close"
+                id="close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          {% endif %} {% endfor %} {% endif %} {% endwith %}
+          <div class="container-fluid p-0">
+            <h1 class="fw-bold secondary-text-color">
+              {% block container_title %} {% endblock container_title %}
+            </h1>
+            <hr />
+            {% block filters %} {% endblock filters %} {% block content %} {%
+            endblock content %}
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+  <!-- THIS IS THE CREATE VEHICLE MODAL -->
+  <div
+    class="modal fade"
+    id="createVehicle"
+    tabindex="-1"
+    aria-labelledby="createVehicle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">CRIAR VEÍCULO</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('vehicles.create_vehicle') }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Modelo</label>
+                        <div class="input-group mb-3">
+                          <select name="model" class="form-select">
+                            {% for model in models_list %}
+                            <option value="{{model.id}}">{{model.name}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Cor</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="color"
+                            maxlength="10"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">VIN</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="vin"
+                            maxlength="10"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">Lugares</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="number"
+                            class="form-control"
+                            name="places"
+                            max="20"
+                            min="2"
+                            maxlength="1"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- THIS IS THE EDIT PROFILE MDOAL -->
+  <div
+    class="modal fade"
+    id="editProfile"
+    tabindex="-1"
+    aria-labelledby="editProfile"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="editProfile">EDITAR PERFIL</h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('users.edit_profile') }}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Primeiro nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="firstname"
+                            value="{{user.first_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Último nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="lastname"
+                            value="{{user.last_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">Username</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="username"
+                            value="{{user.username}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Telefone</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="phone"
+                            value="{{user.phone_number}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="email"
+                            value="{{user.email}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold"
+                          >Número de aluno</label
+                        >
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="process"
+                            value="{{user.student_number}}"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- THIS IS THE CREATE RIDE MODAL -->
+  <div
+    class="modal fade"
+    id="createRideModal"
+    tabindex="-1"
+    aria-labelledby="createRideModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title text-color" id="createRideModal">
+            CRIAR NOVA BOLEIA
+          </h5>
+        </div>
+        <div class="modal-body">
+          <form action="{{ url_for('rides.create_ride') }}" method="POST">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-6">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01"
+                      >Desde</label
+                    >
+                    <select
+                      class="form-select"
+                      id="inputGroupSelect01"
+                      name="origin"
+                    >
+                      <option value="ISMAT" selected>Portimão</option>
+                      <option value="Lagoa">Lagoa</option>
+                      <option value="Albufeira">Albufeira</option>
+                      <option value="Faro">Faro</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01"
+                      >Até</label
+                    >
+                    <select
+                      class="form-select"
+                      id="inputGroupSelect01"
+                      name="destiny"
+                    >
+                      <option value="ISMAT" selected>Ferrari</option>
+                      <option value="Lagoa">Porsche</option>
+                      <option value="Albufeira">Lada</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01"
+                      >Veículo</label
+                    >
+                    <select
+                      class="form-select"
+                      id="inputGroupSelect01"
+                      name="vehicle"
+                    >
+                      {% for vehicle in vehicles %}
+                      <option value="{{vehicle.id}}">{{vehicle.id}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    name="date"
+                  />
+                </div>
+                <div class="row mb-5">
+                  <div class="col-6">
+                    <label class="form-label" for="typeNumber">Lugares</label>
+                    <input
+                      type="number"
+                      id="typeNumber"
+                      class="form-control"
+                      name="seats"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-between align-items-center">
+                <div class="col">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col">
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</html>
+
+<!-- THIS IS THE SCRIPT THAT SHOWS THE TOOLTIP -->
+<script>
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
+
+<!-- THIS IS THE SCRIPT THAT CLOSES THE ALERT AUTOMATICALLY -->
+<script type="text/javascript">
+  setTimeout(function () {
+    document.getElementById("close").click();
+  }, 5000);
+
+  function logout() {
+    if (document.cookie.includes("admin")) {
+      window.location.href = "/admin/logout";
+    } else {
+      window.location.href = "/auth/logout";
+    }
+  }
+</script>
