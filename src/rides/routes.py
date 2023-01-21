@@ -171,57 +171,23 @@ def create_ride():
 
 @login_required
 @student_required
-@rides_bp.route('edit', methods = [ 'POST' ])
-def edit_ride():
-    origin = request.form.get('origin')
-    destiny = request.form.get('destiny')
-    vehicle_id = request.form.get('vehicle')
-    driver = current_user.id
-    total_seats = request.form.get('seats')
-    date = request.form.get('date')
-
-    is_valid = True
-
-    if origin is None or destiny is None:
-        flash('A boleia tem que ter um/a destino/origem', category='error')
-        is_valid = False
+@rides_bp.route('/my-rides/edit/<id>', methods=['GET', 'POST'])
+def edit_ride(id):
     
-    if vehicle_id is None:
-        flash('A boleia tem que ter um veículo associado', category='error')
-        is_valid = False
+    ride = Ride.query.filter_by(id=id).first()
 
-    if total_seats is '':
-        flash('Uma boleia tem que ter no minimo 1 lugar disponível', category='error')
-        is_valid = False
+    ride.origin = request.form.get('origin')
+    ride.destiny = request.form.get('destiny')
+    ride.vehicle_id = request.form.get('vehicle')
+    ride.total_seats = request.form.get('seats')
+    ride.date = request.form.get('date')
 
-    if date is '':
-        flash('Uma boleia tem que ter uma data associada', category='error')
-        is_valid = False
-
-    if is_less_than_30_minutes(datetime.utcnow(), datetime.strptime(date, '%Y-%m-%dT%H:%M')):
-        flash('Uma boleia nao pode acontecer em menos de 30 Minutos', category='error')
-        is_valid = False
-
-    if not is_valid:
-        return redirect(request.referrer)
-
-    ride_pending_status = RideStatus.query.filter_by(name='Active').first()
-
-    new_ride = Ride(
-        start_time=datetime.strptime(date, '%Y-%m-%dT%H:%M'),
-        driver_id=driver,
-        vehicle_id=vehicle_id,
-        origin=origin,
-        destiny=destiny,
-        seats=total_seats,
-        status=ride_pending_status)
-
-    db.session.add(new_ride)
     db.session.commit()
 
-    flash('A sua boleia foi criada', category='info')
+    flash('Boleia editada com sucesso', category='info')
 
-    return redirect(request.referrer)
+    return redirect(url_for('rides.list_my_rides'))
+
 
 @login_required
 @student_required
