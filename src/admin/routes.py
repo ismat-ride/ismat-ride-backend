@@ -179,7 +179,7 @@ def list_ride_requests():
 
       for ride in query:
             ride_requests_list.append(
-                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.ride.origin, ride.ride_request_state.name, 
+                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.ride.origin, ride.ride.destiny, ride.ride_request_state.name, 
                   ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M'),ride.ride.driver.get_initials()) 
             )
 
