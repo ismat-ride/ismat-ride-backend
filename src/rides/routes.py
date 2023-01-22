@@ -51,7 +51,7 @@ def list_rides():
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers),
             is_ride_joinable(currentTime, 
             datetime.datetime.strptime(ride.start_time.strftime(time_format), time_format),
-            ride.status.name, is_joinable)) 
+            ride.status.name, is_joinable),ride.start_time ) 
         )
 
     response['items'] = rides_list
@@ -60,6 +60,48 @@ def list_rides():
         return(render_template("rides/no_data.html"))
 
     return render_template("rides/index.html", request_list = response)
+
+@rides_bp.route("my-rides/list")
+@login_required
+@student_required
+def list_my_rides():
+    page = request.args.get('page', 1, type=int)
+
+    query = Ride.query.filter(Ride.driver_id == current_user.id)
+
+    if request.args.get("name"):
+        query = query.filter(or_(
+            User.first_name.contains(request.args.get("name")),
+            User.last_name.contains(request.args.get("name"))
+            ))
+    if request.args.get("origin"):
+        query = query.filter(or_(Ride.origin.contains(request.args.get("origin")),
+        Ride.destiny.contains(request.args.get("origin"))))
+    if request.args.get("date"):
+        query = query.filter(func.date(Ride.createdAt) == request.args.get("date"))
+    if request.args.get("status"):
+        query = query.filter(Ride.status_id == request.args.get("status"))
+
+    query = query.paginate(page=page, per_page=ITEMS_PER_PAGE)
+
+    response = {'items': list(), 'iter_pages': query.iter_pages, 'page': page, 'pages': query.pages, 'next_num': query.next_num}
+
+    rides_list = list()
+    
+    for ride in query:
+        is_joinable = RideRequest.query.filter_by(user_id=current_user.id, ride_id=ride.id) == None
+
+        rides_list.append(
+            RideListDto(str(ride.id), ride.driver.get_full_name(), ride.driver.get_initials(),ride.origin, ride.destiny, ride.status.name, 
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers), is_joinable, ride.start_time) 
+        )
+
+    response['items'] = rides_list
+
+    if rides_list.__len__() == 0:
+        return(render_template("rides/no_data.html"))
+
+    return render_template("rides/my_rides.html", request_list = response)
 
 @rides_bp.route('<id>', methods = [ 'GET' ])
 @login_required
@@ -150,6 +192,104 @@ def create_ride():
 
 @login_required
 @student_required
+@rides_bp.route('/my-rides/edit/<id>', methods=['GET', 'POST'])
+def edit_ride(id):
+    
+    ride = Ride.query.filter_by(id=id).first()
+
+    ride.origin = request.form.get('origin')
+    ride.destiny = request.form.get('destiny')
+    ride.vehicle_id = request.form.get('vehicle')
+    ride.seats = request.form.get('seats')
+    ride.date = request.form.get('date')
+
+    ride.start_time = datetime.datetime.strptime(request.form.get('date'), '%Y-%m-%dT%H:%M') 
+
+    is_valid = True
+
+    if ride.origin is '' or ride.destiny is '':
+        flash('A boleia tem que ter um/a destino/origem', category='error')
+        is_valid = False
+        return redirect(url_for('rides.list_my_rides'))
+
+    if ride.vehicle_id is None or ride.vehicle_id is '':
+        flash('A boleia tem que ter um veículo associado', category='error')
+        is_valid = False
+        return redirect(url_for('rides.list_my_rides'))    
+
+    if ride.seats is None or ride.seats is '':
+        flash('Uma boleia tem que ter no minimo 1 lugar disponível', category='error')
+        is_valid = False
+        return redirect(url_for('rides.list_my_rides'))
+
+    if ride.start_time is None or ride.start_time is '':
+        flash('Uma boleia tem que ter uma data associada', category='error')
+        is_valid = False
+        return redirect(url_for('rides.list_my_rides'))
+
+    if not is_valid:
+        return redirect(url_for('rides.list_my_rides'))  
+
+    db.session.commit()
+
+    flash('Boleia editada com sucesso', category='info')
+
+    return redirect(url_for('rides.list_my_rides'))
+
+@login_required
+@student_required
+@rides_bp.route('/my-rides/finish/<id>', methods=['GET', 'POST'])
+def finish_ride(id):
+    
+    ride = Ride.query.filter_by(id=id).first()  
+    ride.date = request.form.get('date')    
+
+    print(ride.status_id)
+
+    if ride.status_id == 2 :
+        ride.status_id = 3 
+        db.session.commit()
+        flash('Boleia finalizada com sucesso', category='info')
+
+    elif ride.status_id == 3 :
+        flash('Esta boleia já está finalizada.', category='error')
+
+    elif ride.status_id == 4 :
+        flash('Esta boleia já está cancelada.', category='error')
+
+    elif ride.status_id == 1 :
+        flash('Só é possível finalizar boleias que já tenham começado.', category='error')
+
+    return redirect(url_for('rides.list_my_rides'))
+
+@login_required
+@student_required
+@rides_bp.route('/my-rides/cancel/<id>', methods=['GET', 'POST'])
+def cancel_ride(id):
+    
+    ride = Ride.query.filter_by(id=id).first()
+
+    time_format = "%Y-%d-%m %H:%M:%S"
+
+    currentTime = datetime.datetime.strptime(datetime.datetime.now().strftime(time_format), time_format) 
+
+    if ride.status_id == 4 :
+        flash('Esta boleia já está cancelada.', category='error')
+
+    else:
+        if is_less_than_5_minutes(currentTime, datetime.datetime.strptime(ride.start_time.strftime(time_format), time_format)):
+            flash('Uma boleia não pode ser cancelada a 5 minutos de começar', category='error')            
+            return redirect(url_for('rides.list_my_rides'))
+        else:  
+            ride.status_id = 4 
+            db.session.commit()
+            flash('Boleia cancelada com sucesso', category='info')
+
+    return redirect(url_for('rides.list_my_rides'))
+
+
+@login_required
+@student_required
 @rides_bp.route('<id>/join', methods = [ 'POST' ])
 def join_ride(id):
     ride_to_join = Ride.query.filter_by(id=id).first()
@@ -180,6 +320,11 @@ def is_less_than_30_minutes(currentTime, rideTime):
     time_dif = (rideTime - currentTime) // timedelta(minutes=1)
 
     return time_dif < 30
+
+def is_less_than_5_minutes(currentTime, rideTime):
+    time_dif = (rideTime - currentTime) // timedelta(minutes=1)
+
+    return time_dif < 5
 
 def is_ride_joinable(currentTime, rideTime, rideStatus, is_joinable):
     time_dif = (rideTime - currentTime) // timedelta(minutes=1)

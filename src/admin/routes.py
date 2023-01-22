@@ -46,7 +46,7 @@ def list_users():
 
     for user in query:
         user_list_dto.append(
-            UserListDto(user.email, f'{user.first_name} {user.last_name}', user.phone_number, "teste", user.status, user.get_initials()) 
+            UserListDto(user.id, user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
         )
 
     response['items'] = user_list_dto
@@ -266,6 +266,7 @@ def list_rides():
         return(render_template("admin/rides_no_data.html"))
 
     return render_template("admin/rides.html", request_list = response)    
+
 
 @admin_bp.route('login')
 def login():
