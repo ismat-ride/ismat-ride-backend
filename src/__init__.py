@@ -81,6 +81,7 @@ def create_app():
     def inject_user_vehicles():
         if current_user.is_authenticated:
             vehicles = Vehicle.query.filter_by(user_id=current_user.id).all()
+            print(vehicles)
             return dict(create_ride_vehicles = vehicles)
 
         return dict(vehicles = None)

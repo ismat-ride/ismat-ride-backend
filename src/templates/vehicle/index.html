@@ -69,7 +69,7 @@ block filters %}
                   action="{{ url_for('vehicles.delete_vehicle', id=item.id) }}"
                   method="post"
                 >
-                  <button type="submit" class="btn btn-sm btn-secondary w-100">
+                  <button type="submit" class="btn  btn-secondary w-100">
                     <span class="fw-bold">APAGAR</span>
                   </button>
                 </form>
@@ -79,7 +79,7 @@ block filters %}
                   type="button"
                   data-bs-toggle="modal"
                   data-bs-target="#edit{{item.id}}"
-                  class="btn btn-sm btn-primary w-100"
+                  class="btn btn-primary w-100"
                 >
                   <span class="fw-bold">EDITAR</span>
                 </button>

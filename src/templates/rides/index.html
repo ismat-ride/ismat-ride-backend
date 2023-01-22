@@ -62,16 +62,13 @@ block filters %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
       <div class="card-body">
-        <a class="stretched-link" href="{{item.id}}"></a>
         <div
           class="row align-items-end justify-content-start justify-content-md-center"
         >
           <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
             <div class="row align-items-center mb-2">
-              <div class="col-12">
-                <div
-                  class="d-flex w-100 align-items-center justify-content-start"
-                >
+              <div class="col">
+                <div class="d-flex align-items-center justify-content-start">
                   <div class="initial-avatar-rounded text-end">
                     {{item.driver_initials}}
                   </div>
@@ -95,7 +92,7 @@ block filters %}
             <div class="row align-items-center mb-2">
               <div class="col">
                 {% if 'Activa' == item.status %}
-                <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
+                <span class="badge rounded-pill bg-success font-14px ps-2 pe-2"
                   >{{item.status}}</span
                 >
                 {% elif 'Em Progresso' == item.status %}
@@ -115,39 +112,94 @@ block filters %}
             </div>
             <div class="row align-items-center">
               <div class="col">
-                <span class="font-16px fw-bold text-color"
-                  >{{item.starting_date}}</span
-                >
+                <span class="font-16px fw-bold">{{item.starting_date}}</span>
               </div>
             </div>
             <div class="row align-items-center mb-2">
               <div class="col">
-                <span class="font-16px fw-bold text-color"
-                  >{{item.starting_hour}}</span
-                >
+                <span class="font-16px fw-bold">{{item.starting_hour}}</span>
               </div>
             </div>
             <div class="row align-items-center justify-content-evenly">
               <div class="col">
                 <i class="fa-solid fa-user-group me-2"></i>
-                <span class="fw-bold font-14px text-color me-5"
+                <span class="fw-bold font-14px me-5"
                   >{{item.total_places}}</span
                 >
-                <span class="font-14px text-color"
-                  >{{item.total_available_places}} LUGARES DISPONIVEIS</span
+                <span class="font-14px fw-bold"
+                  >{{item.total_available_places}} LUGARE(S) DISPONIVEI(S)</span
                 >
               </div>
             </div>
           </div>
-          <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2 d-flex">
+          <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2">
+            <a class="text-decoration-none text-white" href="{{item.id}}">
+              <button
+                type="button"
+                class="btn {% if item.is_joinable == 'False' %}btn-primary{% endif %} {% if item.is_joinable == 'True' %}btn-secondary{% endif %} w-100 mb-2"
+              >
+                <span class="fw-bold">VER DETALHE</span>
+              </button>
+            </a>
             <button
-              class="btn btn-primary w-100 {% if item.is_joinable == False %}disabled{% endif %}"
+              class="btn btn-primary w-100 {% if item.is_joinable == 'False' %}disabled{% endif %}"
               data-bs-toggle="modal"
               data-bs-target="#joinride{{item.id}}"
             >
               <span class="fw-bold">JUNTAR-ME</span>
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="joinride{{item.id}}"
+    tabindex="-1"
+    aria-labelledby="joinride{{item.id}}"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">JUNTAR Á BOLEIA</h5>
+        </div>
+        <div class="modal-body">
+          <form
+            action="{{ url_for('rides.join_ride', id=item.id) }}"
+            method="POST"
+          >
+            <div class="row justify-content-center">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="fw-bold text-center">
+                      TENS MESMO A CERTEZA QUE QUERES TE JUNTAR A BOLEIA?
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">NÃO</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold">SIM</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
