@@ -229,9 +229,14 @@
                     </div>
                     <div class="row">
                         <div class="col mb-3">
-                          <label class="form-label secondary-secondary-text-color">Estado</label>
+                          <label class="form-label secondary-text-color">Estado</label>
                             <div class="form-check form-switch">
-                              <input class="form-check-input" type="checkbox" name="status" id="flexSwitchCheckDefault">
+                              {% if user.status == 'Active' %}
+                              <input class="form-check-input" type="checkbox" checked name="status" id="flexSwitchCheckDefault">                               
+                              {% endif %}
+                              {% if user.status == 'Inactive' %}
+                              <input class="form-check-input" type="checkbox" name="status" id="flexSwitchCheckDefault">                               
+                              {% endif %}
                               <label class="form-check-label" for="flexSwitchCheckDefault">Ativo/Inativo</label>
                             </div>
                         </div>
