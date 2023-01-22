@@ -85,7 +85,7 @@ def list_my_rides():
 
         rides_list.append(
             RideListDto(str(ride.id), ride.driver.get_full_name(), ride.driver.get_initials(),ride.origin, ride.destiny, ride.status.name, 
-            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers), is_joinable) 
+            ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers), is_joinable, ride.start_time, ride.seats) 
         )
 
     response['items'] = rides_list
@@ -179,7 +179,9 @@ def edit_ride(id):
     ride.origin = request.form.get('origin')
     ride.destiny = request.form.get('destiny')
     ride.vehicle_id = request.form.get('vehicle')
-    ride.total_seats = request.form.get('seats')
+    ride.seats = request.form.get('seats') 
+
+    ride.start_time=datetime.strptime(request.form.get('date'), '%Y-%m-%dT%H:%M:%S')
 
     db.session.commit()
 
@@ -189,8 +191,8 @@ def edit_ride(id):
 
 @login_required
 @student_required
-@rides_bp.route('/my-rides/finalize/<id>', methods=['GET', 'POST'])
-def finalize_ride(id):
+@rides_bp.route('/my-rides/finish/<id>', methods=['GET', 'POST'])
+def finish_ride(id):
     
     ride = Ride.query.filter_by(id=id).first()  
     ride.date = request.form.get('date')    

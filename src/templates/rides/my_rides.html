@@ -111,25 +111,47 @@
                     >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
                   >
                 </div>
+                {% if 'Active' == item.status or 'On Going' == item.status %}
                 <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
-                    <button class="btn btn-secondary flex-fill w-100" type="button" data-bs-toggle="modal" data-bs-target="#update{{item.id}}">
-                        Editar
-                    </button>
-                </div>
+                  <button class="btn btn-secondary flex-fill w-100 fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#update{{item.id}}">
+                      Editar
+                  </button>
+                </div>                
                 <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
                   <form action="/rides/my-rides/cancel/{{item.id}}">
-                    <button class="btn btn-primary flex-fill w-100" type="submit" name="cancel_" value="cancel">
+                    <button class="btn btn-primary flex-fill w-100 fw-bold" type="submit" name="cancel_" value="cancel">
                         Cancelar
                     </button>
                   </form>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
-                  <form action="/rides/my-rides/finalize/{{item.id}}">
-                    <button class="btn btn-danger flex-fill w-100" type="submit" name="cancel_" value="cancel">
+                  <form action="/rides/my-rides/finish/{{item.id}}">
+                    <button class="btn btn-success flex-fill w-100 fw-bold" type="submit" name="cancel_" value="cancel">
+                        Finalizar
+                    </button>
+                  </form>
+                </div>               
+                {% else %}
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">                                 
+                    <button class="btn bg-secondary text-white fw-bold flex-fill w-100" disabled type="button" data-bs-toggle="modal" data-bs-target="#update{{item.id}}">
+                        Editar
+                    </button>                                   
+                </div>                
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
+                  <form action="/rides/my-rides/cancel/{{item.id}}">
+                    <button class="btn bg-secondary text-white fw-bold flex-fill w-100" disabled type="submit" name="cancel_" value="cancel">
+                        Cancelar
+                    </button>
+                  </form>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
+                  <form action="/rides/my-rides/finish/{{item.id}}">
+                    <button class="btn bg-secondary text-white fw-bold flex-fill w-100" disabled type="submit" name="cancel_" value="cancel">
                         Finalizar
                     </button>
                   </form>
                 </div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -152,47 +174,29 @@
           <div class="modal-body">
             <form action="/rides/my-rides/edit/{{item.id}}" method="POST">
               <div class="container-fluid">
-                <div class="row">
-                  <div class="col-6">
-                    <div class="input-group mb-3">
-                      <label class="input-group-text" for="inputGroupSelect01"
-                        >Desde</label
-                      >
-                      <select
-                        class="form-select"
-                        id="inputGroupSelect01"
+                <div class="row my-3">
+                  <div class="col-6">                    
+                    <label class="form-label">Desde</label>
+                    <input
+                        type="text"
+                        value="{{item.starting_location}}" 
+                        class="form-control"                                               
                         name="origin"
                       >
-                        <option value="Portimão" selected>Portimão</option>
-                        <option value="Lagoa">Lagoa</option>
-                        <option value="Albufeira">Albufeira</option>
-                        <option value="Faro">Faro</option>
-                      </select>
-                    </div>
                   </div>
                   <div class="col-6">
-                    <div class="input-group mb-3">
-                      <label class="input-group-text" for="inputGroupSelect01"
-                        >Até</label
-                      >
-                      <select
-                        class="form-select"
-                        id="inputGroupSelect01"
+                    <label class="form-label">Até</label>
+                    <input
+                        type="text"
+                        value="{{item.end_location}}" 
+                        class="form-control"                                               
                         name="destiny"
                       >
-                        <option value="ISMAT" selected>ISMAT</option>
-                        <option value="Lagoa">Lagoa</option>
-                        <option value="Albufeira">Albufeira</option>
-                      </select>
-                    </div>
-                  </div>
+                  </div>                  
                 </div>
-                <div class="row">
-                  <div class="col-6">
-                    <div class="input-group mb-3">
-                      <label class="input-group-text" for="inputGroupSelect01"
-                        >Veículo</label
-                      >
+                <div class="row my-3">
+                  <div class="col-6">                    
+                    <label class="form-label">Veículo</label>
                       <select
                         class="form-select"
                         id="inputGroupSelect01"
@@ -201,13 +205,13 @@
                         {% for vehicle in vehicles %}
                         <option value="{{vehicle.id}}">{{vehicle.id}}</option>
                         {% endfor %}
-                      </select>
-                    </div>
+                      </select>                   
                   </div>
                   <div class="col-6">
+                    <label class="form-label">Data</label>
                     <input
                       type="datetime-local"
-                      value="{{ item.starting_date }}"
+                      value="{{ item.ride_time }}"
                       class="form-control"
                       name="date"
                     />

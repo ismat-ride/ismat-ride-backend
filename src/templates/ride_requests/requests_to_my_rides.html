@@ -1,16 +1,14 @@
-{% extends 'base/base.html' %} {% block title %} Pedidos Boleia {% endblock
-title %} {% block container_title %} PEDIDOS DE BOLEIA {% endblock
-container_title %} {% block filters %}
-<form action="{{ url_for('admin.list_ride_requests') }}" method="get">
+{% extends 'base/base_client.html' %} {% block title %} Pedidos Para As Minhas
+Boleias {% endblock title %} {% block container_title %} PEDIDOS PARA AS MINHAS
+BOLEIAS {% endblock container_title %} {% block filters %}
+<form action="{{ url_for('ride_requests.my_ride_requests') }}" method="get">
   <div class="card mb-3">
     <div class="card-body">
       <div
         class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
       >
         <div class="flex-fill">
-          <label class="form-label secondary-secondary-text-color"
-            >Condutor</label
-          >
+          <label class="form-label text-color">Nome</label>
           <input
             type="text"
             value="{{ request.args.get('name') or ''}}"
@@ -64,10 +62,8 @@ container_title %} {% block filters %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
       <div class="card-body">
-        <div
-          class="row align-items-end justify-content-start justify-content-md-center"
-        >
-          <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
+        <div class="row">
+          <div class="col-12">
             <div class="row align-items-center mb-2">
               <div class="col-12">
                 <div class="row align-items-center">
@@ -75,23 +71,27 @@ container_title %} {% block filters %}
                     <div
                       class="d-flex w-100 align-items-center justify-content-start"
                     >
-                      <div class="initial-avatar text-end">
+                      <div class="initial-avatar-rounded text-end">
                         {{item.initials}}
                       </div>
                       <span class="ms-3 fw-bold font-16px"
-                        >{{item.driver_name}}</span
+                        >{{item.passanger_name}}</span
                       >
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row align-items-center mb-2">
+            <div class="row align-items-center mb-3">
               <div class="col">
-                <span class="fw-bold font-16px">{{item.passanger_name}}</span>
+                <span class="fw-bold font-14px me-1"
+                  >{{item.starting_location}}</span
+                >
+                <i class="fa-solid fa-arrow-right icon-color me-1"></i>
+                <span class="fw-bold font-14px">{{item.end_location}}</span>
               </div>
             </div>
-            <div class="row align-items-center mb-2">
+            <div class="row align-items-center mb-3">
               <div class="col">
                 {% if 'Aceite' == item.status %}
                 <span class="badge rounded-pill bg-success font-14px ps-2 pe-2"
@@ -112,32 +112,54 @@ container_title %} {% block filters %}
                 {% endif %}
               </div>
             </div>
-            <div class="row align-items-center mb-2">
+            <div class="row align-items-center">
               <div class="col">
-                <span class="fw-bold font-14px me-1"
-                  >{{item.starting_location}}</span
-                >
-                <i class="fa-solid fa-arrow-right icon-color me-1"></i>
-                <span class="fw-bold font-14px">{{item.end_location}}</span>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2 d-flex">
-            <div class="row">
-              <div
-                class="col-12 text-lg-start text-xl-end text-md-start text-sm-end"
-              >
-                <span class="font-14px fw-bold secondary-text-color"
+                <span class="font-16px fw-bold text-color"
                   >{{item.starting_date}}</span
                 >
               </div>
-              <div
-                class="col-12 text-lg-start text-xl-end text-md-start text-sm-end"
-              >
-                <span class="font-14px fw-bold secondary-text-color"
+            </div>
+            <div class="row align-items-center mb-3">
+              <div class="col">
+                <span class="font-16px fw-bold text-color"
                   >{{item.starting_hour}}</span
                 >
               </div>
+            </div>
+          </div>
+          <div class="row justify-content-evenly align-items-center">
+            <div class="col-6">
+              <form
+                action="{{ url_for('ride_requests.my_ride_requests_cancel', id=item.id) }}"
+                method="post"
+              >
+                {% if 'True' == item.is_available %}
+                <button type="submit" class="btn btn-secondary w-100">
+                  <span class="fw-bold">RECUSAR</span>
+                </button>
+                {% elif 'False' == item.is_available %}
+                <button class="btn btn-secondary w-100 disabled">
+                  <span class="fw-bold">RECUSAR</span>
+                </button>
+
+                {% endif %}
+              </form>
+            </div>
+            <div class="col-6">
+              <form
+                action="{{ url_for('ride_requests.my_ride_requests_accept', id=item.id) }}"
+                method="post"
+              >
+                {% if 'True' == item.is_available %}
+                <button type="submit" class="btn btn-primary w-100">
+                  <span class="fw-bold">ACEITAR</span>
+                </button>
+                {% elif 'False' == item.is_available %}
+                <button class="btn btn-primary w-100 disabled">
+                  <span class="fw-bold">ACEITAR</span>
+                </button>
+                {% endif %}
+              </form>
             </div>
           </div>
         </div>
@@ -153,7 +175,7 @@ container_title %} {% block filters %}
     <li class="page-item {% if request_list.page == 1 %}disabled{% endif %}">
       <a
         class="page-link"
-        href="{{ url_for('admin.list_ride_requests', page=request_list.prev_num) }}"
+        href="{{ url_for('ride_requests.my_ride_requests', page=request_list.prev_num) }}"
         tabindex="-1"
         >Anterior</a
       >
@@ -163,7 +185,7 @@ container_title %} {% block filters %}
     request_list.page == page_num %}
     <li class="page-item">
       <a
-        href="{{ url_for('admin.list_ride_requests', page=page_num) }}"
+        href="{{ url_for('ride_requests.my_ride_requests', page=page_num) }}"
         class="page-link"
       >
         {{ page_num }}
@@ -172,7 +194,7 @@ container_title %} {% block filters %}
     {% else %}
     <li class="page-item">
       <a
-        href="{{ url_for('admin.list_ride_requests', page=page_num) }}"
+        href="{{ url_for('ride_requests.my_ride_requests', page=page_num) }}"
         class="page-link"
       >
         {{ page_num }}
@@ -184,7 +206,7 @@ container_title %} {% block filters %}
     >
       <a
         class="page-link"
-        href="{{ url_for('admin.list_ride_requests', page=request_list.next_num) }}"
+        href="{{ url_for('ride_requests.my_ride_requests', page=request_list.next_num) }}"
         tabindex="-1"
         >Seguinte</a
       >
