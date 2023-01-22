@@ -15,6 +15,7 @@ from src.ride_requests.ride_requests import RideRequest
 from src.extensions import db, mail, ITEMS_PER_PAGE, admin_required
 from flask_mail import Message
 
+
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 @login_required
 @admin_required
@@ -104,7 +105,7 @@ def list_brands():
 
        return render_template("brands/index.html", brands = response)
 
-@admin_bp.route("/brand/<id>", methods = ["POST"])
+@admin_bp.route("/brand/<id>", methods = ["POST"]) 
 @login_required
 @admin_required
 def update_brand(id):
@@ -134,7 +135,7 @@ def update_brand(id):
               print(e)
               flash(f'Ocorreu um erro inesperado', 'error')
 
-@admin_bp.route('/brand/delete/<brand_id>')
+@admin_bp.route('/brand/delete/<id>')
 @login_required
 @admin_required
 def delete_brand(brand_id):
@@ -145,16 +146,19 @@ def delete_brand(brand_id):
         
         return redirect(request.url)
 
-    vehicles = db.session.query(Vehicle).filter(Vehicle.model.has(Model.brand_id == brand_id))
+        if brand_to_delete is None:
+            flash('Esta marca nao existe', category='not_found_error')
+            return redirect(url_for('admin.list_brands'))
+      
 
-    if vehicles is None:
-        db.session.remove(brand_to_delete)
-        db.session.commit()
+        try:
+            db.session.delete(brand_to_delete)
+            db.session.commit()
+            flash("MARCA APAGADA COM SUCESSO!", 'info')
+            return redirect(url_for('admin.list_brands'))
+        except:
+            flash(f'Ocorreu um erro inesperado', 'error')
 
-        return redirect(request.url)
-
-    flash('Marca está a ser utilizada, não pode ser apagada', category='error')
-    return redirect(request.url)
 
 @admin_bp.route("/ride-requests/list")
 @login_required
@@ -203,6 +207,7 @@ def list_models():
     page = request.args.get('page', 1, type=int)
 
     query = Model.query
+    modal_brand = Brand.query.all()      
 
     if request.args.get("brand"):
         query = query.filter(
@@ -220,7 +225,7 @@ def list_models():
     if len(query.items) == 0:
         return(render_template("models/no_data.html"))
 
-    return render_template("models/index.html", request_list = response)
+    return render_template("models/index.html", request_list = response,  modal_brand_2 = modal_brand)
 
 @admin_bp.route("rides/list")
 @login_required
@@ -339,3 +344,85 @@ def edit_user_post():
 
     flash('Perfil atualizado com sucesso!', 'info')
     return redirect(request.referrer)
+    
+@admin_bp.route("/brand/insert", methods=['POST', 'GET'])
+@login_required
+def brand_insert():
+
+    if request.method == "POST":
+        
+        brand_name = request.form.get('name')
+        
+        
+        brand = Brand(name=brand_name)
+        
+        db.session.add(brand)
+        db.session.commit()
+        flash("MARCA INSERIDA COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_brands'))
+
+    else:   
+        flash(f'Ocorreu um erro inesperado', 'error')
+
+
+
+@admin_bp.route("/models/<id>", methods = ["POST"]) 
+@login_required
+def update_model(id):
+       models = Model.query.get(id)
+
+       if(models is None):
+              flash('Este modelo nao existe', 'error')
+              return redirect(url_for('admin.list_models'))
+
+       request_data = request.form.get("name")
+
+       if(request_data is None):
+              flash('Nome do modelo nao pode vir vazio: ${name}', 'error')
+              return redirect(url_for('admin.list_models'))
+
+       if(request_data == models.name):
+              flash('Esta marca já existe', 'error')
+              return redirect(url_for('admin.list_models'))
+
+       models.name = request_data
+
+       try:
+              db.session.commit()
+              flash("MODELO ATUALIZADO COM SUCESSO!", 'info')
+              return redirect(url_for('admin.list_models'))
+       except Exception as e:
+              print(e)
+              flash(f'Ocorreu um erro inesperado', 'error')
+
+@admin_bp.route('/models/delete/<id>')
+@login_required
+def delete_model(id):
+    model_to_delete = Model.query.get_or_404(id)
+
+    try:
+        db.session.delete(model_to_delete)
+        db.session.commit()
+        flash("MODELO APAGADO COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_models'))
+    except:
+        flash(f'Ocorreu um erro inesperado', 'error')
+
+@admin_bp.route("/models/insert", methods=['POST', 'GET'])
+@login_required
+def models_insert():
+
+    if request.method == "POST":
+        
+        model_name = request.form.get('name')
+        brand_id_2 = request.form.get('selectBrand')
+        
+        models = Model(name=model_name, brand_id=brand_id_2)
+        
+        db.session.add(models)
+        db.session.commit()
+        flash("MODELO INSERIDO COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_models'))
+
+    else:   
+        flash(f'Ocorreu um erro inesperado', 'error')
