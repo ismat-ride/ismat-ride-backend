@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 
 @dataclass
-class RideListDto:
-    driver_name: str
+class RequestsToMyRidesListDto:
+    id: str
+    passanger_name: str
+    initials: str
     starting_location: str
-    end_location: str
+    end_location:str
     status: str
     starting_date: str
     starting_hour: str
-    total_places: str
-    total_available_places: str
-    initials: str
+    is_available: str
+   

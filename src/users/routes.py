@@ -87,3 +87,38 @@ def register_post():
 @login_required
 def profile():
     return f'<h1> Hello {current_user.email}<h1>'
+
+@users_bp.route("/edit", methods=["POST"])
+def edit_profile():
+    new_user = current_user
+
+    if request.form.get('firstname') == "" or request.form.get('firstname') is None:
+        flash('Insira um primeiro nome!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('lastname') == "" or request.form.get('lastname') is None:
+        flash('Insira um ultimo nome!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('username') == "" or request.form.get('username') is None:
+        flash('Insira um username!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('email') == "" or request.form.get('email') is None:
+        flash('Insira um email!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('phone') == "" or request.form.get('phone') is None:
+        flash('Insira um número de telefone!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('process') == "" or request.form.get('process') is None:
+        flash('Insira um número de aluno!', 'error')
+        return redirect(request.referrer)                   
+
+    new_user.first_name = request.form.get('firstname')
+    new_user.last_name = request.form.get('lastname')
+    new_user.username = request.form.get('username')
+    new_user.email = request.form.get('email')
+    new_user.student_number = request.form.get('process')
+    new_user.phone_number = request.form.get('phone')
+
+    db.session.commit()
+
+    flash('Perfil atualizado com sucesso!', 'info')
+    return redirect(request.referrer)

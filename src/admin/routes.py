@@ -12,11 +12,13 @@ from src.admin.dto.user_list_dto import UserListDto
 from src.admin.dto.ride_list_dto import RideListDto
 from src.admin.dto.ride_requests_dto import RideRequestDto
 from src.ride_requests.ride_requests import RideRequest
-from src.extensions import db, mail, ITEMS_PER_PAGE
+from src.extensions import db, mail, ITEMS_PER_PAGE, admin_required
 from flask_mail import Message
+
 
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 @login_required
+@admin_required
 def list_users():
     page = request.args.get('page', 1, type=int)
     
@@ -56,6 +58,7 @@ def list_users():
 
 @admin_bp.route('send/recovery/<id>')
 @login_required
+@admin_required
 def send_recovery(id):
     user = User.query.filter_by(id=id).first()
 
@@ -81,6 +84,7 @@ def send_recovery(id):
 
 @admin_bp.route("/brands/list")
 @login_required
+@admin_required
 def list_brands():
        page = request.args.get('page', 1, type=int)
        
@@ -101,8 +105,9 @@ def list_brands():
 
        return render_template("brands/index.html", brands = response)
 
-@admin_bp.route("/brand/<id>", methods = ["POST"])
+@admin_bp.route("/brand/<id>", methods = ["POST"]) 
 @login_required
+@admin_required
 def update_brand(id):
        brand = Brand.query.get(id)
 
@@ -130,8 +135,9 @@ def update_brand(id):
               print(e)
               flash(f'Ocorreu um erro inesperado', 'error')
 
-@admin_bp.route('/brand/delete/<brand_id>')
+@admin_bp.route('/brand/delete/<id>')
 @login_required
+@admin_required
 def delete_brand(brand_id):
     brand_to_delete = Brand.query.filter_by(id=brand_id).first()
 
@@ -140,19 +146,23 @@ def delete_brand(brand_id):
         
         return redirect(request.url)
 
-    vehicles = db.session.query(Vehicle).filter(Vehicle.model.has(Model.brand_id == brand_id))
+        if brand_to_delete is None:
+            flash('Esta marca nao existe', category='not_found_error')
+            return redirect(url_for('admin.list_brands'))
+      
 
-    if vehicles is None:
-        db.session.remove(brand_to_delete)
-        db.session.commit()
+        try:
+            db.session.delete(brand_to_delete)
+            db.session.commit()
+            flash("MARCA APAGADA COM SUCESSO!", 'info')
+            return redirect(url_for('admin.list_brands'))
+        except:
+            flash(f'Ocorreu um erro inesperado', 'error')
 
-        return redirect(request.url)
-
-    flash('Marca está a ser utilizada, não pode ser apagada', category='error')
-    return redirect(request.url)
 
 @admin_bp.route("/ride-requests/list")
 @login_required
+@admin_required
 def list_ride_requests():
       page = request.args.get('page', 1, type=int)
 
@@ -179,23 +189,25 @@ def list_ride_requests():
 
       for ride in query:
             ride_requests_list.append(
-                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.local.name, ride.ride_request_state.name, 
+                  RideRequestDto(ride.user.get_full_name(),ride.ride.driver.get_full_name(),ride.ride.origin, ride.ride.destiny, ride.ride_request_state.name, 
                   ride.ride.start_time.strftime('%d-%m-%Y'), ride.ride.start_time.strftime('%H:%M'),ride.ride.driver.get_initials()) 
             )
 
       response['items'] = ride_requests_list
       
       if ride_requests_list.__len__() == 0:
-        return(render_template("ride_requests/no_data.html"))
+        return(render_template("admin/ride_requests_no_data.html"))
 
-      return render_template("ride_requests/index.html", request_list = response)
+      return render_template("admin/ride_requests.html", request_list = response)
 
 @admin_bp.route("/models/list")
 @login_required
+@admin_required
 def list_models():
     page = request.args.get('page', 1, type=int)
 
     query = Model.query
+    modal_brand = Brand.query.all()      
 
     if request.args.get("brand"):
         query = query.filter(
@@ -213,10 +225,11 @@ def list_models():
     if len(query.items) == 0:
         return(render_template("models/no_data.html"))
 
-    return render_template("models/index.html", request_list = response)
+    return render_template("models/index.html", request_list = response,  modal_brand_2 = modal_brand)
 
 @admin_bp.route("rides/list")
 @login_required
+@admin_required
 def list_rides():
     page = request.args.get('page', 1, type=int)
 
@@ -243,36 +256,33 @@ def list_rides():
     
     for ride in query:
         rides_list.append(
-            RideListDto(ride.driver.get_full_name(),ride.origin, ride.status.name, 
+            RideListDto(ride.driver.get_full_name(),ride.origin,ride.destiny, ride.status.name, 
             ride.start_time.strftime('%d-%m-%Y'), ride.start_time.strftime('%H:%M'), ride.seats, ride.seats - len(ride.passengers),ride.driver.get_initials()) 
         )
 
     response['items'] = rides_list
 
     if rides_list.__len__() == 0:
-        return(render_template("rides/no_data.html"))
+        return(render_template("admin/rides_no_data.html"))
 
-    return render_template("rides/index.html", request_list = response)    
-    return redirect(request.url)
+    return render_template("admin/rides.html", request_list = response)    
 
 @admin_bp.route('login')
 def login():
     if current_user.is_authenticated:
-         return redirect(url_for('admin.profile'))
+         return redirect(url_for('admin.list_rides'))
 
     return render_template('admin/login.html')
 
 @admin_bp.route('/login', methods = ['POST'])
 def login_post():
-    print(current_user)
-
     email = request.form.get('email')
     password = request.form.get('password')
     remember_me = request.form.get('remember_me')
 
     user = User.query.filter_by(email=email).first()
     
-    if not user or user.type != 'admin' or not check_password_hash(user.password, password):
+    if not user or user.type != 'Admin' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
 
         return render_template('admin/login.html')  
@@ -306,39 +316,99 @@ def logout():
 
     return response
 
-@admin_bp.route('/edit/<id>', methods=['GET'])
+@admin_bp.route("/edit", methods=["POST"])
 @login_required
-def edit_user(id):
-    user = User.query.filter_by(id=id).first()
+@admin_required
+def edit_user_post():
+    new_user = current_user
 
-    if user is None:
-        flash('Utilizador com este email nao existe', category='error')
+    if request.form.get('firstname') == "" or request.form.get('firstname') is None:
+        flash('Insira um primeiro nome!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('lastname') == "" or request.form.get('lastname') is None:
+        flash('Insira um ultimo nome!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('email') == "" or request.form.get('email') is None:
+        flash('Insira um email!', 'error')
+        return redirect(request.referrer)
+    if request.form.get('phone') == "" or request.form.get('phone') is None:
+        flash('Insira um número de telefone!', 'error')
+        return redirect(request.referrer)
 
-        return redirect(url_for('admin.list_users'))
-
-    return render_template('admin/edit.html', user=user)
-
-@admin_bp.route('/edit/<id>', methods=['POST'])
-@login_required
-def edit_user_post(id):
-    user = User.query.filter_by(id=id).first()
-
-    if user is None:
-        flash('Utilizador com este email nao existe', category='error')
-
-        return redirect(url_for('admin.list_users'))
-        
-    user.first_name = request.form.get('first_name')
-    user.last_name = request.form.get('last_name')
-    user.email = request.form.get('email')
-    user.phone_number = request.form.get('phone_number')
+    new_user.first_name = request.form.get('firstname')
+    new_user.last_name = request.form.get('lastname')
+    new_user.email = request.form.get('email')
+    new_user.phone_number = request.form.get('phone')
 
     db.session.commit()
 
-    flash('Utilizador editado com sucesso', category='info')
+    flash('Perfil atualizado com sucesso!', 'info')
+    return redirect(request.referrer)
+    
+@admin_bp.route("/brand/insert", methods=['POST', 'GET'])
+@login_required
+def brand_insert():
 
-    return redirect(url_for('admin.edit_user', id=id))
+    if request.method == "POST":
+        
+        brand_name = request.form.get('name')
+        
+        
+        brand = Brand(name=brand_name)
+        
+        db.session.add(brand)
+        db.session.commit()
+        flash("MARCA INSERIDA COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_brands'))
 
+    else:   
+        flash(f'Ocorreu um erro inesperado', 'error')
+
+
+
+@admin_bp.route("/models/<id>", methods = ["POST"]) 
+@login_required
+def update_model(id):
+       models = Model.query.get(id)
+
+       if(models is None):
+              flash('Este modelo nao existe', 'error')
+              return redirect(url_for('admin.list_models'))
+
+       request_data = request.form.get("name")
+
+       if(request_data is None):
+              flash('Nome do modelo nao pode vir vazio: ${name}', 'error')
+              return redirect(url_for('admin.list_models'))
+
+       if(request_data == models.name):
+              flash('Esta marca já existe', 'error')
+              return redirect(url_for('admin.list_models'))
+
+       models.name = request_data
+
+       try:
+              db.session.commit()
+              flash("MODELO ATUALIZADO COM SUCESSO!", 'info')
+              return redirect(url_for('admin.list_models'))
+       except Exception as e:
+              print(e)
+              flash(f'Ocorreu um erro inesperado', 'error')
+
+@admin_bp.route('/models/delete/<id>')
+@login_required
+def delete_model(id):
+    model_to_delete = Model.query.get_or_404(id)
+
+    try:
+        db.session.delete(model_to_delete)
+        db.session.commit()
+        flash("MODELO APAGADO COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_models'))
+    except:
+        flash(f'Ocorreu um erro inesperado', 'error')
+
+<<<<<<< HEAD
 @admin_bp.route('/users/update/<id>', methods=['GET', 'POST'])
 @login_required
 def update_user(id):
@@ -365,3 +435,23 @@ def update_user(id):
     flash('Utilizador editado com sucesso', category='info')
 
     return redirect(url_for('admin.list_users'))
+=======
+@admin_bp.route("/models/insert", methods=['POST', 'GET'])
+@login_required
+def models_insert():
+
+    if request.method == "POST":
+        
+        model_name = request.form.get('name')
+        brand_id_2 = request.form.get('selectBrand')
+        
+        models = Model(name=model_name, brand_id=brand_id_2)
+        
+        db.session.add(models)
+        db.session.commit()
+        flash("MODELO INSERIDO COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_models'))
+
+    else:   
+        flash(f'Ocorreu um erro inesperado', 'error')
+>>>>>>> ff2cb6ce79a3faadcc9fecdd92177b67a813fdfd

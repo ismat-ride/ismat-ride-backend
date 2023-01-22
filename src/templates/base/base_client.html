@@ -8,12 +8,12 @@
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static',filename='styles/backoffice/global.css') }}"
+      href="{{ url_for('static',filename='styles/global.css') }}"
     />
     <link
       rel="stylesheet"
       type="text/css"
-      href="{{ url_for('static',filename='styles/backoffice/adminkit.css') }}"
+      href="{{ url_for('static',filename='styles/adminkit.css') }}"
     />
     <script
       src="https://kit.fontawesome.com/86102a7658.js"
@@ -21,7 +21,6 @@
     ></script>
     <script src="{{ url_for('static',filename='js/app.js') }}"></script>
   </head>
-
   <body>
     <div class="wrapper">
       <nav id="sidebar" class="sidebar shadow js-sidebar">
@@ -33,75 +32,82 @@
           </h2>
           <ul class="sidebar-nav">
             <li class="sidebar-item">
-              <!-- ÂDD HERE THE PROFILE URL -->
-<<<<<<< HEAD
-              <a class="sidebar-link" href="{{ url_for('users.profile') }}">
-=======
               <a
                 class="sidebar-link"
                 type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#editProfile"
               >
->>>>>>> ff2cb6ce79a3faadcc9fecdd92177b67a813fdfd
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-user fa-lg me-2 text-color"></i>
-                <span class="align-middle fw-bold">PERFIL</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <!-- ÂDD HERE THE PROFILE URL -->
-              <a class="sidebar-link" href="{{ url_for('admin.list_users') }}">
-                <i class="align-middle"></i>
-                <i class="fa-solid fa-users fa-lg me-2 text-color"></i>
-                <span class="align-middle fw-bold">UTILIZADORES</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{{ url_for('admin.list_rides') }}">
-                <i class="align-middle"></i>
-                <i class="fa-solid fa-registered fa-lg me-2 text-color"></i>
-                <span class="align-middle fw-bold">BOLEIAS</span>
+                <span class="align-middle fw-bold"> PERFIL</span>
               </a>
             </li>
             <li class="sidebar-item">
               <a
                 class="sidebar-link"
-                href="{{ url_for('admin.list_ride_requests') }}"
+                data-bs-target="#rides"
+                data-bs-toggle="collapse"
+              >
+                <i class="align-middle"></i>
+                <i class="fa-solid fa-registered fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">BOLEIAS</span>
+              </a>
+              <ul
+                id="rides"
+                class="sidebar-dropdown list-unstyled collapse show"
+                data-bs-parent="#sidebar"
+              >
+                <li class="sidebar-item">
+                  <a
+                    class="sidebar-link fw-bold"
+                    href="{{url_for('rides.list_rides')}}"
+                    >PESQUISAR</a
+                  >
+                </li>
+                <li class="sidebar-item">
+                  <a
+                    class="sidebar-link fw-bold"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createRideModal"
+                    >CRIAR</a
+                  >
+                </li>
+                <li class="sidebar-item">
+                  <a class="sidebar-link fw-bold" href="../my-rides-page/"
+                    >AS MINHAS BOLEIAS</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="sidebar-item">
+              <a
+                class="sidebar-link collapsed"
+                data-bs-target="#riderequests"
+                data-bs-toggle="collapse"
               >
                 <i class="align-middle"></i>
                 <i class="fa-solid fa-paper-plane fa-lg me-2 text-color"></i>
                 <span class="align-middle fw-bold">PEDIDOS DE BOLEIA</span>
               </a>
-            </li>
-            <li class="sidebar-item">
-              <a
-                class="sidebar-link collapsed"
-                data-bs-target="#marcas"
-                data-bs-toggle="collapse"
-              >
-                <i class="align-middle"></i>
-                <i class="fa-solid fa-b fa-lg me-2 text-color"></i>
-                <span class="align-middle fw-bold">MARCAS</span>
-              </a>
               <ul
-                id="marcas"
+                id="riderequests"
                 class="sidebar-dropdown list-unstyled collapse show"
                 data-bs-parent="#sidebar"
               >
                 <li class="sidebar-item">
                   <a
                     class="sidebar-link fw-bold"
-                    data-bs-toggle="modal"
-                    data-bs-target="#addBrandModal"
-                    >CRIAR</a
+                    href="{{url_for('ride_requests.my_requests_list')}}"
+                    >OS MEUS PEDIDOS</a
                   >
                 </li>
                 <li class="sidebar-item">
                   <a
-                    href="{{ url_for('admin.list_brands') }}"
                     class="sidebar-link fw-bold"
-                    >VISUALIZAR</a
+                    href="{{url_for('ride_requests.my_ride_requests')}}"
+                    >PEDIDOS PARA AS MINHAS BOLEIAS</a
                   >
                 </li>
               </ul>
@@ -109,50 +115,46 @@
             <li class="sidebar-item">
               <a
                 class="sidebar-link collapsed"
-                data-bs-target="#modelos"
+                data-bs-target="#vehicles"
                 data-bs-toggle="collapse"
               >
                 <i class="align-middle"></i>
-                <i class="fa-solid fa-m fa-lg me-2 text-color"></i>
-                <span class="align-middle fw-bold">MODELOS</span>
+                <i class="fa-solid fa-car fa-lg me-2 text-color"></i>
+                <span class="align-middle fw-bold">VEÍCULOS</span>
               </a>
               <ul
-                id="modelos"
+                id="vehicles"
                 class="sidebar-dropdown list-unstyled collapse show"
                 data-bs-parent="#sidebar"
               >
                 <li class="sidebar-item">
                   <a
                     class="sidebar-link fw-bold"
+                    type="button"
                     data-bs-toggle="modal"
-                    data-bs-target="#addModelModal"
+                    data-bs-target="#createVehicle"
                     >CRIAR</a
                   >
                 </li>
                 <li class="sidebar-item">
                   <a
-                    href="{{ url_for('admin.list_models') }}"
+                    href="{{ url_for('vehicles.vehicles_list') }}"
                     class="sidebar-link fw-bold"
-                    >VISUALIZAR</a
+                    >OS MEUS VEÍCULOS</a
                   >
                 </li>
               </ul>
             </li>
           </ul>
-          <div class="row w-100 m-0 logout-wrapper">
-            <div class="col-12">
-              <div class="decoration-none row justify-items-center p-2">
-                <span
-                  onclick="logout()"
-                  class="fw-bold secondary-color text-center"
-                >
-                  <i
-                    class="fa-solid fa-right-from-bracket fa-lg me-2 logout"
-                  ></i
-                  ><span>SAIR</span>
-                </span>
-              </div>
-            </div>
+
+          <div class="row w-100 m-0">
+            <button
+              onclick="logout()"
+              class="btn btn-primary rounded-0 decoration-none p-2"
+            >
+              <i class="fa-solid fa-right-from-bracket fa-lg me-2 logout"></i>
+              <span class="fw-bold">SAIR</span>
+            </button>
           </div>
         </div>
       </nav>
@@ -212,67 +214,68 @@
       </div>
     </div>
   </body>
+  <!-- THIS IS THE CREATE VEHICLE MODAL -->
   <div
     class="modal fade"
-    id="editProfile"
+    id="createVehicle"
     tabindex="-1"
-    aria-labelledby="editProfile"
+    aria-labelledby="createVehicle"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header m-2">
-          <h5 class="modal-title" id="editProfile">EDITAR PERFIL</h5>
+          <h5 class="modal-title" id="createBrandModal">CRIAR VEÍCULO</h5>
         </div>
         <div class="modal-body">
-          <form action="{{ url_for('admin.edit_user_post') }}" method="POST">
+          <form action="{{ url_for('vehicles.create_vehicle') }}" method="POST">
             <div class="row justify-content-center">
               <div class="col-12 col-md-12 col-lg-10">
                 <div class="card shadow">
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-12 mb-3">
-                        <label class="form-label fw-bold">Primeiro nome</label>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Modelo</label>
+                        <div class="input-group mb-3">
+                          <select name="model" class="form-select">
+                            {% for model in models_list %}
+                            <option value="{{model.id}}">{{model.name}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Cor</label>
                         <div class="input-group mb-3">
                           <input
                             type="text"
                             class="form-control"
-                            name="firstname"
-                            value="{{user.first_name}}"
+                            name="color"
+                            maxlength="10"
                           />
                         </div>
                       </div>
-                      <div class="col-12 mb-3">
-                        <label class="form-label fw-bold">Último nome</label>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">VIN</label>
                         <div class="input-group mb-3">
                           <input
                             type="text"
                             class="form-control"
-                            name="lastname"
-                            value="{{user.last_name}}"
+                            name="vin"
+                            maxlength="10"
                           />
                         </div>
                       </div>
-
-                      <div class="col-12 mb-3">
-                        <label class="form-label fw-bold">Telefone</label>
+                      <div class="col-12 col-md-12">
+                        <label class="form-label fw-bold">Lugares</label>
                         <div class="input-group mb-3">
                           <input
-                            type="text"
+                            type="number"
                             class="form-control"
-                            name="phone"
-                            value="{{user.phone_number}}"
-                          />
-                        </div>
-                      </div>
-                      <div class="col-12 mb-3">
-                        <label class="form-label fw-bold">Email</label>
-                        <div class="input-group mb-3">
-                          <input
-                            type="text"
-                            class="form-control"
-                            name="email"
-                            value="{{user.email}}"
+                            name="places"
+                            max="20"
+                            min="2"
+                            maxlength="1"
                           />
                         </div>
                       </div>
@@ -304,50 +307,92 @@
       </div>
     </div>
   </div>
+  <!-- THIS IS THE EDIT PROFILE MDOAL -->
   <div
     class="modal fade"
-    id="addModelModal"
+    id="editProfile"
     tabindex="-1"
-    aria-labelledby="addModelModal"
+    aria-labelledby="editProfile"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header m-2">
-          <h5 class="modal-title" id="createBrandModal">ADICIONAR MODELO</h5>
+          <h5 class="modal-title" id="editProfile">EDITAR PERFIL</h5>
         </div>
         <div class="modal-body">
-          <form action="insert" id="insert" method="POST">
+          <form action="{{ url_for('users.edit_profile') }}" method="POST">
             <div class="row justify-content-center">
               <div class="col-12 col-md-12 col-lg-10">
                 <div class="card shadow">
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-12 mb-2">
-                        <div class="form-group">
-                          <label class="form-label fw-bold">Marca</label>
-                          <select
-                            name="selectBrand"
-                            class="form-select"
-                            aria-label="Default select example"
-                          >
-                            {% for brand in brands_list %}
-                            <option value="{{brand.id}}">{{brand.name}}</option>
-                            {% endfor %}
-                          </select>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Primeiro nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="firstname"
+                            value="{{user.first_name}}"
+                          />
                         </div>
                       </div>
-
-                      <div class="col-12">
-                        <div class="form-group">
-                          <label class="form-label fw-bold">Modelo</label>
-                          <div class="input-group mb-3">
-                            <input
-                              type="text"
-                              class="form-control"
-                              name="name"
-                            />
-                          </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Último nome</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="lastname"
+                            value="{{user.last_name}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold">Username</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="username"
+                            value="{{user.username}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Telefone</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="phone"
+                            value="{{user.phone_number}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 col-sm-6 mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="email"
+                            value="{{user.email}}"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-12 mb-3">
+                        <label class="form-label fw-bold"
+                          >Número de aluno</label
+                        >
+                        <div class="input-group mb-3">
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="process"
+                            value="{{user.student_number}}"
+                          />
                         </div>
                       </div>
                     </div>
@@ -368,7 +413,7 @@
                 </div>
                 <div class="col-12 col-sm-6">
                   <button type="submit" class="btn btn-primary w-100">
-                    <span class="fw-bold">Confirmar</span>
+                    <span class="fw-bold"> Guardar Alterações</span>
                   </button>
                 </div>
               </div>
@@ -378,35 +423,64 @@
       </div>
     </div>
   </div>
+  <!-- THIS IS THE CREATE RIDE MODAL -->
   <div
     class="modal fade"
-    id="addBrandModal"
+    id="createRideModal"
     tabindex="-1"
-    aria-labelledby="addBrandModal"
+    aria-labelledby="createRideModal"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header m-2">
-          <h5 class="modal-title" id="createBrandModal">ADICIONAR MARCA</h5>
+          <h5 class="modal-title" id="createRideModal">CRIAR NOVA BOLEIA</h5>
         </div>
         <div class="modal-body">
-          <form action="/admin/brand/insert" id="insert" method="POST">
-            <div class="row justify-content-center">
-              <div class="col-12 col-md-12 col-lg-10">
-                <div class="card shadow">
-                  <div class="card-body">
-                    <label class="form-label fw-bold">Marca</label>
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control" name="name" />
-                    </div>
+          <form action="{{ url_for('rides.create_ride') }}" method="POST">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Local Atual</label>
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="origin" />
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Destino</label>
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="destiny" />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-bold">Data/Hora Boleia</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      name="date"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Veículo</label>
+                  <div class="input-group mb-3">
+                    <select name="vehicle" class="form-select">
+                      {% for model in create_ride_vehicles %}
+                      <option value="{{model.id}}">{{model.model.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Lugares</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" name="seats" />
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="d-flex flex-column flex-sm-row gap-2">
-                <div class="col-12 col-sm-6">
+              <div class="row justify-content-between align-items-center">
+                <div class="col">
                   <button
                     type="button"
                     class="btn btn-secondary w-100"
@@ -415,9 +489,13 @@
                     <span class="fw-bold">Cancelar</span>
                   </button>
                 </div>
-                <div class="col-12 col-sm-6">
-                  <button type="submit" class="btn btn-primary w-100">
-                    <span class="fw-bold">Confirmar</span>
+                <div class="col">
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold"> Guardar Alterações</span>
                   </button>
                 </div>
               </div>

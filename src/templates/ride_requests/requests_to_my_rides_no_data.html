@@ -1,16 +1,14 @@
-{% extends 'base/base_client.html' %} {% block title %} Pedidos Boleia {%
-endblock title %} {% block container_title %} PEDIDOS DE BOLEIA {% endblock
-container_title %} {% block filters%}
-<form action="{{ url_for('admin.list_ride_requests') }}" method="get">
+{% extends 'base/base_client.html' %} {% block title %} Pedidos Para As Minhas
+Boleias{% endblock title %} {% block container_title %} PEDIDOS PARA AS MINHAS
+BOLEIAS {% endblock container_title %} {% block filters%}
+<form action="{{ url_for('ride_requests.my_ride_requests') }}" method="get">
   <div class="card mb-3">
     <div class="card-body">
       <div
         class="d-flex flex-row flex-wrap gap-4 justify-content-center align-items-end justify-content-sm-start"
       >
         <div class="flex-fill">
-          <label class="form-label secondary-secondary-text-color"
-            >Condutor</label
-          >
+          <label class="form-label">Nome</label>
           <input
             type="text"
             value="{{ request.args.get('name') or ''}}"
@@ -43,9 +41,10 @@ container_title %} {% block filters%}
             >Estado</label
           >
           <select name="status" class="form-select">
-            <option id="1" value="1">Disponivel</option>
+            <option id="1" value="1">Aceite</option>
             <option id="2" value="2">Pendente</option>
-            <option id="3" value="3">Negado</option>
+            <option id="3" value="3">Rejeitada</option>
+            <option id="4" value="4">Cancelada</option>
           </select>
         </div>
         <div class="flex-fill justify-content-center">

@@ -26,7 +26,7 @@ block container_title %} MARCAS {% endblock container_title %} {% block filters
   </div>
 </form>
 {% endblock filters %} {%block content %}
-<div class="row justify-content-evenly">
+<div class="row justify-content-start">
   {% for item in brands['items'] %}
   <div class="col-12 col-md-6 col-lg-6">
     <div class="card shadow">
@@ -34,8 +34,8 @@ block container_title %} MARCAS {% endblock container_title %} {% block filters
         <div class="row h-100">
           <div class="col-12 col-sm-6 col-md-4">
             <div class="col-12 d-flex flex-column">
-              <span class="font-16px mb-0">Marca</span>
-              <span class="font-20px fw-bold mb-0">{{item.name}}</span>
+              <h4 class="mb-0">Marca</h4>
+              <h3 class="fw-bold mb-0">{{item.name}}</h3>
             </div>
           </div>
           <div class="col-12 col-sm-6 col-md-8">
@@ -51,8 +51,16 @@ block container_title %} MARCAS {% endblock container_title %} {% block filters
                     EDITAR
                   </button>
                 </div>
-                <div class="col-6 col-sm-6">
-                  <button class="btn btn-danger w-100 fw-bold">APAGAR</button>
+                <div class="col-12 col-sm-6">
+                  <form action="/admin/brand/delete/{{item.id}}" id="delete">
+                    <button
+                      type="submit"
+                      name="delete_model"
+                      class="btn btn-danger w-100 fw-bold"
+                    >
+                      APAGAR
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>

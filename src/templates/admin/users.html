@@ -54,6 +54,7 @@
         </div>
       </div>
     </div>
+<<<<<<< HEAD
   </form>
   {% endblock filters %}{%block content %}
   <div class="row justify-content-start">
@@ -67,6 +68,21 @@
                 <div class="col">
                   <span class="fw-bold font-16px">{{ user.first_name + " " + user.last_name }}</span> 
                 </div>
+=======
+  </div>
+</form>
+{% endblock filters %}{%block content %}
+<div class="row justify-content-start">
+  {% for user in user_list['items'] %}
+  <div class="col-12 col-md-6 col-lg-6">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="row align-items-center justify-content-md-center">
+          <div class="col-12 col-sm-8 col-md-12 col-lg-12 col-xl-8">
+            <div class="row align-items-center mb-2">
+              <div class="col">
+                <span class="fw-bold font-16px">{{ user.full_name }}</span>
+>>>>>>> ff2cb6ce79a3faadcc9fecdd92177b67a813fdfd
               </div>
               <div class="row align-items-center mb-2">
                 <div class="col-12">
@@ -84,10 +100,32 @@
                 </div>
               </div>
             </div>
+<<<<<<< HEAD
             <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2">
               <div class="row">
                 <div
                   class="col-12 mb-lg-3 mb-xl-6 mb-3 mb-md-3 mb-sm-6 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end"
+=======
+          </div>
+          <div class="col-12 col-sm-4 col-md-12 col-lg-12 col-xl-4 mt-2">
+            <div class="row">
+              <div
+                class="col-12 mb-lg-3 mb-xl-6 mb-3 mb-md-3 mb-sm-6 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end"
+              >
+                <div class="initial-avatar text-end">{{user.initials}}</div>
+              </div>
+
+              <div
+                class="col-12 d-flex justify-content-sm-end justify-content-md-start justify-content-lg-start justify-content-xl-end"
+              >
+                {% if user.status == 'Active' %}
+                <span class="badge rounded-pill bg-success font-14px ps-2 pe-2"
+                  >ATIVO</span
+                >
+                {% endif %} {% if user.status == 'Inactive' %}
+                <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
+                  >INATIVO</span
+>>>>>>> ff2cb6ce79a3faadcc9fecdd92177b67a813fdfd
                 >
                   <span>{{ user.initials }}</span>
                 </div>
@@ -228,6 +266,7 @@
       </div>
     </div>
   </div>
+<<<<<<< HEAD
     {% endfor %}
 </div> 
 
@@ -282,3 +321,60 @@
     select.setAttribute("selected", "");
   </script>
   {% endblock content %}
+=======
+  {% endfor %}
+  <div
+    class="d-flex align-items-center justify-content-center justify-content-md-end"
+  >
+    <ul class="pagination">
+      <li class="page-item {% if user_list.page == 1 %}disabled{% endif %}">
+        <a
+          class="page-link"
+          href="{{ url_for('admin.list_users', page=user_list.prev_num) }}"
+          tabindex="-1"
+          >Anterior</a
+        >
+      </li>
+      {% for page_num in user_list.iter_pages(left_edge=1, right_edge=1,
+      left_current=1, right_current=2) %} {% if page_num %} {% if user_list.page
+      == page_num %}
+      <li class="page-item">
+        <a
+          href="{{ url_for('admin.list_users', page=page_num) }}"
+          class="page-link"
+        >
+          {{ page_num }}
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          href="{{ url_for('admin.list_users', page=page_num) }}"
+          class="page-link"
+        >
+          {{ page_num }}
+        </a>
+      </li>
+      {% endif %} {% else %} ... {% endif %} {% endfor %}
+      <li
+        class="page-item {% if user_list.page == user_list.pages %}disabled{% endif %}"
+      >
+        <a
+          class="page-link"
+          href="{{ url_for('admin.list_users', page=user_list.next_num) }}"
+          tabindex="-1"
+          >Seguinte</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+<script>
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const product = urlParams.get("status");
+  const select = document.getElementById(product);
+  select.setAttribute("selected", "");
+</script>
+{% endblock content %}
+>>>>>>> ff2cb6ce79a3faadcc9fecdd92177b67a813fdfd
