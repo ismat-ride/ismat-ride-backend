@@ -86,7 +86,12 @@
                 data-bs-parent="#sidebar"
               >
                 <li class="sidebar-item">
-                  <a class="sidebar-link fw-bold">CRIAR</a>
+                  <a
+                    class="sidebar-link fw-bold"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addBrandModal"
+                    >CRIAR</a
+                  >
                 </li>
                 <li class="sidebar-item">
                   <a
@@ -113,7 +118,12 @@
                 data-bs-parent="#sidebar"
               >
                 <li class="sidebar-item">
-                  <a class="sidebar-link fw-bold">CRIAR</a>
+                  <a
+                    class="sidebar-link fw-bold"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addModelModal"
+                    >CRIAR</a
+                  >
                 </li>
                 <li class="sidebar-item">
                   <a
@@ -281,6 +291,129 @@
                 <div class="col-12 col-sm-6">
                   <button type="submit" class="btn btn-primary w-100">
                     <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="addModelModal"
+    tabindex="-1"
+    aria-labelledby="addModelModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">ADICIONAR MODELO</h5>
+        </div>
+        <div class="modal-body">
+          <form action="insert" id="insert" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12 mb-2">
+                        <div class="form-group">
+                          <label class="form-label fw-bold">Marca</label>
+                          <select
+                            name="selectBrand"
+                            class="form-select"
+                            aria-label="Default select example"
+                          >
+                            {% for brand in brands_list %}
+                            <option value="{{brand.id}}">{{brand.name}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-12">
+                        <div class="form-group">
+                          <label class="form-label fw-bold">Modelo</label>
+                          <div class="input-group mb-3">
+                            <input
+                              type="text"
+                              class="form-control"
+                              name="name"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold">Confirmar</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="addBrandModal"
+    tabindex="-1"
+    aria-labelledby="addBrandModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">ADICIONAR MARCA</h5>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/brand/insert" id="insert" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <label class="form-label fw-bold">Marca</label>
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" name="name" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold">Confirmar</span>
                   </button>
                 </div>
               </div>
