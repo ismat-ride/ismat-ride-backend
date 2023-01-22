@@ -72,19 +72,19 @@
               </div>
               <div class="row align-items-center mb-2">
                 <div class="col">
-                  {% if 'Active' == item.status %}
+                  {% if 'Activa' == item.status %}
                   <span class="badge rounded-pill bg-primary font-14px ps-2 pe-2"
                     >{{item.status}}</span
                   >
-                  {% elif 'On Going' == item.status %}
+                  {% elif 'Em Progresso' == item.status %}
                   <span class="badge rounded-pill bg-warning font-14px ps-2 pe-2"
                     >{{item.status}}</span
                   >
-                  {% elif 'Finished' == item.status %}
+                  {% elif 'Finalizada' == item.status %}
                   <span class="badge rounded-pill bg-info font-14px ps-2 pe-2"
                     >{{item.status}}</span
                   >
-                  {% elif 'Canceled' == item.status %}
+                  {% elif 'Cancelada' == item.status %}
                   <span class="badge rounded-pill bg-danger font-14px ps-2 pe-2"
                     >{{item.status}}</span
                   >
@@ -111,7 +111,7 @@
                     >{{item.total_available_places}} LUGARES DISPONÍVEIS</span
                   >
                 </div>
-                {% if 'Active' == item.status or 'On Going' == item.status %}
+                {% if 'Activa' == item.status or 'Em Progresso' == item.status %}
                 <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
                   <button class="btn btn-secondary flex-fill w-100 fw-bold" type="button" data-bs-toggle="modal" data-bs-target="#update{{item.id}}">
                       Editar
@@ -137,19 +137,15 @@
                         Editar
                     </button>                                   
                 </div>                
-                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
-                  <form action="/rides/my-rides/cancel/{{item.id}}">
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">                  
                     <button class="btn bg-secondary text-white fw-bold flex-fill w-100" disabled type="submit" name="cancel_" value="cancel">
                         Cancelar
-                    </button>
-                  </form>
+                    </button>                  
                 </div>
-                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
-                  <form action="/rides/my-rides/finish/{{item.id}}">
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">                 
                     <button class="btn bg-secondary text-white fw-bold flex-fill w-100" disabled type="submit" name="cancel_" value="cancel">
                         Finalizar
-                    </button>
-                  </form>
+                    </button>                  
                 </div>
                 {% endif %}
               </div>
@@ -195,17 +191,15 @@
                   </div>                  
                 </div>
                 <div class="row my-3">
-                  <div class="col-6">                    
-                    <label class="form-label">Veículo</label>
-                      <select
-                        class="form-select"
-                        id="inputGroupSelect01"
-                        name="vehicle"
-                      >
-                        {% for vehicle in vehicles %}
-                        <option value="{{vehicle.id}}">{{vehicle.id}}</option>
+                  <div class="col-12 col-md-6">
+                    <label class="form-label fw-bold">Veículo</label>
+                    <div class="input-group mb-3">
+                      <select name="vehicle" class="form-select">
+                        {% for model in create_ride_vehicles %}
+                        <option value="{{model.id}}">{{model.model.name}}</option>
                         {% endfor %}
-                      </select>                   
+                      </select>
+                    </div>
                   </div>
                   <div class="col-6">
                     <label class="form-label">Data</label>

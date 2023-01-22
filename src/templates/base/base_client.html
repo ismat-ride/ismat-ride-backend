@@ -434,81 +434,48 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header m-2">
-          <h5 class="modal-title text-color" id="createRideModal">
-            CRIAR NOVA BOLEIA
-          </h5>
+          <h5 class="modal-title" id="createRideModal">CRIAR NOVA BOLEIA</h5>
         </div>
         <div class="modal-body">
           <form action="{{ url_for('rides.create_ride') }}" method="POST">
             <div class="container-fluid">
               <div class="row">
-                <div class="col-6">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Local Atual</label>
                   <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >Desde</label
-                    >
-                    <select
-                      class="form-select"
-                      id="inputGroupSelect01"
-                      name="origin"
-                    >
-                      <option value="ISMAT" selected>Portimão</option>
-                      <option value="Lagoa">Lagoa</option>
-                      <option value="Albufeira">Albufeira</option>
-                      <option value="Faro">Faro</option>
-                    </select>
+                    <input type="text" class="form-control" name="origin" />
                   </div>
                 </div>
-                <div class="col-6">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Destino</label>
                   <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >Até</label
-                    >
-                    <select
-                      class="form-select"
-                      id="inputGroupSelect01"
-                      name="destiny"
-                    >
-                      <option value="ISMAT" selected>Ferrari</option>
-                      <option value="Lagoa">Porsche</option>
-                      <option value="Albufeira">Lada</option>
-                    </select>
+                    <input type="text" class="form-control" name="destiny" />
                   </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-6">
+                <div class="col-12">
+                  <label class="form-label fw-bold">Data/Hora Boleia</label>
                   <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputGroupSelect01"
-                      >Veículo</label
-                    >
-                    <select
-                      class="form-select"
-                      id="inputGroupSelect01"
-                      name="vehicle"
-                    >
-                      {% for vehicle in vehicles %}
-                      <option value="{{vehicle.id}}">{{vehicle.id}}</option>
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      name="date"
+                    />
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Veículo</label>
+                  <div class="input-group mb-3">
+                    <select name="vehicle" class="form-select">
+                      {% for model in create_ride_vehicles %}
+                      <option value="{{model.id}}">{{model.model.name}}</option>
                       {% endfor %}
                     </select>
                   </div>
                 </div>
-                <div class="col-6">
-                  <input
-                    type="datetime-local"
-                    class="form-control"
-                    name="date"
-                  />
-                </div>
-                <div class="row mb-5">
-                  <div class="col-6">
-                    <label class="form-label" for="typeNumber">Lugares</label>
-                    <input
-                      type="number"
-                      id="typeNumber"
-                      class="form-control"
-                      name="seats"
-                    />
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Lugares</label>
+                  <div class="input-group mb-3">
+                    <input type="number" class="form-control" name="seats" />
                   </div>
                 </div>
               </div>
