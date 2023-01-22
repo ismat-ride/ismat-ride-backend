@@ -11,7 +11,7 @@ from flask_mail import Message
 @auth_bp.route('/login')
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('vehicles.vehicles_list'))
+        return redirect(url_for('rides.list_rides'))
 
     return render_template('auth/login.html')
 
@@ -23,7 +23,7 @@ def login_post():
 
     user = User.query.filter_by(email=email).first()
 
-    if not user or not check_password_hash(user.password, password):
+    if user.type != 'Student' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
         return render_template('auth/login.html')  
 

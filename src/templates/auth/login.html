@@ -42,7 +42,7 @@
                 LOGIN
               </button>
               <div class="d-flex justify-content-end input-group fw-bold">
-                <span>Esqueci-me da <span class="text-primary">Password</span>?</span>
+                <span>Esqueci-me da <span class="text-primary"><a class="fw-bold" href="{{url_for('auth.recover_get')}}">Password</span>?</a></span> 
               </div>
         </form>
         {% with messages = get_flashed_messages(category_filter=["invalid_credentials"]) %}
