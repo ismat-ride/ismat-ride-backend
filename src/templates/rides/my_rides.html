@@ -48,7 +48,7 @@
       </div>
     </form>
     {% endblock filters %} {%block content %}
-    <div class="row justify-content-evenly">
+    <div class="row justify-content-start">
       {% for item in request_list['items'] %}
       <div class="col-12 col-md-6 col-lg-6">
         <div class="card shadow">
@@ -117,9 +117,16 @@
                     </button>
                 </div>
                 <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
-                  <form action="{{ item.id }}">
+                  <form action="/rides/my-rides/cancel/{{item.id}}">
                     <button class="btn btn-primary flex-fill w-100" type="submit" name="cancel_" value="cancel">
                         Cancelar
+                    </button>
+                  </form>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 text-start text-sm-end">
+                  <form action="/rides/my-rides/finalize/{{item.id}}">
+                    <button class="btn btn-danger flex-fill w-100" type="submit" name="cancel_" value="cancel">
+                        Finalizar
                     </button>
                   </form>
                 </div>
@@ -205,6 +212,7 @@
                       name="date"
                     />
                   </div>
+                </div>
                   <div class="row mb-5">
                     <div class="col-6">
                       <label class="form-label" for="typeNumber">Lugares</label>
@@ -216,8 +224,7 @@
                         name="seats"
                       />
                     </div>
-                  </div>
-                </div>
+                  </div>                
                 <div class="row justify-content-between align-items-center">
                   <div class="col">
                     <button

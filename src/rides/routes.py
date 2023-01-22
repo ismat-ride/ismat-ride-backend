@@ -180,11 +180,56 @@ def edit_ride(id):
     ride.destiny = request.form.get('destiny')
     ride.vehicle_id = request.form.get('vehicle')
     ride.total_seats = request.form.get('seats')
-    ride.date = request.form.get('date')
 
     db.session.commit()
 
     flash('Boleia editada com sucesso', category='info')
+
+    return redirect(url_for('rides.list_my_rides'))
+
+@login_required
+@student_required
+@rides_bp.route('/my-rides/finalize/<id>', methods=['GET', 'POST'])
+def finalize_ride(id):
+    
+    ride = Ride.query.filter_by(id=id).first()  
+    ride.date = request.form.get('date')    
+
+    print(ride.status_id)
+
+    if ride.status_id == 2 :
+        ride.status_id = 3 
+        db.session.commit()
+        flash('Boleia finalizada com sucesso', category='info')
+
+    elif ride.status_id == 3 :
+        flash('Esta boleia já está finalizada.', category='error')
+
+    elif ride.status_id == 4 :
+        flash('Esta boleia já está cancelada.', category='error')
+
+    elif ride.status_id == 1 :
+        flash('Só é possível finalizar boleias que já tenham começado.', category='error')
+
+    return redirect(url_for('rides.list_my_rides'))
+
+@login_required
+@student_required
+@rides_bp.route('/my-rides/cancel/<id>', methods=['GET', 'POST'])
+def cancel_ride(id):
+    
+    ride = Ride.query.filter_by(id=id).first()  
+    ride.date = request.form.get('date')    
+
+    print(ride.status_id)
+
+    if ride.status_id == 4 :
+        flash('Esta boleia já está cancelada.', category='error')
+
+    else:
+        ride.status_id = 4 
+        db.session.commit()
+        flash('Boleia cancelada com sucesso', category='info')
 
     return redirect(url_for('rides.list_my_rides'))
 
