@@ -12,11 +12,12 @@ from src.admin.dto.user_list_dto import UserListDto
 from src.admin.dto.ride_list_dto import RideListDto
 from src.admin.dto.ride_requests_dto import RideRequestDto
 from src.ride_requests.ride_requests import RideRequest
-from src.extensions import db, mail, ITEMS_PER_PAGE
+from src.extensions import db, mail, ITEMS_PER_PAGE, admin_required
 from flask_mail import Message
 
 @admin_bp.route('/users/list', methods = [ 'GET' ])
 @login_required
+@admin_required
 def list_users():
     page = request.args.get('page', 1, type=int)
     
@@ -56,6 +57,7 @@ def list_users():
 
 @admin_bp.route('send/recovery/<id>')
 @login_required
+@admin_required
 def send_recovery(id):
     user = User.query.filter_by(id=id).first()
 
@@ -81,6 +83,7 @@ def send_recovery(id):
 
 @admin_bp.route("/brands/list")
 @login_required
+@admin_required
 def list_brands():
        page = request.args.get('page', 1, type=int)
        
@@ -103,6 +106,7 @@ def list_brands():
 
 @admin_bp.route("/brand/<id>", methods = ["POST"])
 @login_required
+@admin_required
 def update_brand(id):
        brand = Brand.query.get(id)
 
@@ -132,6 +136,7 @@ def update_brand(id):
 
 @admin_bp.route('/brand/delete/<brand_id>')
 @login_required
+@admin_required
 def delete_brand(brand_id):
     brand_to_delete = Brand.query.filter_by(id=brand_id).first()
 
@@ -153,6 +158,7 @@ def delete_brand(brand_id):
 
 @admin_bp.route("/ride-requests/list")
 @login_required
+@admin_required
 def list_ride_requests():
       page = request.args.get('page', 1, type=int)
 
@@ -192,6 +198,7 @@ def list_ride_requests():
 
 @admin_bp.route("/models/list")
 @login_required
+@admin_required
 def list_models():
     page = request.args.get('page', 1, type=int)
 
@@ -217,6 +224,7 @@ def list_models():
 
 @admin_bp.route("rides/list")
 @login_required
+@admin_required
 def list_rides():
     page = request.args.get('page', 1, type=int)
 
@@ -269,7 +277,7 @@ def login_post():
 
     user = User.query.filter_by(email=email).first()
     
-    if not user or user.type != 'admin' or not check_password_hash(user.password, password):
+    if not user or user.type != 'Admin' or not check_password_hash(user.password, password):
         flash('Credenciais invalidas', 'invalid_credentials')
 
         return render_template('admin/login.html')  
@@ -304,6 +312,8 @@ def logout():
     return response
 
 @admin_bp.route("/edit", methods=["POST"])
+@login_required
+@admin_required
 def edit_user_post():
     new_user = current_user
 
