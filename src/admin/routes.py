@@ -80,7 +80,7 @@ def send_recovery(id):
 
     flash('Email de recuperação enviado', category='info')
 
-    return redirect(request.url)
+    return redirect(url_for('admin.list_users'))
 
 @admin_bp.route("/brands/list")
 @login_required
@@ -138,26 +138,26 @@ def update_brand(id):
 @admin_bp.route('/brand/delete/<id>')
 @login_required
 @admin_required
-def delete_brand(brand_id):
-    brand_to_delete = Brand.query.filter_by(id=brand_id).first()
+def delete_brand(id):
+    brand_to_delete = Brand.query.filter_by(id=id).first()
 
     if brand_to_delete is None:
         flash('Esta marca nao existe', category='not_found_error')
         
-        return redirect(request.url)
+        return redirect(url_for('admin.list_brands'))
 
-        if brand_to_delete is None:
-            flash('Esta marca nao existe', category='not_found_error')
-            return redirect(url_for('admin.list_brands'))
-      
+    if brand_to_delete is None:
+        flash('Esta marca nao existe', category='not_found_error')
+        return redirect(url_for('admin.list_brands'))
+    
 
-        try:
-            db.session.delete(brand_to_delete)
-            db.session.commit()
-            flash("MARCA APAGADA COM SUCESSO!", 'info')
-            return redirect(url_for('admin.list_brands'))
-        except:
-            flash(f'Ocorreu um erro inesperado', 'error')
+    try:
+        db.session.delete(brand_to_delete)
+        db.session.commit()
+        flash("MARCA APAGADA COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_brands'))
+    except:
+        flash(f'Ocorreu um erro inesperado', 'error')
 
 
 @admin_bp.route("/ride-requests/list")
@@ -266,6 +266,7 @@ def list_rides():
         return(render_template("admin/rides_no_data.html"))
 
     return render_template("admin/rides.html", request_list = response)    
+
 
 @admin_bp.route('login')
 def login():
@@ -408,7 +409,6 @@ def delete_model(id):
     except:
         flash(f'Ocorreu um erro inesperado', 'error')
 
-<<<<<<< HEAD
 @admin_bp.route('/users/update/<id>', methods=['GET', 'POST'])
 @login_required
 def update_user(id):    
@@ -425,16 +425,16 @@ def update_user(id):
     user.status = request.form.get('status')
     
     if request.form.get("status") is None:
-        user.status = "Inactive"
+        user.status = "2"
     if request.form.get("status") == "on":
-        user.status = "Active"
+        user.status = "1"
 
     db.session.commit()
 
     flash('Utilizador editado com sucesso', category='info')
 
     return redirect(url_for('admin.list_users'))
-=======
+
 @admin_bp.route("/models/insert", methods=['POST', 'GET'])
 @login_required
 def models_insert():
@@ -453,4 +453,4 @@ def models_insert():
 
     else:   
         flash(f'Ocorreu um erro inesperado', 'error')
->>>>>>> ff2cb6ce79a3faadcc9fecdd92177b67a813fdfd
+

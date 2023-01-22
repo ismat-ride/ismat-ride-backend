@@ -13,6 +13,8 @@ class RideListDto:
     total_places: str
     total_available_places: str
     is_joinable: bool
+    ride_time: str
+    
 
 @dataclass
 class RideDto:
