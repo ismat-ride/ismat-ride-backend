@@ -19,9 +19,11 @@ class RideDto:
     id: int
     starting_location: str
     end_location: str
-    vehicle: str
     starting_date: str
-    starting_hour: str
+    model: str
+    brand: str
+    vin: str
+    color: str
     total_places: str
     passengers: list
     is_joinable: bool
@@ -30,4 +32,10 @@ class RideDto:
 class PassengerListDto:
     id: int
     initials: str
+    first_name: str
+    last_name: str
+    username: str
+    phone_number: str
+    email: str
+    student_number: str
  
