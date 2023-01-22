@@ -45,27 +45,96 @@ block container_title %} MODELOS {% endblock container_title %} {% block filters
         <div class="row h-100">
           <div class="col-12 col-sm-6 col-md-4">
             <div class="col-12 d-flex flex-column mb-2">
-              <span class="font-16px mb-0">Marca</span>
-              <span class="font-20px fw-bold mb-0">{{item.brand.name}}</span>
+              <h4 class="mb-0">Marca</h4>
+              <h3 class="fw-bold mb-0">{{item.brand.name}}</h3>
             </div>
 
             <div class="col-12 d-flex flex-column mb-2">
-              <span class="font-16px mb-0">Modelo</span>
-              <span class="font-20px fw-bold mb-0">{{item.name}}</span>
+              <h4 class="mb-0">Modelo</h4>
+              <h3 class="fw-bold mb-0">{{item.name}}</h3>
             </div>
           </div>
           <div class="col-12 col-sm-6 col-md-8">
             <div class="d-flex flex-column h-100 justify-content-end">
               <div class="row align-items-end">
                 <div class="col-6 col-sm-6">
-                  <button class="btn btn-primary w-100 fw-bold">EDITAR</button>
+                  <button
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit{{item.name}}"
+                    class="btn btn-primary w-100 fw-bold"
+                  >
+                    EDITAR
+                  </button>
                 </div>
-                <div class="col-6 col-sm-6">
-                  <button class="btn btn-danger w-100 fw-bold">APAGAR</button>
+                <div class="col-12 col-sm-6">
+                  <form action="/admin/models/delete/{{item.id}}" id="delete">
+                    <button
+                      type="submit"
+                      name="delete_model"
+                      class="btn btn-danger w-100 fw-bold"
+                    >
+                      APAGAR
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="edit{{item.name}}"
+    tabindex="-1"
+    aria-labelledby="edit{{item.name}}"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content">
+        <div class="modal-header m-2">
+          <h5 class="modal-title" id="createBrandModal">EDITAR MODELO</h5>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/models/{{item.id}}" method="POST">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-12 col-lg-10">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <label class="form-label fw-bold">Modelo</label>
+                    <div class="input-group mb-3">
+                      <input
+                        type="text"
+                        value="{{item.name}}"
+                        class="form-control"
+                        name="name"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="d-flex flex-column flex-sm-row gap-2">
+                <div class="col-12 col-sm-6">
+                  <button
+                    type="button"
+                    class="btn btn-secondary w-100"
+                    data-bs-dismiss="modal"
+                  >
+                    <span class="fw-bold">Cancelar</span>
+                  </button>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="submit" class="btn btn-primary w-100">
+                    <span class="fw-bold"> Guardar Alterações</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

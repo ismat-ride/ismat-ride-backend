@@ -86,4 +86,9 @@ def create_app():
 
         return dict(vehicles = None)
 
+    @app.context_processor
+    def inject_brands():
+        brands = Brand.query.all()
+        return dict(brands_list = brands)    
+
     return app

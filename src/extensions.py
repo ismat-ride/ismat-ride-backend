@@ -28,6 +28,14 @@ def student_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if current_user.type != 'Student':
-            return redirect(url_for('auth.login', next=request.url))
+            return redirect(url_for('admin.list_users'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if current_user.type != 'Admin':
+            return redirect(url_for('rides.list_rides'))
         return f(*args, **kwargs)
     return decorated_function
