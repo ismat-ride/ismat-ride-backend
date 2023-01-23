@@ -46,7 +46,7 @@ def list_users():
 
     for user in query:
         user_list_dto.append(
-            UserListDto(user.id, user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
+            UserListDto(user.id, user.get_full_name(), user.email, user.username, user.first_name, user.last_name, user.phone_number, "teste", user.status, user.get_initials()) 
         )
 
     response['items'] = user_list_dto
@@ -80,7 +80,7 @@ def send_recovery(id):
 
     flash('Email de recuperação enviado', category='info')
 
-    return redirect(request.url)
+    return redirect(url_for('admin.list_users'))
 
 @admin_bp.route("/brands/list")
 @login_required
@@ -138,26 +138,26 @@ def update_brand(id):
 @admin_bp.route('/brand/delete/<id>')
 @login_required
 @admin_required
-def delete_brand(brand_id):
-    brand_to_delete = Brand.query.filter_by(id=brand_id).first()
+def delete_brand(id):
+    brand_to_delete = Brand.query.filter_by(id=id).first()
 
     if brand_to_delete is None:
         flash('Esta marca nao existe', category='not_found_error')
         
-        return redirect(request.url)
+        return redirect(url_for('admin.list_brands'))
 
-        if brand_to_delete is None:
-            flash('Esta marca nao existe', category='not_found_error')
-            return redirect(url_for('admin.list_brands'))
-      
+    if brand_to_delete is None:
+        flash('Esta marca nao existe', category='not_found_error')
+        return redirect(url_for('admin.list_brands'))
+    
 
-        try:
-            db.session.delete(brand_to_delete)
-            db.session.commit()
-            flash("MARCA APAGADA COM SUCESSO!", 'info')
-            return redirect(url_for('admin.list_brands'))
-        except:
-            flash(f'Ocorreu um erro inesperado', 'error')
+    try:
+        db.session.delete(brand_to_delete)
+        db.session.commit()
+        flash("MARCA APAGADA COM SUCESSO!", 'info')
+        return redirect(url_for('admin.list_brands'))
+    except:
+        flash(f'Ocorreu um erro inesperado', 'error')
 
 
 @admin_bp.route("/ride-requests/list")
@@ -409,6 +409,32 @@ def delete_model(id):
     except:
         flash(f'Ocorreu um erro inesperado', 'error')
 
+@admin_bp.route('/users/update/<id>', methods=['GET', 'POST'])
+@login_required
+def update_user(id):    
+    user = User.query.filter_by(id=id).first()
+
+    if user is None:
+        flash('Utilizador com este email nao existe', category='error')
+
+        return redirect(url_for('admin.list_users'))
+
+    user.username = request.form.get('username')    
+    user.email = request.form.get('email')
+    user.phone_number = request.form.get('phone_number')
+    user.status = request.form.get('status')
+    
+    if request.form.get("status") is None:
+        user.status = "Inactive"
+    if request.form.get("status") == "on":
+        user.status = "Active"
+
+    db.session.commit()
+
+    flash('Utilizador editado com sucesso', category='info')
+
+    return redirect(url_for('admin.list_users'))
+
 @admin_bp.route("/models/insert", methods=['POST', 'GET'])
 @login_required
 def models_insert():
@@ -427,3 +453,4 @@ def models_insert():
 
     else:   
         flash(f'Ocorreu um erro inesperado', 'error')
+
